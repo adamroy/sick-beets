@@ -15,7 +15,10 @@ public class GridContainer : MonoBehaviour
 
     private void HandleTouch(GameObject obj)
     {
-        content.HandleTouch(obj);
+        if (content != null)
+        {
+            content.HandleTouch(obj);
+        }
     }
 
     public void SetItem(GridItem item)
@@ -28,5 +31,10 @@ public class GridContainer : MonoBehaviour
         var temp = content;
         content = null;
         return temp;
+    }
+
+    public void UpdateSimulation(int deltaMillis)
+    {
+        print("UpdateSimulation: " + deltaMillis);
     }
 }
