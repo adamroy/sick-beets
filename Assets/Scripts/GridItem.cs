@@ -7,9 +7,4 @@ public class GridItem : MonoBehaviour
     {
         return false;
     }
-
-    private void UpdateSimulation(int i)
-    {
-        print("UpdateSimulation: " + i);
-    }
 }

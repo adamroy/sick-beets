@@ -42,7 +42,7 @@ public class EventManager : MonoBehaviour
         instance.objectMap[e].Remove(go);
     }
 
-    public static void BroadCast(Event e, object argument)
+    public static void Broadcast(Event e, object argument)
     {
         if (instance == null) return;
 

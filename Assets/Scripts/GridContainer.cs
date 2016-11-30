@@ -23,18 +23,20 @@ public class GridContainer : MonoBehaviour
 
     public void SetItem(GridItem item)
     {
+        if(content != null)
+            throw new System.Exception("Already an item here!");
+
         content = item;
+        content.transform.SetParent(this.transform, false);
+        content.transform.localPosition = Vector3.zero;
+        content.transform.localRotation = Quaternion.identity;
     }
 
     public GridItem RemoveItem()
     {
         var temp = content;
+        content.transform.SetParent(null, true);
         content = null;
         return temp;
-    }
-
-    public void UpdateSimulation(int deltaMillis)
-    {
-        print("UpdateSimulation: " + deltaMillis);
     }
 }

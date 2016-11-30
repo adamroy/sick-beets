@@ -17,7 +17,7 @@ public class AutoGrid : MonoBehaviour
 
     private void Awake()
     {
-        CalculateNeighbors2();
+        CalculateNeighbors();
     }
 
     private void CalculateNeighbors()

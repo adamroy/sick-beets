@@ -6,12 +6,20 @@ using System.Collections.Generic;
 public class GameGlue : MonoBehaviour
 {
     public AutoGrid gridRoot;
+    public GameObject beenPotPrefab;
 
     private const string timeKey = "GamePauseTime";
 
     private void Start()
     {
+        gridRoot.GetAllAttached<GridTouch>().ForEach(t => t.OnGridPressed += GridTouched);
         StartCoroutine(MainCoroutine());
+    }
+
+    private void GridTouched(GameObject grid)
+    {
+        var instance = Instantiate(beenPotPrefab).GetComponent<BeetPot>();
+        grid.GetComponent<GridContainer>().SetItem(instance);
     }
 
     private void OnApplicationPause(bool pause)
@@ -54,7 +62,7 @@ public class GameGlue : MonoBehaviour
 
     private void UpdateWorld(int deltaMillis)
     {
-        EventManager.BroadCast(EventManager.Event.UpdateSimulation, deltaMillis);
+        EventManager.Broadcast(EventManager.Event.UpdateSimulation, deltaMillis);
     }
     
     // Seconds since UTC epoch
