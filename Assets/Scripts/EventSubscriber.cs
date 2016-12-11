@@ -5,7 +5,7 @@ public class EventSubscriber : MonoBehaviour
 {
     public List<EventManager.Event> subscribedEvents;
 
-    private void Start ()
+    private void Awake ()
     {
 	    foreach(var e in subscribedEvents)
         {

@@ -6,7 +6,8 @@ public class EventManager : MonoBehaviour
 {
     public enum Event
     {
-        UpdateSimulation
+        UpdateSimulation,
+        NeedsMet
     }
 
     static private EventManager instance;

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 // Manages the item the grid space holds
@@ -6,6 +7,8 @@ using System.Collections.Generic;
 [RequireComponent(typeof(GridTouch))]
 public class GridContainer : MonoBehaviour
 {
+    public Action<GridItem> OnItemChanged;
+
     private GridItem content;
 
     private void Start()
@@ -30,6 +33,8 @@ public class GridContainer : MonoBehaviour
         content.transform.SetParent(this.transform, false);
         content.transform.localPosition = Vector3.zero;
         content.transform.localRotation = Quaternion.identity;
+
+        if (OnItemChanged != null) OnItemChanged(item);
     }
 
     public GridItem RemoveItem()
@@ -37,6 +42,12 @@ public class GridContainer : MonoBehaviour
         var temp = content;
         content.transform.SetParent(null, true);
         content = null;
+        if (OnItemChanged != null) OnItemChanged(null);
         return temp;
+    }
+
+    public GridItem GetItem()
+    {
+        return content;
     }
 }
