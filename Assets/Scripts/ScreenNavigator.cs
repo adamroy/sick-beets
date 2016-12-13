@@ -105,8 +105,8 @@ public class ScreenNavigator : MonoBehaviour
         float distanceToCurrent = Vector3.Distance(currentPosition.position, this.transform.position);
         bool inCorrectDirection = (this.transform.position.x - currentPosition.position.x) * (targetPosition.position.x - currentPosition.position.x) > 0;
 
-        // If we are over one quarter the way to the nearest position, go there
-        if (inCorrectDirection && distanceToCurrent / diff > 0.25f)
+        // If we are over one sixth the way to the nearest position, go there
+        if (inCorrectDirection && distanceToCurrent / diff > 0.15f)
             return targetPosition;
         else
             return currentPosition;
