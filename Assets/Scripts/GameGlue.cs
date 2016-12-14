@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
-using System.Linq;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(BeetGenerator))]
@@ -9,89 +8,77 @@ public class GameGlue : MonoBehaviour
 {
     public AutoGrid nurseryGridRoot;
     public AutoGrid intakeGridRoot;
-    public GameObject beenPotPrefab;
-    public GameObject beetPrefab;
-    public GameObject providerPrefab;
+    public AutoGrid labGridRoot;
 
     private BeetGenerator generator;
     private const string timeKey = "GamePauseTime";
-    private int placement = 0;
     private Beet selectedBeet;
 
     private void Start()
     {
         generator = GetComponent<BeetGenerator>();
-        nurseryGridRoot.GetAllAttached<GridContainer>().ForEach(c => c.OnItemChanged += RefreshGrid);
         nurseryGridRoot.GetAllAttached<GridTouch>().ForEach(t => t.OnGridPressed += NurseryGridTouched);
         intakeGridRoot.GetAllAttached<GridTouch>().ForEach(t => t.OnGridPressed += IntakeGridTouched);
+        labGridRoot.GetAllAttached<GridTouch>().ForEach(t => t.OnGridPressed += IntakeGridTouched);
         StartCoroutine(MainCoroutine());
     }
 
-    // Called when a new grid item is placed.  Recalculate what everything gets.
-    private void RefreshGrid(GridItem item)
+    private void NurseryGridTouched(GameObject grid)
     {
-        var providers = nurseryGridRoot.GetAllAttached<GridContainer>().Select(container => container.GetItem() as Provider).Where(i => i != null);
-        var needsMet = new Dictionary<Need, float>();
-        foreach(var p in providers)
-        {
-            if (!needsMet.ContainsKey(p.needMet))
-                needsMet[p.needMet] = p.value;
-            else
-                needsMet[p.needMet] += p.value;
-        }
+        var container = grid.GetComponent<BeetContainer>();
+        if (container == null) return;
 
-        EventManager.Broadcast(EventManager.Event.NeedsMet, needsMet);
+        // If empty and we have a selected beet, place
+        // If not empty and no selected beet, select that beet
+        // If not empty and we have a selected beet, nothing
+        // Empty and no beet, nothing
+        if (container.IsEmpty)
+        {
+            if (selectedBeet != null)
+            {
+                selectedBeet.transform.parent.GetComponent<BeetContainer>().RemoveBeet();
+                selectedBeet.MarkUnselected();
+                container.SetBeet(selectedBeet);
+                selectedBeet = null;
+            }
+        }
+        else
+        {
+            if(selectedBeet == null)
+            {
+                selectedBeet = container.Beet;
+                selectedBeet.MarkSelected();
+            }
+        }
     }
 
     private void IntakeGridTouched(GameObject grid)
     {
-        var beetPot = grid.GetComponent<BeetPot>();
-        if (beetPot == null)
-            return;
-
-        var beet = beetPot.GetBeet();
-        if (beet == null)
-            return;
-
-        if (selectedBeet == beet)
+        var beetContainer = grid.GetComponent<BeetContainer>();
+        if (beetContainer == null) return;
+        var beet = beetContainer.Beet;
+        
+        // If not empty select that beet
+        // If empty or we re-select beet, unselect
+        if ((selectedBeet == beet && selectedBeet != null) || (beet == null && selectedBeet != null))
         {
-            beet.MarkUnSelected();
+            selectedBeet.MarkUnselected();
             selectedBeet = null;
             return;
         }
-        else
+        else if(beet != null)
         {
+            if (selectedBeet != null)
+                selectedBeet.MarkUnselected();
             beet.MarkSelected();
             selectedBeet = beet;
         }
     }
 
-    private void NurseryGridTouched(GameObject grid)
+    private void LabGridTouched(GameObject grid)
     {
-        // Place beet pot
-        if (placement == 0)
-        {
-            var instance = Instantiate(beenPotPrefab).GetComponent<BeetPot>();
-            grid.GetComponent<GridContainer>().SetItem(instance);
-        }
-        // Place beet
-        else if (placement == 1) 
-        {
-            var pot = grid.GetComponent<GridContainer>().GetItem() as BeetPot;
-            if (pot != null && selectedBeet != null)
-            {
-                selectedBeet.transform.parent.GetComponent<BeetPot>().RemoveBeet();
-                selectedBeet.MarkUnSelected();
-                pot.SetBeet(selectedBeet);
-                RefreshGrid(null);
-            }
-        }
-        // Place provider
-        else if (placement == 2)
-        {
-            var instance = Instantiate(providerPrefab).GetComponent<Provider>();
-            grid.GetComponent<GridContainer>().SetItem(instance);
-        }
+        // For now same action
+        NurseryGridTouched(grid);
     }
 
     private void OnApplicationPause(bool pause)
@@ -111,10 +98,6 @@ public class GameGlue : MonoBehaviour
 
         while (true)
         {
-            if (Input.GetKeyDown(KeyCode.I)) placement = 0;
-            if (Input.GetKeyDown(KeyCode.O)) placement = 1;
-            if (Input.GetKeyDown(KeyCode.P)) placement = 2;
-
             int delta = Mathf.RoundToInt(Time.deltaTime * 1000);
             UpdateWorld(delta);
             yield return null;

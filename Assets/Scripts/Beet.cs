@@ -46,7 +46,7 @@ public class Beet : MonoBehaviour
         renderer.material.color = selectedColor;
     }
 
-    public void MarkUnSelected()
+    public void MarkUnselected()
     {
         selected = false;
     }

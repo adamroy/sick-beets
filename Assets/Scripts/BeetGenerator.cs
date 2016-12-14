@@ -8,33 +8,33 @@ public class BeetGenerator : MonoBehaviour
     public AutoGrid gridRoot;
     public float generationRate;
 
-    private List<BeetPot> pots;
+    private List<BeetContainer> containers;
 
     private void Start()
     {
-        pots = gridRoot.GetAllAttached<BeetPot>();
+        containers = gridRoot.GetAllAttached<BeetContainer>();
         // Shuffle
-        for (int i = 0; i < pots.Count - 1; i++)
+        for (int i = 0; i < containers.Count - 1; i++)
         {
-            var index = Random.Range(i + 1, pots.Count);
-            var temp = pots[i];
-            pots[i] = pots[index];
-            pots[index] = temp;
+            var index = Random.Range(i + 1, containers.Count);
+            var temp = containers[i];
+            containers[i] = containers[index];
+            containers[index] = temp;
         }
         InvokeRepeating("GenerateBeet", 0f, 10f);
     }
 
     private void GenerateBeet()
     {
-        var emptyPot = GetEmptyPot();
-        if (emptyPot == null) return;
+        var emptyCont = GetEmptyContainer();
+        if (emptyCont == null) return;
         int index = Random.Range(0, beetPrefabs.Length);
         var beet = Instantiate(beetPrefabs[index].gameObject).GetComponent<Beet>();
-        emptyPot.SetBeet(beet);
+        emptyCont.SetBeet(beet);
     }
 
-    private BeetPot GetEmptyPot()
+    private BeetContainer GetEmptyContainer()
     {
-        return pots.FirstOrDefault(p => p.IsEmpty);
+        return containers.FirstOrDefault(p => p.IsEmpty);
     }
 }
