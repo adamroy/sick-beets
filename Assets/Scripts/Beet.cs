@@ -9,6 +9,7 @@ public class Beet : MonoBehaviour
     // With needs met perfectly this is how long this beet takes to heal (in ms)
     public int lifeSpan;
     public Color endColor;
+    public Color selectedColor;
 
     public NeedRange[] needs;
 
@@ -18,6 +19,7 @@ public class Beet : MonoBehaviour
     // Ranges from -1 to +1
     private float healRate;
 
+    private bool selected = false;
     private Color startColor;
     private new Renderer renderer;
 
@@ -38,12 +40,24 @@ public class Beet : MonoBehaviour
         return false;
     }
 
+    public void MarkSelected()
+    {
+        selected = true;
+        renderer.material.color = selectedColor;
+    }
+
+    public void MarkUnSelected()
+    {
+        selected = false;
+    }
+
     private void UpdateSimulation(int deltaMillis)
     {
         health += Mathf.RoundToInt(healRate * deltaMillis);
         health = Mathf.Clamp(health, 0, lifeSpan);
         float progress = (float)health / lifeSpan;
-        renderer.material.color = Color.Lerp(startColor, endColor, progress);
+        if (!selected)
+            renderer.material.color = Color.Lerp(startColor, endColor, progress);
     }
 
     private void NeedsMet(Dictionary<Need, float> needsMet)

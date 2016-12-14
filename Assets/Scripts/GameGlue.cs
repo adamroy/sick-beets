@@ -4,27 +4,33 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(BeetGenerator))]
 public class GameGlue : MonoBehaviour
 {
-    public AutoGrid gridRoot;
+    public AutoGrid nurseryGridRoot;
+    public AutoGrid intakeGridRoot;
     public GameObject beenPotPrefab;
     public GameObject beetPrefab;
     public GameObject providerPrefab;
 
+    private BeetGenerator generator;
     private const string timeKey = "GamePauseTime";
     private int placement = 0;
+    private Beet selectedBeet;
 
     private void Start()
     {
-        gridRoot.GetAllAttached<GridContainer>().ForEach(c => c.OnItemChanged += RefreshGrid);
-        gridRoot.GetAllAttached<GridTouch>().ForEach(t => t.OnGridPressed += GridTouched);
+        generator = GetComponent<BeetGenerator>();
+        nurseryGridRoot.GetAllAttached<GridContainer>().ForEach(c => c.OnItemChanged += RefreshGrid);
+        nurseryGridRoot.GetAllAttached<GridTouch>().ForEach(t => t.OnGridPressed += NurseryGridTouched);
+        intakeGridRoot.GetAllAttached<GridTouch>().ForEach(t => t.OnGridPressed += IntakeGridTouched);
         StartCoroutine(MainCoroutine());
     }
 
     // Called when a new grid item is placed.  Recalculate what everything gets.
     private void RefreshGrid(GridItem item)
     {
-        var providers = gridRoot.GetAllAttached<GridContainer>().Select(container => container.GetItem() as Provider).Where(i => i != null);
+        var providers = nurseryGridRoot.GetAllAttached<GridContainer>().Select(container => container.GetItem() as Provider).Where(i => i != null);
         var needsMet = new Dictionary<Need, float>();
         foreach(var p in providers)
         {
@@ -37,23 +43,50 @@ public class GameGlue : MonoBehaviour
         EventManager.Broadcast(EventManager.Event.NeedsMet, needsMet);
     }
 
-    private void GridTouched(GameObject grid)
+    private void IntakeGridTouched(GameObject grid)
     {
+        var beetPot = grid.GetComponent<BeetPot>();
+        if (beetPot == null)
+            return;
+
+        var beet = beetPot.GetBeet();
+        if (beet == null)
+            return;
+
+        if (selectedBeet == beet)
+        {
+            beet.MarkUnSelected();
+            selectedBeet = null;
+            return;
+        }
+        else
+        {
+            beet.MarkSelected();
+            selectedBeet = beet;
+        }
+    }
+
+    private void NurseryGridTouched(GameObject grid)
+    {
+        // Place beet pot
         if (placement == 0)
         {
             var instance = Instantiate(beenPotPrefab).GetComponent<BeetPot>();
             grid.GetComponent<GridContainer>().SetItem(instance);
         }
-        else if (placement == 1)
+        // Place beet
+        else if (placement == 1) 
         {
             var pot = grid.GetComponent<GridContainer>().GetItem() as BeetPot;
-            if (pot != null)
+            if (pot != null && selectedBeet != null)
             {
-                var instance = Instantiate(beetPrefab).GetComponent<Beet>();
-                pot.SetBeet(instance);
+                selectedBeet.transform.parent.GetComponent<BeetPot>().RemoveBeet();
+                selectedBeet.MarkUnSelected();
+                pot.SetBeet(selectedBeet);
                 RefreshGrid(null);
             }
         }
+        // Place provider
         else if (placement == 2)
         {
             var instance = Instantiate(providerPrefab).GetComponent<Provider>();

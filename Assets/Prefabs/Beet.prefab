@@ -107,6 +107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeSpan: 10000
   endColor: {r: 1, g: 0.6413793, b: 0, a: 1}
+  selectedColor: {r: 1, g: 0, b: 0, a: 1}
   needs:
   - Need: {fileID: 11400000, guid: 2113fdb19a4d93c4db1f5e1164c62c91, type: 2}
     min: 50

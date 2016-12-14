@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class BeetPot : GridItem
 {
+    public bool IsEmpty { get { return beet == null; } }
+
     private Beet beet;
 
     public void SetBeet(Beet inBeet)
@@ -22,6 +24,11 @@ public class BeetPot : GridItem
         beet.transform.SetParent(null, true);
         beet = null;
         return temp;
+    }
+
+    public Beet GetBeet()
+    {
+        return beet;
     }
 
     public override bool HandleTouch(GameObject obj)
