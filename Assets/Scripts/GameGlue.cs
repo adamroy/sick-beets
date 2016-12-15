@@ -17,9 +17,9 @@ public class GameGlue : MonoBehaviour
     private void Start()
     {
         generator = GetComponent<BeetGenerator>();
-        nurseryGridRoot.GetAllAttached<GridTouch>().ForEach(t => t.OnGridPressed += NurseryGridTouched);
-        intakeGridRoot.GetAllAttached<GridTouch>().ForEach(t => t.OnGridPressed += IntakeGridTouched);
-        labGridRoot.GetAllAttached<GridTouch>().ForEach(t => t.OnGridPressed += IntakeGridTouched);
+        nurseryGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnPressed += NurseryGridTouched);
+        intakeGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnPressed += IntakeGridTouched);
+        labGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnPressed += LabGridTouched);
         StartCoroutine(MainCoroutine());
     }
 
@@ -44,7 +44,13 @@ public class GameGlue : MonoBehaviour
         }
         else
         {
-            if(selectedBeet == null)
+            var destinationBeet = container.Beet;
+            if(destinationBeet == selectedBeet)
+            {
+                selectedBeet.MarkUnselected();
+                selectedBeet = null;
+            }
+            else if(selectedBeet == null)
             {
                 selectedBeet = container.Beet;
                 selectedBeet.MarkSelected();

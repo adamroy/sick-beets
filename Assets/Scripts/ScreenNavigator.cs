@@ -9,7 +9,9 @@ public class ScreenNavigator : MonoBehaviour
 {
     // Where the camera should stop to be on different screens
     public Transform[] cameraPositions;
-    public Collider activationCollider;
+    public float distanceToCancelClick;
+    public float allowedDistanceOverBoundry;
+    public float boundryGravity;
 
     private Transform currentPosition;
     private new Camera camera;
@@ -44,24 +46,35 @@ public class ScreenNavigator : MonoBehaviour
             {
                 RaycastHit hit;
                 var ray = camera.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit, float.PositiveInfinity) && hit.collider == activationCollider)
+                if (Physics.Raycast(ray, out hit, float.PositiveInfinity))
                 {
-
                     if (movementCoroutine != null)
                     {
                         StopCoroutine(movementCoroutine);
                         InitializeCurrentPosition();
                     }
+
                     var initialPosition = camera.ScreenToWorldPoint(Input.mousePosition).x;
+                    float originalCameraWorldX = camera.transform.position.x;
+                    int orignalLayer = hit.collider.gameObject.layer;
 
                     while (!Input.GetMouseButtonUp(0))
                     {
-                        var deltaPosition = initialPosition - camera.ScreenToWorldPoint(Input.mousePosition).x;
-                        transform.Translate(Vector3.right * deltaPosition, Space.Self);
+                        var deltaPosition = GetDeltaPosition(initialPosition, camera.ScreenToWorldPoint(Input.mousePosition).x);
+                        initialPosition += deltaPosition - (initialPosition - camera.ScreenToWorldPoint(Input.mousePosition).x);
+                        camera.transform.Translate(Vector3.right * deltaPosition, Space.Self);
+
+                        float cameraWorldDeltaX =  originalCameraWorldX - camera.transform.position.x;
+                        if (Mathf.Abs(cameraWorldDeltaX) > distanceToCancelClick && hit.collider.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast"))
+                        {
+                            // Moving layer to IgnoreRaycast hopefully will cancel OnMouseUpAsButton()
+                            hit.collider.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+                        }
+
                         yield return null;
                     }
-
-
+                    
+                    hit.collider.gameObject.layer = orignalLayer;
                     var targetPosition = GetNextPosition();
                     movementCoroutine = StartCoroutine(SnapToPosition(targetPosition));
                 }
@@ -71,11 +84,41 @@ public class ScreenNavigator : MonoBehaviour
         }
     }
 
+    private float GetDeltaPosition(float initialPositionX, float inputWorldX)
+    {
+        float delta = initialPositionX - inputWorldX;
+        float destinationCameraX = camera.transform.position.x + delta;
+
+        float minX = float.MaxValue, maxX = float.MinValue;
+        foreach(var t in cameraPositions)
+        {
+            if (t.position.x < minX)
+                minX = t.position.x;
+            if (t.position.x > maxX)
+                maxX = t.position.x;
+        }
+
+        if (destinationCameraX < minX)
+        {
+            float distanceOver = minX - destinationCameraX;
+            float ratio = distanceOver / allowedDistanceOverBoundry;
+            delta *= 1 / (boundryGravity * ratio + 1);
+        }
+        else if (destinationCameraX > maxX)
+        {
+            float distanceOver = destinationCameraX - maxX;
+            float ratio = distanceOver / allowedDistanceOverBoundry;
+            delta *= 1 / (boundryGravity * ratio + 1);
+        }
+
+        return delta;
+    }
+
     private IEnumerator SnapToPosition(Transform target)
     {
         currentPosition = target;
 
-        while (Vector3.Distance(transform.position, target.position) > 0.1f)
+        while (Vector3.Distance(transform.position, target.position) > 0.01f)
         {
             transform.position = Vector3.Lerp(transform.position, target.position, 0.1f);
             yield return null;
