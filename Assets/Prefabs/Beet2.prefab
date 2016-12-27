@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f30707cefa56fd9468db8358ac1d4eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeSpan: 10000
+  lifeSpan: 5000
   endColor: {r: 0, g: 1, b: 0.25517225, a: 1}
   selectedColor: {r: 1, g: 0, b: 0, a: 1}
   needs:

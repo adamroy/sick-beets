@@ -73,5 +73,26 @@ public class NurserySettingsPanel : MonoBehaviour, ScreenNavigator.InputConsumer
         return active;
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Menu))
+        {
+            if (active == false)
+            {
+                active = true;
+                StartCoroutine(MovePanel(panelRaisedLocation, true));
+            }
+            else
+            {
+                active = false;
+                StartCoroutine(MovePanel(panelLoweredLocation, false));
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            active = false;
+            StartCoroutine(MovePanel(panelLoweredLocation, false));
+        }
+    }
 
 }

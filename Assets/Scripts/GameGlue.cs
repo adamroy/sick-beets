@@ -10,6 +10,7 @@ public class GameGlue : MonoBehaviour
     public AutoGrid intakeGridRoot;
     public AutoGrid labGridRoot;
     public AutoGrid releaseGrid;
+    public AutoGrid catchGrid;
     public NurserySettingsPanel settingsPanel;
 
     private BeetGenerator generator;
@@ -17,15 +18,20 @@ public class GameGlue : MonoBehaviour
     private Beet selectedBeet;
     private Dictionary<Need, float> needsMet;
 
+    private void Awake()
+    {
+        settingsPanel.OnSettingsChanged += SettingsChanged;
+    }
+
     private void Start()
     {
         needsMet = new Dictionary<Need, float>();
         generator = GetComponent<BeetGenerator>();
         nurseryGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += NurseryGridTouched);
-        intakeGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += IntakeGridTouched);
+        // intakeGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += IntakeGridTouched);
         labGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += LabGridTouched);
         releaseGrid.GetComponent<TouchSensor>().OnUpAsButton += ReleaseGridTouched;
-        settingsPanel.OnSettingsChanged += SettingsChanged;
+        catchGrid.GetComponent<TouchSensor>().OnUpAsButton += CatchGridTouched;
         StartCoroutine(MainCoroutine());
     }
 
@@ -75,6 +81,12 @@ public class GameGlue : MonoBehaviour
                 selectedBeet = container.Beet;
                 selectedBeet.MarkSelected();
             }
+            else
+            {
+                selectedBeet.MarkUnselected();
+                selectedBeet = container.Beet;
+                selectedBeet.MarkSelected();
+            }
         }
     }
 
@@ -108,7 +120,7 @@ public class GameGlue : MonoBehaviour
 
         // If empty and we have a selected beet, place
         // If not empty and no selected beet, select that beet
-        // If not empty and we have a selected beet, nothing
+        // If not empty and we have a selected beet, select new beet
         // Empty and no beet, nothing
         if (container.IsEmpty)
         {
@@ -134,23 +146,39 @@ public class GameGlue : MonoBehaviour
                 selectedBeet = container.Beet;
                 selectedBeet.MarkSelected();
             }
+            else
+            {
+                selectedBeet.MarkUnselected();
+                selectedBeet = container.Beet;
+                selectedBeet.MarkSelected();
+            }
         }
     }
 
     private void ReleaseGridTouched(GameObject grid)
     {
-        print("Here");
         var container = grid.GetComponent<BeetContainer>();
         if (container == null || selectedBeet == null) return;
-        print("Here2");
         if (selectedBeet.IsHealed == false) return;
-        print("Here3");
         if (container.IsEmpty == false) return;
-        print("Here4");
 
         selectedBeet.RemoveFromContainer();
         container.SetBeet(selectedBeet);
+        selectedBeet.MarkUnselected();
+        selectedBeet = null;
         Invoke("ReleaseBeet", 3f);
+    }
+
+    private void CatchGridTouched(GameObject grid)
+    {
+        var container = grid.GetComponent<BeetContainer>();
+        if (container == null) return;
+        if (container.IsEmpty == true) return;
+
+        if (selectedBeet != null)
+            selectedBeet.MarkUnselected();
+        selectedBeet = container.Beet;
+        selectedBeet.MarkSelected();
     }
 
     private void ReleaseBeet()
@@ -159,7 +187,7 @@ public class GameGlue : MonoBehaviour
         if (container.IsEmpty) return;
 
         var beet = container.RemoveBeet();
-        Destroy(beet);
+        Destroy(beet.gameObject);
     }
 
     private void OnApplicationPause(bool pause)

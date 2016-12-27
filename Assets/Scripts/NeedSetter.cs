@@ -8,7 +8,7 @@ public class NeedSetter : MonoBehaviour
 
     public Action<Need, float> OnNeedSet;
 
-	void Start()
+	void Awake()
     {
         slider.OnValueChanged += (Slider s) => { if (OnNeedSet != null) OnNeedSet(need, s.Value * 100); };
     }
