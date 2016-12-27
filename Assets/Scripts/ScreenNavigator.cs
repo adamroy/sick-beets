@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 // Controls navigation between game screens
 // Swipe horizontally to switch screens or use buttons
@@ -7,6 +8,8 @@ using System.Collections;
 [RequireComponent(typeof(Camera))]
 public class ScreenNavigator : MonoBehaviour
 {
+    public static ScreenNavigator Instance { get; private set; }
+
     // Where the camera should stop to be on different screens
     public Transform[] cameraPositions;
     public float distanceToCancelClick;
@@ -16,6 +19,35 @@ public class ScreenNavigator : MonoBehaviour
     private Transform currentPosition;
     private new Camera camera;
     private Coroutine movementCoroutine;
+    private List<InputConsumer> inputConsumers;
+
+    public interface InputConsumer
+    {
+        bool IsActive();
+    }
+
+    private void Awake()
+    {
+        inputConsumers = new List<InputConsumer>();
+        Instance = this;
+    }
+
+    public void AddInputConsumer(InputConsumer ip)
+    {
+        inputConsumers.Add(ip);
+    }
+
+    public void RemoveInputConsumer(InputConsumer ip)
+    {
+        inputConsumers.Remove(ip);
+    }
+
+    private bool CanMove()
+    {
+        foreach (var ip in inputConsumers)
+            if (ip.IsActive()) return false;
+        return true;
+    }
 
     private void Start()
     {
@@ -42,7 +74,7 @@ public class ScreenNavigator : MonoBehaviour
     {
         while(true)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && CanMove())
             {
                 RaycastHit hit;
                 var ray = camera.ScreenPointToRay(Input.mousePosition);
@@ -154,4 +186,7 @@ public class ScreenNavigator : MonoBehaviour
         else
             return currentPosition;
     }
+
+    
+
 }

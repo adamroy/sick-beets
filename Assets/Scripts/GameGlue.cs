@@ -9,18 +9,35 @@ public class GameGlue : MonoBehaviour
     public AutoGrid nurseryGridRoot;
     public AutoGrid intakeGridRoot;
     public AutoGrid labGridRoot;
+    public NurserySettingsPanel settingsPanel;
 
     private BeetGenerator generator;
     private const string timeKey = "GamePauseTime";
     private Beet selectedBeet;
+    private Dictionary<Need, float> needsMet;
 
     private void Start()
     {
+        needsMet = new Dictionary<Need, float>();
         generator = GetComponent<BeetGenerator>();
-        nurseryGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnPressed += NurseryGridTouched);
-        intakeGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnPressed += IntakeGridTouched);
-        labGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnPressed += LabGridTouched);
+        nurseryGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += NurseryGridTouched);
+        intakeGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += IntakeGridTouched);
+        labGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += LabGridTouched);
+        settingsPanel.OnSettingsChanged += SettingsChanged;
         StartCoroutine(MainCoroutine());
+    }
+
+    private void SettingsChanged(Need need, float value)
+    {
+        needsMet[need] = value;
+
+        foreach(var container in nurseryGridRoot.GetAllAttached<BeetContainer>())
+        {
+            if(!container.IsEmpty)
+            {
+                container.Beet.SetNeedsMet(needsMet);
+            }
+        }
     }
 
     private void NurseryGridTouched(GameObject grid)
@@ -39,6 +56,7 @@ public class GameGlue : MonoBehaviour
                 selectedBeet.transform.parent.GetComponent<BeetContainer>().RemoveBeet();
                 selectedBeet.MarkUnselected();
                 container.SetBeet(selectedBeet);
+                selectedBeet.SetNeedsMet(needsMet);
                 selectedBeet = null;
             }
         }
@@ -90,7 +108,6 @@ public class GameGlue : MonoBehaviour
     private void OnApplicationPause(bool pause)
     {
         if (pause) SaveTime();
-        // else LoadTimeAndUpdate();
     }
 
     public void OnApplicationQuit()

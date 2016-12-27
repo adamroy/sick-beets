@@ -60,7 +60,7 @@ public class Beet : MonoBehaviour
             renderer.material.color = Color.Lerp(startColor, endColor, progress);
     }
 
-    private void NeedsMet(Dictionary<Need, float> needsMet)
+    public void SetNeedsMet(Dictionary<Need, float> needsMet)
     {
         float total = 0;
         foreach (var nr in needs)
@@ -72,7 +72,7 @@ public class Beet : MonoBehaviour
             total += score;
         }
         healRate = total / needs.Length;
-        print("Heal Rate: " + healRate);
+        // print("Heal Rate: " + healRate);
     }
 }
 
