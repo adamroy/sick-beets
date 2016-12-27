@@ -10,11 +10,12 @@ public class Beet : MonoBehaviour
     public int lifeSpan;
     public Color endColor;
     public Color selectedColor;
-
     public NeedRange[] needs;
 
-    // Health ranges from 0 - 100
-    // 0 = dead, 100 = cured
+    public bool IsHealed { get { return health == lifeSpan; } }
+
+    // Health ranges from 0 - lifespan
+    // 0 = dead, lifespan = cured
     private int health = 0;
     // Ranges from -1 to +1
     private float healRate;
@@ -28,16 +29,6 @@ public class Beet : MonoBehaviour
         health = Random.Range(10, 40);
         renderer = GetComponentInChildren<Renderer>();
         startColor = renderer.material.color;
-    }
-
-	public bool HandleTouch()
-    {
-        print("Needs");
-        foreach (NeedRange n in needs)
-        {
-            print(n.Need.name + " " + n.Value);
-        }
-        return false;
     }
 
     public void MarkSelected()
@@ -73,6 +64,21 @@ public class Beet : MonoBehaviour
         }
         healRate = total / needs.Length;
         // print("Heal Rate: " + healRate);
+    }
+
+    public void RemoveFromContainer()
+    {
+        healRate = 0;
+        var parent = this.transform.parent;
+        while(parent!=null)
+        {
+            var container = parent.GetComponent<BeetContainer>(); ;
+            if (container != null && container.Beet == this)
+            {
+                container.RemoveBeet();
+                return;
+            }
+        }
     }
 }
 

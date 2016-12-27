@@ -15,7 +15,10 @@ public class BeetContainer : MonoBehaviour
     public void SetBeet(Beet inBeet)
     {
         if (beet != null)
-            throw new System.Exception("We've got a beet here already!");
+        {
+            Debug.LogError("We've got a beet here already!");
+            return;
+        }
 
         beet = inBeet;
         beet.transform.SetParent(this.transform, false);
@@ -29,16 +32,13 @@ public class BeetContainer : MonoBehaviour
             beet.transform.localPosition = Vector3.zero;
             beet.transform.localRotation = Quaternion.identity;
         }
-
-        SendMessage("BeetSet", beet, SendMessageOptions.DontRequireReceiver);
     }
 
     public Beet RemoveBeet()
     {
-        var temp = beet;
         beet.transform.SetParent(null, true);
+        var temp = beet;
         beet = null;
-        SendMessage("BeetRemoved", temp, SendMessageOptions.DontRequireReceiver);
         return temp;
     }
 }

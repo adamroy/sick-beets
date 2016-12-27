@@ -9,6 +9,7 @@ public class GameGlue : MonoBehaviour
     public AutoGrid nurseryGridRoot;
     public AutoGrid intakeGridRoot;
     public AutoGrid labGridRoot;
+    public AutoGrid releaseGrid;
     public NurserySettingsPanel settingsPanel;
 
     private BeetGenerator generator;
@@ -23,6 +24,7 @@ public class GameGlue : MonoBehaviour
         nurseryGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += NurseryGridTouched);
         intakeGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += IntakeGridTouched);
         labGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += LabGridTouched);
+        releaseGrid.GetComponent<TouchSensor>().OnUpAsButton += ReleaseGridTouched;
         settingsPanel.OnSettingsChanged += SettingsChanged;
         StartCoroutine(MainCoroutine());
     }
@@ -53,7 +55,7 @@ public class GameGlue : MonoBehaviour
         {
             if (selectedBeet != null)
             {
-                selectedBeet.transform.parent.GetComponent<BeetContainer>().RemoveBeet();
+                selectedBeet.RemoveFromContainer();
                 selectedBeet.MarkUnselected();
                 container.SetBeet(selectedBeet);
                 selectedBeet.SetNeedsMet(needsMet);
@@ -101,8 +103,63 @@ public class GameGlue : MonoBehaviour
 
     private void LabGridTouched(GameObject grid)
     {
-        // For now same action
-        NurseryGridTouched(grid);
+        var container = grid.GetComponent<BeetContainer>();
+        if (container == null) return;
+
+        // If empty and we have a selected beet, place
+        // If not empty and no selected beet, select that beet
+        // If not empty and we have a selected beet, nothing
+        // Empty and no beet, nothing
+        if (container.IsEmpty)
+        {
+            if (selectedBeet != null)
+            {
+                selectedBeet.RemoveFromContainer();
+                selectedBeet.MarkUnselected();
+                container.SetBeet(selectedBeet);
+                // selectedBeet.SetNeedsMet(needsMet); /**** Same as Nursery action for now except we don't get any needs met ****/
+                selectedBeet = null;
+            }
+        }
+        else
+        {
+            var destinationBeet = container.Beet;
+            if (destinationBeet == selectedBeet)
+            {
+                selectedBeet.MarkUnselected();
+                selectedBeet = null;
+            }
+            else if (selectedBeet == null)
+            {
+                selectedBeet = container.Beet;
+                selectedBeet.MarkSelected();
+            }
+        }
+    }
+
+    private void ReleaseGridTouched(GameObject grid)
+    {
+        print("Here");
+        var container = grid.GetComponent<BeetContainer>();
+        if (container == null || selectedBeet == null) return;
+        print("Here2");
+        if (selectedBeet.IsHealed == false) return;
+        print("Here3");
+        if (container.IsEmpty == false) return;
+        print("Here4");
+
+        selectedBeet.RemoveFromContainer();
+        container.SetBeet(selectedBeet);
+        Invoke("ReleaseBeet", 3f);
+    }
+
+    private void ReleaseBeet()
+    {
+        var container = releaseGrid.GetComponent<BeetContainer>();
+        if (container.IsEmpty) return;
+
+        var beet = container.RemoveBeet();
+        Destroy(beet);
     }
 
     private void OnApplicationPause(bool pause)

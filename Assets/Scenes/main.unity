@@ -140,9 +140,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 257104426}
   - {fileID: 2007092959}
   - {fileID: 393932461}
-  - {fileID: 257104426}
   - {fileID: 1163445351}
   - {fileID: 407722388}
   - {fileID: 603189604}
@@ -1256,7 +1256,7 @@ GameObject:
   - 114: {fileID: 257104428}
   - 114: {fileID: 257104427}
   m_Layer: 0
-  m_Name: Grid (2)
+  m_Name: ReleaseGrid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1275,7 +1275,7 @@ Transform:
   m_Children:
   - {fileID: 2107659728}
   m_Father: {fileID: 8648179}
-  m_RootOrder: 2
+  m_RootOrder: 0
 --- !u!114 &257104427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1310,7 +1310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b9779e9d3cf5fa44b70bcc2a86c66d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridKey: nursery
+  gridKey: release
   gridMargin: 0.5
 --- !u!23 &257104430
 MeshRenderer:
@@ -1322,7 +1322,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 5a4ec49d86c4c594ba62843132a6b2b1, type: 2}
+  - {fileID: 2100000, guid: fe12cef845b4bb748925a9fe43d211a2, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -1959,6 +1959,7 @@ MonoBehaviour:
   nurseryGridRoot: {fileID: 2007092962}
   intakeGridRoot: {fileID: 1640365670}
   labGridRoot: {fileID: 950075764}
+  releaseGrid: {fileID: 257104429}
   settingsPanel: {fileID: 955408784}
 --- !u!1 &368695702
 GameObject:
@@ -2110,7 +2111,7 @@ Transform:
   m_Children:
   - {fileID: 344089519}
   m_Father: {fileID: 8648179}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!114 &393932462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7996,7 +7997,7 @@ Transform:
   m_Children:
   - {fileID: 1621769578}
   m_Father: {fileID: 8648179}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!114 &2007092960
 MonoBehaviour:
   m_ObjectHideFlags: 0
