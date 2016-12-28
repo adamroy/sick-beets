@@ -66,7 +66,7 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightingDataAsset: {fileID: 112000053, guid: ae2bd95546b01dd4a9d9c1263b07e25e,
+  m_LightingDataAsset: {fileID: 112000024, guid: ae2bd95546b01dd4a9d9c1263b07e25e,
     type: 2}
   m_RuntimeCPUUsage: 25
 --- !u!196 &4
@@ -1239,6 +1239,8 @@ MonoBehaviour:
   catchGrid: {fileID: 1440444714}
   labGrid: {fileID: 1175482290}
   settingsPanel: {fileID: 955408784}
+  beetPrefab: {fileID: 11426354, guid: bb51831fa43e40b459448cee4675a215, type: 2}
+  beetLocations: []
 --- !u!1 &393932460
 GameObject:
   m_ObjectHideFlags: 0

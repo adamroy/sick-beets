@@ -13,7 +13,7 @@ public class EventManager : MonoBehaviour
     static private EventManager instance;
     private Dictionary<Event, List<GameObject>> objectMap;
 
-    private void Start()
+    private void Awake()
     {
         if (instance != null)
         {

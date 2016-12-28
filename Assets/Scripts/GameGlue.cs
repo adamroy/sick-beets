@@ -6,7 +6,7 @@ using System.Linq;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
+public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer, JsonModel
 {
     public AutoGrid nurseryGridRoot;
     public AutoGrid labGridRoot;
@@ -14,10 +14,15 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
     public AutoGrid catchGrid;
     public AutoGrid labGrid;
     public NurserySettingsPanel settingsPanel;
+    public Beet beetPrefab;
     
     private const string timeKey = "GamePauseTime";
+    private const string gameModelKey = "GameData";
     private Beet selectedBeet;
     private Dictionary<Need, float> needsMet;
+
+    [SerializeField]
+    private List<BeetContainer> beetLocations;
 
     private void Awake()
     {
@@ -26,15 +31,23 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
 
     private void Start()
     {
+        if (PlayerPrefs.HasKey(gameModelKey))
+        {
+            var data = PlayerPrefs.GetString(gameModelKey);
+            var newData = Convert.FromBase64String(data);
+            var newStream = new MemoryStream(newData);
+            JsonReader reader = new JsonReader(newStream);
+            reader.ReadObject(this);
+        }
+
         ScreenNavigator.Instance.AddInputConsumer(this);
         needsMet = new Dictionary<Need, float>();
         nurseryGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += NurseryGridTouched);
         releaseGrid.GetComponent<TouchSensor>().OnUpAsButton += ReleaseGridTouched;
         catchGrid.GetComponent<TouchSensor>().OnUpAsButton += CatchGridTouched;
         labGrid.GetComponent<TouchSensor>().OnUpAsButton += ToLabGridTouched;
-        StartCoroutine(MainCoroutine());
 
-        SaveGame();
+        StartCoroutine(MainCoroutine());
     }
 
     private void SettingsChanged(Need need, float value)
@@ -173,6 +186,12 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
 
     public void OnApplicationQuit()
     {
+        MemoryStream stream = new MemoryStream();
+        JsonWriter writer = new JsonWriter(stream);
+        writer.WriteObject(this);
+        string data = Convert.ToBase64String(stream.ToArray());
+        PlayerPrefs.SetString(gameModelKey, data);
+
         SaveTime();
     }
 
@@ -182,9 +201,10 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
 
         while (true)
         {
+            yield return null;
+
             int delta = Mathf.RoundToInt(Time.deltaTime * 1000);
             UpdateWorld(delta);
-            yield return null;
         }
     }
 
@@ -219,34 +239,29 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
         return selectedBeet != null;
     }
 
-    private void SaveGame()
+    public void BeforeSerializing()
     {
-        MemoryStream stream = new MemoryStream();
-        StreamWriter writer = new StreamWriter(stream);
+        beetLocations = new List<BeetContainer>();
+        foreach (var container in nurseryGridRoot.GetAllAttached<BeetContainer>())
+            if (container.IsEmpty == false)
+                beetLocations.Add(container);
+    }
 
-        string ourData = "Hello world!";
-        int length = ourData.Length;
-        writer.Write(length.ToString("D10"));
-        writer.Write(ourData);
-        writer.Write("Extra Data");
-        writer.Flush();
+    public void AfterDeserializing()
+    {
+        foreach (var container in this.beetLocations)
+        {
+            var beet = Instantiate(beetPrefab.gameObject).GetComponent<Beet>();
+            container.SetBeet(beet);
+        }
+    }
 
-        var originalData = stream.ToArray();
-        string data = Convert.ToBase64String(originalData);
-
-        var newData = Convert.FromBase64String(data);
-        var newStream = new MemoryStream(newData);
-
-        StreamReader reader = new StreamReader(newStream);
-        print("Read message:");
-        char[] buffer = new char[10];
-        reader.Read(buffer, 0, 10);
-        int myInt = int.Parse(new string(buffer));
-        print(myInt);
-
-        buffer = new char[myInt];
-        reader.Read(buffer, 0, myInt);
-        string theNewMessage = new string(buffer);
-        print(theNewMessage);
+    public JsonModel[] GetChildren()
+    {
+        List<JsonModel> children = new List<JsonModel>();
+        foreach (var container in nurseryGridRoot.GetAllAttached<BeetContainer>())
+            if (container.IsEmpty == false)
+                children.Add(container.Beet);
+        return children.ToArray();
     }
 }

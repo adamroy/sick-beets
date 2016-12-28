@@ -17,15 +17,17 @@ public class Beet : MonoBehaviour, JsonModel
 
     // Health ranges from 0 - lifespan
     // 0 = dead, lifespan = cured
+    [SerializeField]
     private int health = 0;
     // Ranges from -1 to +1
+    [SerializeField]
     private float healRate;
 
     private bool selected = false;
     private Color startColor;
     private new Renderer renderer;
 
-    private void Start()
+    private void Awake()
     {
         health = Random.Range(10, 40);
         renderer = GetComponentInChildren<Renderer>();
@@ -48,7 +50,7 @@ public class Beet : MonoBehaviour, JsonModel
         health += Mathf.RoundToInt(healRate * deltaMillis);
         health = Mathf.Clamp(health, 0, lifeSpan);
         float progress = (float)health / lifeSpan;
-        if (!selected)
+        if (!selected && renderer != null)
             renderer.material.color = Color.Lerp(startColor, endColor, progress);
     }
 
@@ -73,7 +75,7 @@ public class Beet : MonoBehaviour, JsonModel
         var parent = this.transform.parent;
         while(parent!=null)
         {
-            var container = parent.GetComponent<BeetContainer>(); ;
+            var container = parent.GetComponent<BeetContainer>();
             if (container != null && container.Beet == this)
             {
                 container.RemoveBeet();
@@ -82,20 +84,19 @@ public class Beet : MonoBehaviour, JsonModel
         }
     }
 
-    public void Serialize(StreamWriter writer)
+    public void BeforeSerializing()
     {
-        string json = JsonUtility.ToJson(this);
-        writer.Write(json.Length.ToString("D10"));
-        writer.Write(json);
+        // No op
     }
 
-    public void Deserialize(StreamReader reader)
+    public JsonModel[] GetChildren()
     {
-        char[] buff = new char[10];
-        reader.Read(buff, 0, 10);
-        int length = int.Parse(new string(buff));
+        return null;
+    }
 
-        throw new NotImplementedException();
+    public void AfterDeserializing()
+    {
+        // No op
     }
 }
 
