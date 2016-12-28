@@ -6,56 +6,39 @@ using System.Linq;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer, JsonModel
+[RequireComponent(typeof(GameModel))]
+public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
 {
-    public AutoGrid nurseryGridRoot;
-    public AutoGrid labGridRoot;
-    public AutoGrid releaseGrid;
-    public AutoGrid catchGrid;
-    public AutoGrid labGrid;
-    public NurserySettingsPanel settingsPanel;
-    public Beet beetPrefab;
     
-    private const string timeKey = "GamePauseTime";
-    private const string gameModelKey = "GameData";
+    
     private Beet selectedBeet;
     private Dictionary<Need, float> needsMet;
+    private GameModel model;
 
-    [HideInInspector]
-    [SerializeField]
-    private List<BeetContainer> beetLocations;
-
+    
     private void Awake()
     {
-        settingsPanel.OnSettingsChanged += SettingsChanged;
+        model = GetComponent<GameModel>();
+        model.settingsPanel.OnSettingsChanged += SettingsChanged;
     }
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey(gameModelKey))
-        {
-            var data = PlayerPrefs.GetString(gameModelKey);
-            var newData = Convert.FromBase64String(data);
-            var newStream = new MemoryStream(newData);
-            JsonReader reader = new JsonReader(newStream);
-            reader.ReadObject(this);
-        }
-
         ScreenNavigator.Instance.AddInputConsumer(this);
         needsMet = new Dictionary<Need, float>();
-        nurseryGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += NurseryGridTouched);
-        releaseGrid.GetComponent<TouchSensor>().OnUpAsButton += ReleaseGridTouched;
-        catchGrid.GetComponent<TouchSensor>().OnUpAsButton += CatchGridTouched;
-        labGrid.GetComponent<TouchSensor>().OnUpAsButton += ToLabGridTouched;
+        model.nurseryGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += NurseryGridTouched);
+        model.releaseGrid.GetComponent<TouchSensor>().OnUpAsButton += ReleaseGridTouched;
+        model.catchGrid.GetComponent<TouchSensor>().OnUpAsButton += CatchGridTouched;
+        model.labGrid.GetComponent<TouchSensor>().OnUpAsButton += ToLabGridTouched;
 
         StartCoroutine(MainCoroutine());
     }
 
-    private void SettingsChanged(Need need, float value)
+    private void SettingsChanged(Need need = null, float value = 0.5f)
     {
-        needsMet[need] = value;
+        if (need != null) needsMet[need] = value;
 
-        foreach(var container in nurseryGridRoot.GetAllAttached<BeetContainer>())
+        foreach(var container in model.nurseryGridRoot.GetAllAttached<BeetContainer>())
         {
             if(!container.IsEmpty)
             {
@@ -145,7 +128,7 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer, JsonModel
 
     private void ReleaseBeet()
     {
-        var container = releaseGrid.GetComponent<BeetContainer>();
+        var container = model.releaseGrid.GetComponent<BeetContainer>();
         if (container.IsEmpty) return;
 
         var beet = container.RemoveBeet();
@@ -159,7 +142,7 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer, JsonModel
         if (container.IsEmpty == false) return;
         if (selectedBeet == null) return;
 
-        var open = labGridRoot.GetAllAttached<BeetContainer>().FirstOrDefault(p => p.IsEmpty);
+        var open = model.labGridRoot.GetAllAttached<BeetContainer>().FirstOrDefault(p => p.IsEmpty);
         if (open == null) return;
 
         selectedBeet.RemoveFromContainer();
@@ -172,42 +155,29 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer, JsonModel
 
     private void MoveToLab()
     {
-        var open = labGridRoot.GetAllAttached<BeetContainer>().FirstOrDefault(p => p.IsEmpty);
+        var open = model.labGridRoot.GetAllAttached<BeetContainer>().FirstOrDefault(p => p.IsEmpty);
         if (open == null) return;
 
-        var beet = labGrid.GetComponent<BeetContainer>().Beet;
+        var beet = model.labGrid.GetComponent<BeetContainer>().Beet;
         beet.RemoveFromContainer();
         open.SetBeet(beet);
     }
 
     private void OnApplicationPause(bool pause)
     {
-        if (pause)
-        {
-            MemoryStream stream = new MemoryStream();
-            JsonWriter writer = new JsonWriter(stream);
-            writer.WriteObject(this);
-            string data = Convert.ToBase64String(stream.ToArray());
-            PlayerPrefs.SetString(gameModelKey, data);
-
-            SaveTime();
-        }
+        if (pause) model.SaveGame();
     }
 
     public void OnApplicationQuit()
     {
-        MemoryStream stream = new MemoryStream();
-        JsonWriter writer = new JsonWriter(stream);
-        writer.WriteObject(this);
-        string data = Convert.ToBase64String(stream.ToArray());
-        PlayerPrefs.SetString(gameModelKey, data);
-
-        SaveTime();
+        model.SaveGame();
     }
 
     private IEnumerator MainCoroutine()
     {
-        LoadTimeAndUpdate();
+        model.LoadGame();
+        SettingsChanged();
+        UpdateWorld(model.ElapsedTimeSinceLoad);
 
         while (true)
         {
@@ -218,60 +188,13 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer, JsonModel
         }
     }
 
-    private void SaveTime()
+    private void UpdateWorld(float deltaTime)
     {
-        // Save time in seconds, though we work with millis out here
-        PlayerPrefs.SetInt(timeKey, CurrentSeconds());
-        PlayerPrefs.Save();
-    }
-
-    private void LoadTimeAndUpdate()
-    {
-        // Save time in seconds, though we work with millis out here
-        int previousTime = PlayerPrefs.GetInt(timeKey, CurrentSeconds());
-        int delta = CurrentSeconds() - previousTime;
-        UpdateWorld(delta * 1000); // Expects milliseconds
-    }
-
-    private void UpdateWorld(int deltaMillis)
-    {
-        EventManager.Broadcast(EventManager.Event.UpdateSimulation, deltaMillis);
-    }
-    
-    // Seconds since UTC epoch
-    private int CurrentSeconds()
-    {
-        return (int)((DateTime.UtcNow.Ticks - 621355968000000000) / TimeSpan.TicksPerSecond);
+        EventManager.Broadcast(EventManager.Event.UpdateSimulation, deltaTime);
     }
 
     public bool IsActive()
     {
         return selectedBeet != null;
-    }
-
-    public void BeforeSerializing()
-    {
-        beetLocations = new List<BeetContainer>();
-        foreach (var container in nurseryGridRoot.GetAllAttached<BeetContainer>())
-            if (container.IsEmpty == false)
-                beetLocations.Add(container);
-    }
-
-    public void AfterDeserializing()
-    {
-        foreach (var container in this.beetLocations)
-        {
-            var beet = Instantiate(beetPrefab.gameObject).GetComponent<Beet>();
-            container.SetBeet(beet);
-        }
-    }
-
-    public JsonModel[] GetChildren()
-    {
-        List<JsonModel> children = new List<JsonModel>();
-        foreach (var container in nurseryGridRoot.GetAllAttached<BeetContainer>())
-            if (container.IsEmpty == false)
-                children.Add(container.Beet);
-        return children.ToArray();
     }
 }

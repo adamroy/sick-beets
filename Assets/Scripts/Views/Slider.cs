@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 
+[RequireComponent(typeof(SliderModel))]
 public class Slider : MonoBehaviour
 {
     public Action<Slider> OnValueChanged;
@@ -9,11 +10,11 @@ public class Slider : MonoBehaviour
     {
         get
         {
-            return value;
+            return model.value;
         }
         private set
         {
-            this.value = value;
+            model.value = value;
             sliderGameObject.transform.position = Vector3.Lerp(lowEndTransform.position, highEndTransform.position, value);
             if (OnValueChanged != null) OnValueChanged(this);
         }
@@ -23,18 +24,21 @@ public class Slider : MonoBehaviour
     public TouchSensor sliderSensor;
     public GameObject sliderGameObject;
     public new Camera camera;
-    [Range(0f,1f)]
-    public float startingValue;
-
-    private float value;
+    
     private bool sliderHeld;
+    private SliderModel model;
+
+    private void Awake()
+    {
+        model = GetComponent<SliderModel>();
+    }
 
     private void Start()
     {
         sliderHeld = false;
         sliderSensor.OnDown += (go) => sliderHeld = true;
         sliderSensor.OnUp += (go) => sliderHeld = false;
-        Value = startingValue;
+        Value = Value;
     }
 
     private void Update()

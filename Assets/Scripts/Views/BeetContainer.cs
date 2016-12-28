@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System;
 
 // Responsible for positioning and parenting a beet
+[RequireComponent(typeof(BeetContainer))]
 public class BeetContainer : MonoBehaviour
 {
     // Place to put the beet at
     public Transform targetTransform;
 
-    public Beet Beet { get { return beet; } }
-    public bool IsEmpty { get { return beet == null; } }
+    public Beet Beet { get { return model.beetModel.GetComponent<Beet>(); } }
+    public bool IsEmpty { get { return Beet == null; } }
 
-    private Beet beet;
+    private BeetContainerModel model;
     
     public void SetBeet(Beet inBeet)
     {
-        if (beet != null)
+        if (model.beet != null)
         {
             Debug.LogError("We've got a beet here already!");
             return;

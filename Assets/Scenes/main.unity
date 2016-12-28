@@ -1172,6 +1172,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 368646186}
+  - 114: {fileID: 368646188}
   - 114: {fileID: 368646189}
   - 114: {fileID: 368646185}
   - 114: {fileID: 368646187}
@@ -1222,6 +1223,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91256bf4c810f55449251b6557b957d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &368646188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 368646184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c5186f8f9cd6db479267bc28e274fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nurseryGridRoot: {fileID: 2007092962}
+  labGridRoot: {fileID: 1583254771}
+  releaseGrid: {fileID: 257104429}
+  catchGrid: {fileID: 1440444714}
+  labGrid: {fileID: 1175482290}
+  settingsPanel: {fileID: 955408784}
+  settingsPanelModel: {fileID: 955408785}
+  time: 0
+  savedBeets: []
 --- !u!114 &368646189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1233,14 +1254,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3a814e775f68124ea4d14ef07952213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nurseryGridRoot: {fileID: 2007092962}
-  labGridRoot: {fileID: 1583254771}
-  releaseGrid: {fileID: 257104429}
-  catchGrid: {fileID: 1440444714}
-  labGrid: {fileID: 1175482290}
-  settingsPanel: {fileID: 955408784}
-  beetPrefab: {fileID: 11426354, guid: bb51831fa43e40b459448cee4675a215, type: 2}
-  beetLocations: []
 --- !u!1 &393932460
 GameObject:
   m_ObjectHideFlags: 0
@@ -1816,6 +1829,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 955408783}
+  - 114: {fileID: 955408785}
   - 114: {fileID: 955408784}
   m_Layer: 8
   m_Name: NurserySettingsPanel
@@ -1860,6 +1874,20 @@ MonoBehaviour:
   settings:
   - {fileID: 1156285451}
   - {fileID: 983900945}
+--- !u!114 &955408785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 955408782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f39e8bb8e1ae364458d3f5e85390f931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sliders:
+  - {fileID: 1156285452}
+  - {fileID: 983900947}
 --- !u!1 &983900943
 GameObject:
   m_ObjectHideFlags: 0
@@ -1868,6 +1896,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 983900944}
+  - 114: {fileID: 983900947}
   - 114: {fileID: 983900946}
   - 114: {fileID: 983900945}
   m_Layer: 8
@@ -1922,7 +1951,18 @@ MonoBehaviour:
   sliderSensor: {fileID: 296244001}
   sliderGameObject: {fileID: 296243999}
   camera: {fileID: 1859154007}
-  startingValue: 0.5
+--- !u!114 &983900947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 983900943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b406992726d14ef4f9516cb7caec30db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 0.5
 --- !u!1 &984371217
 GameObject:
   m_ObjectHideFlags: 0
@@ -2190,6 +2230,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1156285449}
+  - 114: {fileID: 1156285452}
   - 114: {fileID: 1156285450}
   - 114: {fileID: 1156285451}
   m_Layer: 8
@@ -2231,7 +2272,6 @@ MonoBehaviour:
   sliderSensor: {fileID: 1788744951}
   sliderGameObject: {fileID: 1788744949}
   camera: {fileID: 1859154007}
-  startingValue: 0.5
 --- !u!114 &1156285451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2245,6 +2285,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   need: {fileID: 11400000, guid: 2113fdb19a4d93c4db1f5e1164c62c91, type: 2}
   slider: {fileID: 1156285450}
+--- !u!114 &1156285452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1156285448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b406992726d14ef4f9516cb7caec30db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 0.5
 --- !u!1 &1163445350
 GameObject:
   m_ObjectHideFlags: 0

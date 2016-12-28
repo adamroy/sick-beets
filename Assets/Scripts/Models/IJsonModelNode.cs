@@ -1,24 +1,31 @@
 ﻿using System;
 using UnityEngine;
 using System.IO;
+using System.Collections.Generic;
 
-public interface JsonModel
+public interface IJsonModelNode
 {
     // Prepare data to be serialized
+    // Save things that will let you instantiate any children you need to
     void BeforeSerializing();
 
     // Use data to set up object and create children
+    // Create children from data saved in BeforeSerializing(), in same order
     void AfterDeserializing();
 
     // Get all children that need to be serialized/deserialized
-    JsonModel[] GetChildren();
+    // Return null if this is a leaf node
+    // Important! Children must brought up in the same order before serialization and after deserialization
+    // This is because that order is saved in the Json string and needs to be maintained for proper deserialization
+    IEnumerable<IJsonModelNode> GetChildren();
 }
 
 public class JsonWriter : StreamWriter
 {
     public JsonWriter(MemoryStream s) : base(s) { }
 
-    public void WriteObject(JsonModel o)
+    // Writes this object and all its children recursively to the stream
+    public void WriteObject(IJsonModelNode o)
     {
         o.BeforeSerializing();
         string json = JsonUtility.ToJson(o);
@@ -50,7 +57,8 @@ public class JsonReader : StreamReader
         buff = new char[10];
     }
 
-    public void ReadObject(JsonModel o)
+    // Writes this object and all its children recursively to the stream
+    public void ReadObject(IJsonModelNode o)
     {
         Read(buff, 0, 10);
         int length = int.Parse(new string(buff));

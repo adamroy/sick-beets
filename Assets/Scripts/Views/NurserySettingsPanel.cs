@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+[RequireComponent(typeof(NurserySettingsPanelModel))]
 public class NurserySettingsPanel : MonoBehaviour, ScreenNavigator.InputConsumer
 {
     public TouchSensor raiseTouchSensor, lowerTouchSensor;
@@ -27,9 +28,11 @@ public class NurserySettingsPanel : MonoBehaviour, ScreenNavigator.InputConsumer
     }
 
     private bool active;
+    private NurserySettingsPanelModel model;
 
     private void Awake()
     {
+        model = GetComponent<NurserySettingsPanelModel>();
         active = false;
         raiseTouchSensor.OnUpAsButton += OnSensorTouched;
         lowerTouchSensor.OnUpAsButton += OnSensorTouched;   
