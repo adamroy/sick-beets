@@ -64,22 +64,11 @@ public class GameModel : MonoBehaviour, IJsonModelNode
     public void BeforeSerializing()
     {
         time = CurrentSeconds();
-
-        savedBeets = new List<SavedBeet>();
-        foreach (var cnt in nurseryGridRoot.GetAllAttached<BeetContainer>())
-            if (cnt.IsEmpty == false)
-                savedBeets.Add(new SavedBeet { container = cnt, prefab = cnt.Beet.prefab });
     }
 
     public void AfterDeserializing()
     {
         ElapsedTimeSinceLoad = CurrentSeconds() - time;
-
-        foreach (var savedBeet in this.savedBeets)
-        {
-            var beet = Instantiate(savedBeet.prefab).GetComponent<Beet>();
-            savedBeet.container.SetBeet(beet);
-        }
     }
 
     IEnumerable<IJsonModelNode> IJsonModelNode.GetChildren()

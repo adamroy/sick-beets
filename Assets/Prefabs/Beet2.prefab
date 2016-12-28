@@ -25,8 +25,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 448370}
-  - 114: {fileID: 11435230}
+  - 114: {fileID: 11486268}
   - 114: {fileID: 11426354}
+  - 114: {fileID: 11435230}
   m_Layer: 0
   m_Name: Beet2
   m_TagString: Untagged
@@ -105,16 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f30707cefa56fd9468db8358ac1d4eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 134150}
-  lifeSpan: 5000
-  endColor: {r: 0, g: 1, b: 0.25517225, a: 1}
-  selectedColor: {r: 1, g: 0, b: 0, a: 1}
-  needs:
-  - Need: {fileID: 11400000, guid: 7927c36b3e5b7864ea178e3668210a59, type: 2}
-    min: 20
-    max: 30
-  health: 0
-  healRate: 0
 --- !u!114 &11435230
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -127,6 +118,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   subscribedEvents: 0000000001000000
+--- !u!114 &11486268
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 134150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdac9ef76a806764a90335c84739e387, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 134150}
+  lifeSpan: 10000
+  endColor: {r: 0, g: 1, b: 0.42068958, a: 1}
+  selectedColor: {r: 1, g: 0, b: 0, a: 1}
+  needs:
+  - Need: {fileID: 11400000, guid: 7927c36b3e5b7864ea178e3668210a59, type: 2}
+    min: 0.2
+    max: 0.3
+  health: 0
+  healRate: 0.23628476
+  startColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

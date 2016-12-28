@@ -10,37 +10,50 @@ public class BeetContainer : MonoBehaviour
     public Transform targetTransform;
 
     public Beet Beet { get { return model.beetModel.GetComponent<Beet>(); } }
-    public bool IsEmpty { get { return Beet == null; } }
+    public bool IsEmpty { get { return model == null || model.beetModel == null || Beet == null; } }
 
     private BeetContainerModel model;
+
+    private void Awake()
+    {
+        model = GetComponent<BeetContainerModel>();
+    }
+
+    private void Start()
+    {
+        if(model.beetModel != null)
+        {
+            SetBeet(model.beetModel.GetComponent<Beet>());
+        }
+    }
     
     public void SetBeet(Beet inBeet)
     {
-        if (model.beet != null)
+        if (model.beetModel != null)
         {
             Debug.LogError("We've got a beet here already!");
             return;
         }
 
-        beet = inBeet;
-        beet.transform.SetParent(this.transform, false);
+        model.beetModel = inBeet.GetComponent<BeetModel>();
+        inBeet.transform.SetParent(this.transform, false);
         if (targetTransform != null)
         {
-            beet.transform.position = targetTransform.position;
-            beet.transform.rotation = targetTransform.rotation;
+            inBeet.transform.position = targetTransform.position;
+            inBeet.transform.rotation = targetTransform.rotation;
         }
         else
         {
-            beet.transform.localPosition = Vector3.zero;
-            beet.transform.localRotation = Quaternion.identity;
+            inBeet.transform.localPosition = Vector3.zero;
+            inBeet.transform.localRotation = Quaternion.identity;
         }
     }
 
     public Beet RemoveBeet()
     {
-        beet.transform.SetParent(null, true);
-        var temp = beet;
-        beet = null;
-        return temp;
+        model.beetModel.transform.SetParent(null, true);
+        var temp = model.beetModel;
+        model.beetModel = null;
+        return temp.GetComponent<Beet>();
     }
 }

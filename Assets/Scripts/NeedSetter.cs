@@ -10,6 +10,6 @@ public class NeedSetter : MonoBehaviour
 
 	void Awake()
     {
-        slider.OnValueChanged += (Slider s) => { if (OnNeedSet != null) OnNeedSet(need, s.Value * 100); };
+        slider.OnValueChanged += (Slider s) => { if (OnNeedSet != null) OnNeedSet(need, s.Value); };
     }
 }
