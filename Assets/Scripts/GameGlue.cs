@@ -21,6 +21,7 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer, JsonModel
     private Beet selectedBeet;
     private Dictionary<Need, float> needsMet;
 
+    [HideInInspector]
     [SerializeField]
     private List<BeetContainer> beetLocations;
 
@@ -181,7 +182,16 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer, JsonModel
 
     private void OnApplicationPause(bool pause)
     {
-        if (pause) SaveTime();
+        if (pause)
+        {
+            MemoryStream stream = new MemoryStream();
+            JsonWriter writer = new JsonWriter(stream);
+            writer.WriteObject(this);
+            string data = Convert.ToBase64String(stream.ToArray());
+            PlayerPrefs.SetString(gameModelKey, data);
+
+            SaveTime();
+        }
     }
 
     public void OnApplicationQuit()
