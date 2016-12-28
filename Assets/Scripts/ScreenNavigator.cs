@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -99,7 +100,7 @@ public class ScreenNavigator : MonoBehaviour
                         float cameraWorldDeltaX =  originalCameraWorldX - camera.transform.position.x;
                         if (Mathf.Abs(cameraWorldDeltaX) > distanceToCancelClick && hit.collider.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast"))
                         {
-                            // Moving layer to IgnoreRaycast hopefully will cancel OnMouseUpAsButton()
+                            // Moving layer to IgnoreRaycast cancels OnMouseUpAsButton()
                             hit.collider.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
                         }
 
@@ -186,7 +187,4 @@ public class ScreenNavigator : MonoBehaviour
         else
             return currentPosition;
     }
-
-    
-
 }

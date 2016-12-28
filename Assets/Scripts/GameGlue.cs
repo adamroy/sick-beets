@@ -2,18 +2,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
-[RequireComponent(typeof(BeetGenerator))]
-public class GameGlue : MonoBehaviour
+public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
 {
     public AutoGrid nurseryGridRoot;
-    public AutoGrid intakeGridRoot;
     public AutoGrid labGridRoot;
     public AutoGrid releaseGrid;
     public AutoGrid catchGrid;
+    public AutoGrid labGrid;
     public NurserySettingsPanel settingsPanel;
-
-    private BeetGenerator generator;
+    
     private const string timeKey = "GamePauseTime";
     private Beet selectedBeet;
     private Dictionary<Need, float> needsMet;
@@ -25,14 +26,15 @@ public class GameGlue : MonoBehaviour
 
     private void Start()
     {
+        ScreenNavigator.Instance.AddInputConsumer(this);
         needsMet = new Dictionary<Need, float>();
-        generator = GetComponent<BeetGenerator>();
         nurseryGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += NurseryGridTouched);
-        // intakeGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += IntakeGridTouched);
-        labGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += LabGridTouched);
         releaseGrid.GetComponent<TouchSensor>().OnUpAsButton += ReleaseGridTouched;
         catchGrid.GetComponent<TouchSensor>().OnUpAsButton += CatchGridTouched;
+        labGrid.GetComponent<TouchSensor>().OnUpAsButton += ToLabGridTouched;
         StartCoroutine(MainCoroutine());
+
+        SaveGame();
     }
 
     private void SettingsChanged(Need need, float value)
@@ -89,72 +91,7 @@ public class GameGlue : MonoBehaviour
             }
         }
     }
-
-    private void IntakeGridTouched(GameObject grid)
-    {
-        var beetContainer = grid.GetComponent<BeetContainer>();
-        if (beetContainer == null) return;
-        var beet = beetContainer.Beet;
-        
-        // If not empty select that beet
-        // If empty or we re-select beet, unselect
-        if ((selectedBeet == beet && selectedBeet != null) || (beet == null && selectedBeet != null))
-        {
-            selectedBeet.MarkUnselected();
-            selectedBeet = null;
-            return;
-        }
-        else if(beet != null)
-        {
-            if (selectedBeet != null)
-                selectedBeet.MarkUnselected();
-            beet.MarkSelected();
-            selectedBeet = beet;
-        }
-    }
-
-    private void LabGridTouched(GameObject grid)
-    {
-        var container = grid.GetComponent<BeetContainer>();
-        if (container == null) return;
-
-        // If empty and we have a selected beet, place
-        // If not empty and no selected beet, select that beet
-        // If not empty and we have a selected beet, select new beet
-        // Empty and no beet, nothing
-        if (container.IsEmpty)
-        {
-            if (selectedBeet != null)
-            {
-                selectedBeet.RemoveFromContainer();
-                selectedBeet.MarkUnselected();
-                container.SetBeet(selectedBeet);
-                // selectedBeet.SetNeedsMet(needsMet); /**** Same as Nursery action for now except we don't get any needs met ****/
-                selectedBeet = null;
-            }
-        }
-        else
-        {
-            var destinationBeet = container.Beet;
-            if (destinationBeet == selectedBeet)
-            {
-                selectedBeet.MarkUnselected();
-                selectedBeet = null;
-            }
-            else if (selectedBeet == null)
-            {
-                selectedBeet = container.Beet;
-                selectedBeet.MarkSelected();
-            }
-            else
-            {
-                selectedBeet.MarkUnselected();
-                selectedBeet = container.Beet;
-                selectedBeet.MarkSelected();
-            }
-        }
-    }
-
+    
     private void ReleaseGridTouched(GameObject grid)
     {
         var container = grid.GetComponent<BeetContainer>();
@@ -166,7 +103,7 @@ public class GameGlue : MonoBehaviour
         container.SetBeet(selectedBeet);
         selectedBeet.MarkUnselected();
         selectedBeet = null;
-        Invoke("ReleaseBeet", 3f);
+        Invoke("ReleaseBeet", 1f);
     }
 
     private void CatchGridTouched(GameObject grid)
@@ -176,7 +113,18 @@ public class GameGlue : MonoBehaviour
         if (container.IsEmpty == true) return;
 
         if (selectedBeet != null)
-            selectedBeet.MarkUnselected();
+        {
+            if (selectedBeet == container.Beet)
+            {
+                selectedBeet.MarkUnselected();
+                selectedBeet = null;
+                return;
+            }
+            else
+            {
+                selectedBeet.MarkUnselected();
+            }
+        }
         selectedBeet = container.Beet;
         selectedBeet.MarkSelected();
     }
@@ -188,6 +136,34 @@ public class GameGlue : MonoBehaviour
 
         var beet = container.RemoveBeet();
         Destroy(beet.gameObject);
+    }
+
+    private void ToLabGridTouched(GameObject grid)
+    {
+        var container = grid.GetComponent<BeetContainer>();
+        if (container == null) return;
+        if (container.IsEmpty == false) return;
+        if (selectedBeet == null) return;
+
+        var open = labGridRoot.GetAllAttached<BeetContainer>().FirstOrDefault(p => p.IsEmpty);
+        if (open == null) return;
+
+        selectedBeet.RemoveFromContainer();
+        selectedBeet.MarkUnselected();
+        container.SetBeet(selectedBeet);
+        selectedBeet = null;
+
+        Invoke("MoveToLab", 1f);
+    }
+
+    private void MoveToLab()
+    {
+        var open = labGridRoot.GetAllAttached<BeetContainer>().FirstOrDefault(p => p.IsEmpty);
+        if (open == null) return;
+
+        var beet = labGrid.GetComponent<BeetContainer>().Beet;
+        beet.RemoveFromContainer();
+        open.SetBeet(beet);
     }
 
     private void OnApplicationPause(bool pause)
@@ -236,5 +212,41 @@ public class GameGlue : MonoBehaviour
     private int CurrentSeconds()
     {
         return (int)((DateTime.UtcNow.Ticks - 621355968000000000) / TimeSpan.TicksPerSecond);
+    }
+
+    public bool IsActive()
+    {
+        return selectedBeet != null;
+    }
+
+    private void SaveGame()
+    {
+        MemoryStream stream = new MemoryStream();
+        StreamWriter writer = new StreamWriter(stream);
+
+        string ourData = "Hello world!";
+        int length = ourData.Length;
+        writer.Write(length.ToString("D10"));
+        writer.Write(ourData);
+        writer.Write("Extra Data");
+        writer.Flush();
+
+        var originalData = stream.ToArray();
+        string data = Convert.ToBase64String(originalData);
+
+        var newData = Convert.FromBase64String(data);
+        var newStream = new MemoryStream(newData);
+
+        StreamReader reader = new StreamReader(newStream);
+        print("Read message:");
+        char[] buffer = new char[10];
+        reader.Read(buffer, 0, 10);
+        int myInt = int.Parse(new string(buffer));
+        print(myInt);
+
+        buffer = new char[myInt];
+        reader.Read(buffer, 0, myInt);
+        string theNewMessage = new string(buffer);
+        print(theNewMessage);
     }
 }

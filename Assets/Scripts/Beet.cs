@@ -2,9 +2,10 @@
 using System;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using System.IO;
 
 [RequireComponent(typeof(EventSubscriber))]
-public class Beet : MonoBehaviour
+public class Beet : MonoBehaviour, JsonModel
 {
     // With needs met perfectly this is how long this beet takes to heal (in ms)
     public int lifeSpan;
@@ -79,6 +80,22 @@ public class Beet : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public void Serialize(StreamWriter writer)
+    {
+        string json = JsonUtility.ToJson(this);
+        writer.Write(json.Length.ToString("D10"));
+        writer.Write(json);
+    }
+
+    public void Deserialize(StreamReader reader)
+    {
+        char[] buff = new char[10];
+        reader.Read(buff, 0, 10);
+        int length = int.Parse(new string(buff));
+
+        throw new NotImplementedException();
     }
 }
 
