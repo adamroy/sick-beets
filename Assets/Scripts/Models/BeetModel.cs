@@ -14,11 +14,11 @@ public class BeetModel : MonoBehaviour, IJsonModelNode
     // Health ranges from 0 - 1
     // 0 = dead, 1 = cured
     [HideInInspector]
-    public float health = 0;
+    public float health = Random.Range(0.1f, 0.5f);
 
     // Ranges from -1 to +1
     [HideInInspector]
-    public float healRate = Random.Range(0.1f, 1f / 0.5f);
+    public float healRate;
     
     [HideInInspector]
     public Color startColor;

@@ -19,13 +19,13 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
     private void Awake()
     {
         model = GetComponent<GameModel>();
+        needsMet = new Dictionary<Need, float>();
         model.settingsPanel.OnSettingsChanged += SettingsChanged;
     }
 
     private void Start()
     {
         ScreenNavigator.Instance.AddInputConsumer(this);
-        needsMet = new Dictionary<Need, float>();
         model.nurseryGridRoot.GetAllAttached<TouchSensor>().ForEach(t => t.OnUpAsButton += NurseryGridTouched);
         model.releaseGrid.GetComponent<TouchSensor>().OnUpAsButton += ReleaseGridTouched;
         model.catchGrid.GetComponent<TouchSensor>().OnUpAsButton += CatchGridTouched;
@@ -176,15 +176,14 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
     private IEnumerator MainCoroutine()
     {
         model.LoadGame();
-        SettingsChanged();
-        UpdateWorld(model.ElapsedTimeSinceLoad);
+        UpdateWorld(model.ElapsedMillisSinceLoad);
 
         while (true)
         {
-            yield return null;
-
             int delta = Mathf.RoundToInt(Time.deltaTime * 1000);
             UpdateWorld(delta);
+
+            yield return null;
         }
     }
 

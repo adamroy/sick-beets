@@ -57,7 +57,7 @@ public class JsonReader : StreamReader
         buff = new char[10];
     }
 
-    // Writes this object and all its children recursively to the stream
+    // Reads this object and all its children recursively from the stream
     public void ReadObject(IJsonModelNode o)
     {
         Read(buff, 0, 10);

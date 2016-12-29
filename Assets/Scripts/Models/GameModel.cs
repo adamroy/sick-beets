@@ -6,10 +6,9 @@ using System.Linq;
 
 public class GameModel : MonoBehaviour, IJsonModelNode
 {
-    private const string timeKey = "GamePauseTime";
     private const string gameModelKey = "GameData";
 
-    public float ElapsedTimeSinceLoad { get; private set; }
+    public float ElapsedMillisSinceLoad { get; private set; }
 
     public AutoGrid nurseryGridRoot;
     public AutoGrid labGridRoot;
@@ -21,7 +20,7 @@ public class GameModel : MonoBehaviour, IJsonModelNode
 
     [HideInInspector]
     [SerializeField]
-    private float time;
+    private long time;
 
     [HideInInspector]
     [SerializeField]
@@ -56,9 +55,9 @@ public class GameModel : MonoBehaviour, IJsonModelNode
     }
 
     // Seconds since UTC epoch
-    private float CurrentSeconds()
+    private long CurrentSeconds()
     {
-        return (float)((DateTime.UtcNow.Ticks - 621355968000000000) / TimeSpan.TicksPerSecond);
+        return ((DateTime.UtcNow.Ticks - 621355968000000000) / TimeSpan.TicksPerSecond);
     }
 
     public void BeforeSerializing()
@@ -68,7 +67,8 @@ public class GameModel : MonoBehaviour, IJsonModelNode
 
     public void AfterDeserializing()
     {
-        ElapsedTimeSinceLoad = CurrentSeconds() - time;
+        var elapsedSeconds = CurrentSeconds() - time;
+        ElapsedMillisSinceLoad = Convert.ToSingle(elapsedSeconds * 1000);
     }
 
     IEnumerable<IJsonModelNode> IJsonModelNode.GetChildren()

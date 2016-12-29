@@ -29,7 +29,7 @@ public class BeetContainer : MonoBehaviour
     
     public void SetBeet(Beet inBeet)
     {
-        if (model.beetModel != null)
+        if (model.beetModel != null && model.beetModel != inBeet.GetComponent<BeetModel>())
         {
             Debug.LogError("We've got a beet here already!");
             return;

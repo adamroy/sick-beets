@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
+using UnityEditor;
 
 [RequireComponent(typeof(EventSubscriber), typeof(BeetModel))]
 public class Beet : MonoBehaviour
 {
-    public bool IsHealed { get { return Mathf.Approximately(model.health, model.lifeSpan); } }
+    public bool IsHealed { get { return Mathf.Approximately(model.health, 1f); } }
 
     private bool selected = false;    
     private new Renderer renderer;
@@ -32,6 +33,8 @@ public class Beet : MonoBehaviour
 
     private void UpdateSimulation(float deltaMillis)
     {
+        //print("Update: " + deltaMillis + "ms");
+        //print("Heal rate: " + model.healRate);
         model.health += (model.healRate * deltaMillis) / model.lifeSpan;
         model.health = Mathf.Clamp01(model.health);
         float progress = model.health;
@@ -51,7 +54,7 @@ public class Beet : MonoBehaviour
             total += score;
         }
         model.healRate = total / model.needs.Length;
-        // print("Heal Rate: " + healRate);
+        // print("Heal Rate: " + model.healRate);
     }
 
     public void RemoveFromContainer()
