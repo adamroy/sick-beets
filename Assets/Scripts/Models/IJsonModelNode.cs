@@ -78,5 +78,26 @@ public class JsonReader : StreamReader
     }
 }
 
+public static class JsonSavingUtility
+{
+    public static void Save(string key, IJsonModelNode root)
+    {
+        MemoryStream stream = new MemoryStream();
+        JsonWriter writer = new JsonWriter(stream);
+        writer.WriteObject(root);
+        string data = Convert.ToBase64String(stream.ToArray());
+        PlayerPrefs.SetString(key, data);
+    }
 
-
+    public static void Load(string key, IJsonModelNode root)
+    {
+        if (PlayerPrefs.HasKey(key))
+        {
+            var dataString = PlayerPrefs.GetString(key);
+            var dataBuffer = Convert.FromBase64String(dataString);
+            var dataStream = new MemoryStream(dataBuffer);
+            JsonReader reader = new JsonReader(dataStream);
+            reader.ReadObject(root);
+        }
+    }
+}

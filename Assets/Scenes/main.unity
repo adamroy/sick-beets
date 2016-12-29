@@ -1297,6 +1297,7 @@ MonoBehaviour:
   labGrid: {fileID: 1175482290}
   settingsPanel: {fileID: 955408784}
   settingsPanelModel: {fileID: 955408785}
+  navigator: {fileID: 922099289}
   time: 0
   savedBeets: []
 --- !u!114 &368646189
@@ -1890,6 +1891,7 @@ MonoBehaviour:
   distanceToCancelClick: 0.5
   allowedDistanceOverBoundry: 1
   boundryGravity: 10
+  currentPosition: {fileID: 0}
 --- !u!1 &929457659
 GameObject:
   m_ObjectHideFlags: 0

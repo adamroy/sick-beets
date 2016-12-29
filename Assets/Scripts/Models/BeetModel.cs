@@ -14,7 +14,7 @@ public class BeetModel : MonoBehaviour, IJsonModelNode
     // Health ranges from 0 - 1
     // 0 = dead, 1 = cured
     [HideInInspector]
-    public float health = Random.Range(0.1f, 0.5f);
+    public float health;
 
     // Ranges from -1 to +1
     [HideInInspector]
@@ -22,6 +22,11 @@ public class BeetModel : MonoBehaviour, IJsonModelNode
     
     [HideInInspector]
     public Color startColor;
+    
+    private void Awake()
+    {
+        health = Random.Range(0.1f, 0.5f);
+    }
 
     public void BeforeSerializing() { }
     public void AfterDeserializing() { }

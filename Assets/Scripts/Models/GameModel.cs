@@ -17,6 +17,7 @@ public class GameModel : MonoBehaviour, IJsonModelNode
     public AutoGrid labGrid;
     public NurserySettingsPanel settingsPanel;
     public NurserySettingsPanelModel settingsPanelModel;
+    public ScreenNavigator navigator;
 
     [HideInInspector]
     [SerializeField]
@@ -35,23 +36,12 @@ public class GameModel : MonoBehaviour, IJsonModelNode
 
     public void  SaveGame()
     {
-        MemoryStream stream = new MemoryStream();
-        JsonWriter writer = new JsonWriter(stream);
-        writer.WriteObject(this);
-        string data = Convert.ToBase64String(stream.ToArray());
-        PlayerPrefs.SetString(gameModelKey, data);
+        JsonSavingUtility.Save(gameModelKey, this);
     }
 
     public void LoadGame()
     {
-        if (PlayerPrefs.HasKey(gameModelKey))
-        {
-            var data = PlayerPrefs.GetString(gameModelKey);
-            var newData = Convert.FromBase64String(data);
-            var newStream = new MemoryStream(newData);
-            JsonReader reader = new JsonReader(newStream);
-            reader.ReadObject(this);
-        }
+        JsonSavingUtility.Load(gameModelKey, this);
     }
 
     // Seconds since UTC epoch
@@ -75,7 +65,10 @@ public class GameModel : MonoBehaviour, IJsonModelNode
     {
         List<IJsonModelNode> children = new List<IJsonModelNode>();
         children.Add(settingsPanelModel);
+        children.Add(navigator);
+        children.Add(catchGrid.GetComponent<IJsonModelNode>());
         children.AddRange(nurseryGridRoot.GetAllAttached<BeetContainerModel>().Cast<IJsonModelNode>());
+        children.AddRange(labGridRoot.GetAllAttached<BeetContainerModel>().Cast<IJsonModelNode>());
         return children;
     }
 }

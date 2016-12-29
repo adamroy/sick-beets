@@ -7,7 +7,7 @@ using System.Collections.Generic;
 // Swipe horizontally to switch screens or use buttons
 // Assumes x axis aligned
 [RequireComponent(typeof(Camera))]
-public class ScreenNavigator : MonoBehaviour
+public class ScreenNavigator : MonoBehaviour, IJsonModelNode
 {
     public static ScreenNavigator Instance { get; private set; }
 
@@ -17,6 +17,8 @@ public class ScreenNavigator : MonoBehaviour
     public float allowedDistanceOverBoundry;
     public float boundryGravity;
 
+    [HideInInspector]
+    [SerializeField]
     private Transform currentPosition;
     private new Camera camera;
     private Coroutine movementCoroutine;
@@ -52,8 +54,11 @@ public class ScreenNavigator : MonoBehaviour
 
     private void Start()
     {
-        InitializeCurrentPosition();
         camera = GetComponent<Camera>();
+        if (currentPosition != null)
+            camera.transform.position = currentPosition.position;
+        else
+            InitializeCurrentPosition();
         StartCoroutine(NavigationCoroutine());
     }
 
@@ -187,4 +192,10 @@ public class ScreenNavigator : MonoBehaviour
         else
             return currentPosition;
     }
+
+    public void BeforeSerializing() { }
+
+    public void AfterDeserializing() { }
+
+    public IEnumerable<IJsonModelNode> GetChildren() { return null; }
 }

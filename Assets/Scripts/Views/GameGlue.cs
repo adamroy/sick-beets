@@ -100,7 +100,7 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
         container.SetBeet(selectedBeet);
         selectedBeet.MarkUnselected();
         selectedBeet = null;
-        Invoke("ReleaseBeet", 1f);
+        Invoke("ReleaseBeet", 3f);
     }
 
     private void CatchGridTouched(GameObject grid)
@@ -150,27 +150,39 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
         container.SetBeet(selectedBeet);
         selectedBeet = null;
 
-        Invoke("MoveToLab", 1f);
+        Invoke("MoveToLab", 3f);
     }
 
     private void MoveToLab()
     {
         var open = model.labGridRoot.GetAllAttached<BeetContainer>().FirstOrDefault(p => p.IsEmpty);
         if (open == null) return;
+        var container = model.labGrid.GetComponent<BeetContainer>();
+        if (container.IsEmpty) return;
 
-        var beet = model.labGrid.GetComponent<BeetContainer>().Beet;
-        beet.RemoveFromContainer();
-        open.SetBeet(beet);
+        var beet = container.Beet;
+        if (beet != null)
+        {
+            beet.RemoveFromContainer();
+            open.SetBeet(beet);
+        }
     }
 
     private void OnApplicationPause(bool pause)
     {
-        if (pause) model.SaveGame();
+        if (pause)
+        {
+            CancelInvoke("MoveToLab");
+            MoveToLab();
+            CancelInvoke("ReleaseBeet");
+            ReleaseBeet();
+            model.SaveGame();
+        }
     }
 
     public void OnApplicationQuit()
     {
-        model.SaveGame();
+        OnApplicationPause(true);
     }
 
     private IEnumerator MainCoroutine()
