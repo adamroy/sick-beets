@@ -10,29 +10,12 @@ using strange.extensions.command.impl;
 /// the View (listening to/controlling interface), Commands (business logic),
 /// Models (maintaining state) or Services (reaching out for data).
 
-public class SickBeetsContext : MVCSContext
+public class SickBeetsContext : MVCSSignalsContext
 {
     public SickBeetsContext(MonoBehaviour view) : base(view) { }
 
     public SickBeetsContext(MonoBehaviour view, ContextStartupFlags flags) : base(view, flags) { }
-
-    // Unbind the default EventCommandBinder and rebind the SignalCommandBinder
-    protected override void addCoreComponents()
-    {
-        base.addCoreComponents();
-        injectionBinder.Unbind<ICommandBinder>();
-        injectionBinder.Bind<ICommandBinder>().To<SignalCommandBinder>().ToSingleton();
-    }
-
-    // Override Start so that we can fire the StartSignal 
-    override public IContext Start()
-    {
-        base.Start();
-        StartSignal startSignal = injectionBinder.GetInstance<StartSignal>();
-        startSignal.Dispatch();
-        return this;
-    }
-
+    
     protected override void mapBindings()
     {
         // Injection bindings
@@ -58,5 +41,9 @@ public class SickBeetsContext : MVCSContext
             .Once();
         commandBinder.Bind<ContainerSelectedSignal>()
             .To<ContainerSelectedCommand>();
+        commandBinder.Bind<DestroyBeetSignal>()
+            .To<DestroyBeetCommand>();
+        commandBinder.Bind<RequestBeetCreationSignal>()
+            .To<CreateBeetCommand>();
     }
 }

@@ -23,11 +23,13 @@ public class BeetView : View
 
     public void MarkSelected()
     {
-        renderer.material.color = Color.red;
+        if (renderer != null)
+            renderer.material.color = Color.red;
     }
 
     public void MarkUnselected()
     {
-        renderer.material.color = startColor;
+        if (renderer != null)
+            renderer.material.color = startColor;
     }
 }

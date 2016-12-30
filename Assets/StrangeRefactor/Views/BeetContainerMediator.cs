@@ -16,22 +16,34 @@ public class BeetContainerMediator : Mediator
     [Inject]
     public PlaceBeetSignal beetPlacementSignal { get; set; }
 
+    [Inject]
+    public DestroyBeetSignal beetDestroySignal { get; set; }
+
     public override void OnRegister()
     {
         view.Init();
-        view.touchSignal.AddListener(
-            () => selectionSignal.Dispatch(view));
+        view.touchSignal.AddListener(TouchListener);
 
         if (view.function == BeetContainerFunction.Input)
             beetCreationSignal.AddListener(view.PlaceBeet);
 
-        beetPlacementSignal.AddListener(
-            (beet, container) =>
+        beetPlacementSignal.AddListener(PlaceBeet);
+    }
+
+    private void TouchListener()
+    {
+        selectionSignal.Dispatch(view);
+    }
+
+    void PlaceBeet(BeetView beet, BeetContainerView container)
+    {
+        if (container == this.view)
+        {
+            view.PlaceBeet(beet);
+            if(view.function == BeetContainerFunction.Output)
             {
-                if (container == this.view)
-                {
-                    view.PlaceBeet(beet);
-                }
-            });
+                beetDestroySignal.Dispatch(beet, view, 2f);
+            }
+        }
     }
 }

@@ -17,6 +17,9 @@ public class ContainerSelectedCommand : Command
 
     [Inject]
     public PlaceBeetSignal beetPlacementSignal { get; set; }
+    
+    [Inject]
+    public RequestBeetCreationSignal beetCreationRequestSignal { get; set; }
 
     public override void Execute()
     {
@@ -30,7 +33,7 @@ public class ContainerSelectedCommand : Command
                 beetSelectionSignal.Dispatch(-1);
                 model.SelectedBeet = null;
             }
-            else // Otherwise replace selection
+            else 
             {
                 beetSelectionSignal.Dispatch(beetModel.InstanceID);
                 model.SelectedBeet = beetModel;
@@ -38,9 +41,13 @@ public class ContainerSelectedCommand : Command
         }
         else 
         {
-            // If no beet at destination and we gave a selected beet, place that
-            if (model.SelectedBeet != null)
+            // If no beet at destination (and it's not the input) and we gave a selected beet, place that
+            if (model.SelectedBeet != null && containerModel.function != BeetContainerFunction.Input)
             {
+                // If we are removing from the input, for now lets just generate another beet
+                if(model.GetContainerAssignment(model.SelectedBeet).function == BeetContainerFunction.Input)
+                    beetCreationRequestSignal.Dispatch();
+
                 model.AssignBeetToContainer(model.SelectedBeet, containerModel);
                 var beetView = GameObject.FindObjectsOfType<BeetView>().First(v => v.GetInstanceID() == model.SelectedBeet.InstanceID);
                 var containerView = GameObject.FindObjectsOfType<BeetContainerView>().First(v => v.GetInstanceID() == containerModel.InstanceID);
