@@ -17,7 +17,7 @@ public class DestroyBeetCommand : Command
     public float delay { get; set; }
 
     [Inject]
-    public ISickBeetsModel model { get; set; }
+    public SickBeetsModel model { get; set; }
 
     public override void Execute()
     {

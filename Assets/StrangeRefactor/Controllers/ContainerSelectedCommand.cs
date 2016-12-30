@@ -10,7 +10,7 @@ public class ContainerSelectedCommand : Command
     public BeetContainerView view { get; set; }
 
     [Inject]
-    public ISickBeetsModel model { get; set; }
+    public SickBeetsModel model { get; set; }
 
     [Inject]
     public SelectBeetSignal beetSelectionSignal { get; set; }
@@ -48,13 +48,13 @@ public class ContainerSelectedCommand : Command
         else 
         {
             // If no beet at destination (and it's not the input) and we gave a selected beet, place that
-            if (model.SelectedBeet != null && containerModel.function != BeetContainerFunction.Input)
+            if (model.SelectedBeet != null && containerModel.Function != BeetContainerFunction.Input)
             {
                 // If we are removing from the input, for now lets just generate another beet
-                if(model.GetContainerAssignment(model.SelectedBeet).function == BeetContainerFunction.Input)
+                if(model.GetContainerByAssignment(model.SelectedBeet).Function == BeetContainerFunction.Input)
                     beetCreationRequestSignal.Dispatch();
 
-                bool containerIsTransfer = containerModel.function == BeetContainerFunction.LabTransfer;
+                bool containerIsTransfer = containerModel.Function == BeetContainerFunction.LabTransfer;
                 bool labHasBeet = model.GetBeetAssignment(model.GetContainerByFunction(BeetContainerFunction.Lab)) != null;
                 if (!containerIsTransfer || (containerIsTransfer && !labHasBeet))
                 {
@@ -66,10 +66,10 @@ public class ContainerSelectedCommand : Command
                     model.SelectedBeet = null;
 
                     // Destroy beet if we are placing into output
-                    if (containerModel.function == BeetContainerFunction.Output)
+                    if (containerModel.Function == BeetContainerFunction.Output)
                         beetDestroySignal.Dispatch(beetView, containerView, 2f);
                     // Transfer beet if we are placing into transfer container
-                    if (containerModel.function == BeetContainerFunction.LabTransfer)
+                    if (containerModel.Function == BeetContainerFunction.LabTransfer)
                         labTransferSignal.Dispatch(beetView, 2f);
                 }
             }

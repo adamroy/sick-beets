@@ -21,7 +21,7 @@ public class SickBeetsContext : MVCSSignalsContext
     {
         // Injection bindings
         injectionBinder.Bind<IBeetPrefabLibrary>().ToValue(GameObject.FindObjectOfType<PrefabLibrary>());
-        injectionBinder.Bind<ISickBeetsModel>().To<SickBeetsModel>().ToSingleton();
+        injectionBinder.Bind<SickBeetsModel>().ToSingleton();
         injectionBinder.Bind<BeetCreatedSignal>().ToSingleton();
         injectionBinder.Bind<SelectBeetSignal>().ToSingleton();
         injectionBinder.Bind<PlaceBeetSignal>().ToSingleton();

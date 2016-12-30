@@ -3,8 +3,22 @@ using System.Collections;
 using System;
 
 [Serializable]
-public class BeetContainerModel : IBeetContainerModel
+public class BeetContainerModel
 {
-    public int InstanceID { get; set; }
-    public BeetContainerFunction function { get; set; }
+    [SerializeField]
+    private int instanceID;
+    public int InstanceID { get { return instanceID; } set { instanceID = value; } }
+
+    [SerializeField]
+    private BeetContainerFunction function;
+    public BeetContainerFunction Function { get { return function; } set { function = value; } }
+}
+
+public enum BeetContainerFunction
+{
+    Nursery, 
+    Input, 
+    Output,
+    LabTransfer,
+    Lab
 }

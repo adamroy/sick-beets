@@ -6,7 +6,7 @@ using strange.extensions.command.impl;
 public class LoadModelCommand : Command
 {
     [Inject]
-    public ISickBeetsModel model { get; set; }
+    public SickBeetsModel model { get; set; }
 
     public override void Execute()
     {
@@ -23,7 +23,7 @@ public class LoadModelCommand : Command
             {
                 var containerModel = new BeetContainerModel();
                 containerModel.InstanceID = view.GetInstanceID();
-                containerModel.function = view.function;
+                containerModel.Function = view.function;
                 model.AddContainer(containerModel);
             }
         }

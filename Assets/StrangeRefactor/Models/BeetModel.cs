@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 [Serializable]
-public class BeetModel : IBeetModel
+public class BeetModel
 {
     [SerializeField]
     private BeetType type;
@@ -20,4 +20,9 @@ public class BeetModel : IBeetModel
     [SerializeField]
     private NeedRange[] needs;
     public NeedRange[] Needs { get { return needs; } set { needs = value; } }
+}
+
+public enum BeetType
+{
+    Common
 }

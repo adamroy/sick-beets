@@ -11,7 +11,7 @@ public class CreateBeetCommand : Command
     public BeetCreatedSignal creationSignal { get; set; }
 
     [Inject]
-    public ISickBeetsModel model { get; set; }
+    public SickBeetsModel model { get; set; }
 
     // Create the beet view and model, connect them
     public override void Execute()

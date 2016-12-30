@@ -10,7 +10,7 @@ public class SaveModelCommand : Command
     public bool pause { get; set; }
 
     [Inject]
-    public ISickBeetsModel model { get; set; }
+    public SickBeetsModel model { get; set; }
     
     public override void Execute()
     {

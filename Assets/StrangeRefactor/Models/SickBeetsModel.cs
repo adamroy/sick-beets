@@ -4,13 +4,13 @@ using System;
 using System.Linq;
 
 [Serializable]
-public class SickBeetsModel : ISickBeetsModel
+public class SickBeetsModel : IJsonModelNode
 {
     [SerializeField]
-    private List<IBeetModel> beets;
+    private List<BeetModel> beets;
 
     [SerializeField]
-    private List<IBeetContainerModel> containers;
+    private List<BeetContainerModel> containers;
     
     [SerializeField]
     private List<Assignment> assignmentsList;
@@ -22,23 +22,23 @@ public class SickBeetsModel : ISickBeetsModel
         public int containerIndex;
     }
 
-    private Dictionary<IBeetContainerModel, IBeetModel> assignments;
+    private Dictionary<BeetContainerModel, BeetModel> assignments;
     
     public SickBeetsModel()
     {
-        beets = new List<IBeetModel>();
-        containers = new List<IBeetContainerModel>();
-        assignments = new Dictionary<IBeetContainerModel, IBeetModel>();
+        beets = new List<BeetModel>();
+        containers = new List<BeetContainerModel>();
+        assignments = new Dictionary<BeetContainerModel, BeetModel>();
     }
 
-    public IBeetModel SelectedBeet { get; set; }
+    public BeetModel SelectedBeet { get; set; }
 
-    public void AddBeet(IBeetModel beet)
+    public void AddBeet(BeetModel beet)
     {
         beets.Add(beet);
     }
 
-    public void RemoveBeet(IBeetModel beet)
+    public void RemoveBeet(BeetModel beet)
     {
         // Remove assignments
         if (assignments.ContainsValue(beet))
@@ -47,12 +47,12 @@ public class SickBeetsModel : ISickBeetsModel
         beets.Remove(beet);
     }
     
-    public void AddContainer(IBeetContainerModel container)
+    public void AddContainer(BeetContainerModel container)
     {
         containers.Add(container);
     }
 
-    public void RemoveContainer(IBeetContainerModel container)
+    public void RemoveContainer(BeetContainerModel container)
     {
         // Remove assignments
         if (assignments.ContainsKey(container))
@@ -61,20 +61,20 @@ public class SickBeetsModel : ISickBeetsModel
         containers.Remove(container);
     }
 
-    public void AssignBeetToContainer(IBeetModel beet, IBeetContainerModel container)
+    public void AssignBeetToContainer(BeetModel beet, BeetContainerModel container)
     {
         if (assignments.ContainsValue(beet))
             assignments.Remove(assignments.First(kvp => kvp.Value == beet).Key);
         assignments[container] = beet;
     }
     
-    public void UnassignBeetToContainer(IBeetModel beet, IBeetContainerModel container)
+    public void UnassignBeetToContainer(BeetModel beet, BeetContainerModel container)
     {
         if (assignments.ContainsKey(container))
             assignments.Remove(container);
     }
 
-    public IBeetModel GetBeetAssignment(IBeetContainerModel container)
+    public BeetModel GetBeetAssignment(BeetContainerModel container)
     {
         if (assignments.ContainsKey(container))
             return assignments[container];
@@ -82,7 +82,7 @@ public class SickBeetsModel : ISickBeetsModel
             return null;
     }
 
-    public IBeetContainerModel GetContainerAssignment(IBeetModel beet)
+    public BeetContainerModel GetContainerByAssignment(BeetModel beet)
     {
         if (assignments.ContainsValue(beet))
             return assignments.First(kvp => kvp.Value == beet).Key;
@@ -90,24 +90,29 @@ public class SickBeetsModel : ISickBeetsModel
             return null;
     }
 
-    public IBeetModel GetBeetByID(int instanceID)
+    public BeetModel GetBeetByID(int instanceID)
     {
         return beets.FirstOrDefault(beet => beet.InstanceID == instanceID);
     }
 
-    public IBeetContainerModel GetContainerByID(int instanceID)
+    public BeetContainerModel GetContainerByID(int instanceID)
     {
         return containers.FirstOrDefault(container => container.InstanceID == instanceID);
     }
 
-    public IBeetContainerModel GetContainerByFunction(BeetContainerFunction function)
+    public BeetContainerModel GetContainerByFunction(BeetContainerFunction function)
     {
-        return containers.FirstOrDefault(container => container.function == function);
+        return containers.FirstOrDefault(container => container.Function == function);
     }
 
-    public IEnumerable<IBeetContainerModel> GetContainersByFunction(BeetContainerFunction function)
+    public IEnumerable<BeetContainerModel> GetContainersByFunction(BeetContainerFunction function)
     {
-        return containers.FindAll(container => container.function == function);
+        return containers.FindAll(container => container.Function == function);
+    }
+
+    public List<KeyValuePair<BeetContainerModel, BeetModel>> GetAllAssignements()
+    {
+        return assignments.ToList();
     }
 
     public void BeforeSerializing()
@@ -121,7 +126,7 @@ public class SickBeetsModel : ISickBeetsModel
 
     public void AfterDeserializing()
     {
-        assignments = new Dictionary<IBeetContainerModel, IBeetModel>();
+        assignments = new Dictionary<BeetContainerModel, BeetModel>();
         foreach (var kvp in assignmentsList)
         {
             var container = containers[kvp.containerIndex];
