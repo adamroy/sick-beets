@@ -9,29 +9,24 @@ public class GameModel : IJsonModelNode
     public bool SuccessfulyLoaded { get; set; }
 
     [SerializeField]
+    public long Time;
+
+    [SerializeField]
     private List<BeetModel> beets;
 
     [SerializeField]
     private List<BeetContainerModel> containers;
-    
-    [SerializeField]
-    private List<Assignment> assignmentsList;
 
-    [Serializable]
-    class Assignment
-    {
-        public int beetIndex;
-        public int containerIndex;
-    }
+    private SerializableDictionary<BeetContainerModel, BeetModel> assignments;
+    private SerializableDictionary<EnvironmentVariable, float> environmentVariables;
 
-    private Dictionary<BeetContainerModel, BeetModel> assignments;
-    
     public GameModel()
     {
         SuccessfulyLoaded = false;
         beets = new List<BeetModel>();
         containers = new List<BeetContainerModel>();
-        assignments = new Dictionary<BeetContainerModel, BeetModel>();
+        assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
+        environmentVariables = new SerializableDictionary<EnvironmentVariable, float>();
     }
 
     public BeetModel SelectedBeet { get; set; }
@@ -118,29 +113,37 @@ public class GameModel : IJsonModelNode
         return assignments.ToList();
     }
 
+    public float GetEnvironmentValue(EnvironmentVariable variable)
+    {
+        if (environmentVariables.ContainsKey(variable))
+            return environmentVariables[variable];
+        else
+            return 0f;
+    }
+
+#region IJsonModelNode
+
     public void BeforeSerializing()
     {
-        assignmentsList = new List<Assignment>();
-        foreach (var kvp in assignments)
-        {
-            assignmentsList.Add(new Assignment() { containerIndex = containers.IndexOf(kvp.Key), beetIndex = beets.IndexOf(kvp.Value) });
-        }
+
     }
 
     public void AfterDeserializing()
     {
-        assignments = new Dictionary<BeetContainerModel, BeetModel>();
-        foreach (var kvp in assignmentsList)
-        {
-            var container = containers[kvp.containerIndex];
-            var beet = beets[kvp.beetIndex];
-            assignments[container] = beet;
-        }
+        // Deserializing creates new lists out of serialized ones, so we need 
+        // to reinitialize dictionaries so that it has references to the actual lists
+        assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
     }
-
+    
     public IEnumerable<IJsonModelNode> GetChildren()
     {
-        return null;
+        // Since the dictionaries need to process before and after serialization, pass off as children
+        List<IJsonModelNode> children = new List<IJsonModelNode>();
+        children.Add(assignments);
+        children.Add(environmentVariables);
+        return children;
     }
+
+#endregion
 }
 

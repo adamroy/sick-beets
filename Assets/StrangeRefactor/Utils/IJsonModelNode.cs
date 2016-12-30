@@ -25,10 +25,10 @@ public class JsonWriter : StreamWriter
     public JsonWriter(MemoryStream s) : base(s) { }
 
     // Writes this object and all its children recursively to the stream
-    public void WriteObject(IJsonModelNode o)
+    public void WriteObject(IJsonModelNode o, bool prettyPrint = false)
     {
         o.BeforeSerializing();
-        string json = JsonUtility.ToJson(o);
+        string json = JsonUtility.ToJson(o, prettyPrint);
         int length = json.Length;
         Write(length.ToString("D10"));
         Write(json);
@@ -38,7 +38,7 @@ public class JsonWriter : StreamWriter
         if (children != null)
         {
             foreach (var child in children)
-                WriteObject(child);
+                WriteObject(child, prettyPrint);
         }
     }
 
@@ -84,7 +84,7 @@ public static class JsonSavingUtility
     {
         MemoryStream stream = new MemoryStream();
         JsonWriter writer = new JsonWriter(stream);
-        writer.WriteObject(root);
+        writer.WriteObject(root, debug);
         if (debug)
             Debug.Log(System.Text.Encoding.Default.GetString(stream.ToArray()));
         string data = Convert.ToBase64String(stream.ToArray());

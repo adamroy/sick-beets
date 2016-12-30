@@ -35,6 +35,7 @@ public class SickBeetsContext : MVCSSignalsContext
             .To<LoadModelCommand>()
             .To<InstantiateModelCommand>()
             .To<StartCommand>()
+            .To<UpdateModelRoutineCommand>()
             .Once().InSequence();
         commandBinder.Bind<QuitSignal>()
             .To<SaveModelCommand>()

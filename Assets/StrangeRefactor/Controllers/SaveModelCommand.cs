@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using strange.extensions.command.impl;
+using System;
 
 // Save the model to playerprefs or somewhere
 public class SaveModelCommand : Command
@@ -18,7 +19,7 @@ public class SaveModelCommand : Command
     {
         if (pause)
         {
-            JsonSavingUtility.Save(SaveGameKey, model);
+            JsonSavingUtility.Save(SaveGameKey, model, true);
         }
     }
 }

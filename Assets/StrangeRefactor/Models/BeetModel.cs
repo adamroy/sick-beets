@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 [Serializable]
@@ -18,8 +18,41 @@ public class BeetModel
     public float Health { get { return health; } set { health = value; } }
 
     [SerializeField]
-    private NeedRange[] needs;
-    public NeedRange[] Needs { get { return needs; } set { needs = value; } }
+    private float lifeSpan;
+    public float LifeSpan { get { return lifeSpan; } set { lifeSpan = value; } }
+
+    [SerializeField]
+    private List<EnvironmentVariable> environmentNeeds;
+    [SerializeField]
+    private List<float> environmentNeedValues;
+
+    public BeetModel()
+    {
+        environmentNeeds = new List<EnvironmentVariable>();
+        environmentNeedValues = new List<float>();
+    }
+
+    public void AddEnvironmentNeed(EnvironmentVariable variable, float value)
+    {
+        if (HasEnvironmentNeed(variable))
+            throw new Exception("Beet model already containes need: " + variable.name);
+
+        environmentNeeds.Add(variable);
+        environmentNeedValues.Add(value);
+    }
+
+    public IEnumerable<EnvironmentVariable> EnvironmentNeeds { get { return environmentNeeds; } }
+
+    public bool HasEnvironmentNeed(EnvironmentVariable need)
+    {
+        return environmentNeeds.Contains(need);
+    }
+
+    public float GetEnvironmentNeedValue(EnvironmentVariable need)
+    {
+        int index = environmentNeeds.IndexOf(need);
+        return environmentNeedValues[index];
+    }
 }
 
 public enum BeetType
