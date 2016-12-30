@@ -30,7 +30,7 @@ public class BeetGenerator : MonoBehaviour
         if (emptyCont == null) return;
         int index = Random.Range(0, beetPrefabs.Length);
         var beet = Instantiate(beetPrefabs[index].gameObject).GetComponent<Beet>();
-        beet.GetComponent<BeetModel>().prefab = beetPrefabs[index].gameObject;
+        beet.GetComponent<OldBeetModel>().prefab = beetPrefabs[index].gameObject;
         emptyCont.SetBeet(beet);
     }
 

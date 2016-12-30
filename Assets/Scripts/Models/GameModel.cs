@@ -67,8 +67,8 @@ public class GameModel : MonoBehaviour, IJsonModelNode
         children.Add(settingsPanelModel);
         children.Add(navigator);
         children.Add(catchGrid.GetComponent<IJsonModelNode>());
-        children.AddRange(nurseryGridRoot.GetAllAttached<BeetContainerModel>().Cast<IJsonModelNode>());
-        children.AddRange(labGridRoot.GetAllAttached<BeetContainerModel>().Cast<IJsonModelNode>());
+        children.AddRange(nurseryGridRoot.GetAllAttached<OldBeetContainerModel>().Cast<IJsonModelNode>());
+        children.AddRange(labGridRoot.GetAllAttached<OldBeetContainerModel>().Cast<IJsonModelNode>());
         return children;
     }
 }

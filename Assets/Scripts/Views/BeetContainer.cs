@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System;
 
 // Responsible for positioning and parenting a beet
-[RequireComponent(typeof(BeetContainer))]
 public class BeetContainer : MonoBehaviour
 {
     // Place to put the beet at
@@ -12,11 +11,11 @@ public class BeetContainer : MonoBehaviour
     public Beet Beet { get { return model.beetModel.GetComponent<Beet>(); } }
     public bool IsEmpty { get { return model == null || model.beetModel == null || Beet == null; } }
 
-    private BeetContainerModel model;
+    private OldBeetContainerModel model;
 
     private void Awake()
     {
-        model = GetComponent<BeetContainerModel>();
+        model = GetComponent<OldBeetContainerModel>();
     }
 
     private void Start()
@@ -29,13 +28,13 @@ public class BeetContainer : MonoBehaviour
     
     public void SetBeet(Beet inBeet)
     {
-        if (model.beetModel != null && model.beetModel != inBeet.GetComponent<BeetModel>())
+        if (model.beetModel != null && model.beetModel != inBeet.GetComponent<OldBeetModel>())
         {
             Debug.LogError("We've got a beet here already!");
             return;
         }
 
-        model.beetModel = inBeet.GetComponent<BeetModel>();
+        model.beetModel = inBeet.GetComponent<OldBeetModel>();
         inBeet.transform.SetParent(this.transform, false);
         if (targetTransform != null)
         {

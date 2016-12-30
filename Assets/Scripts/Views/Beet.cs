@@ -1,21 +1,19 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Random = UnityEngine.Random;
-using UnityEditor;
 
-[RequireComponent(typeof(EventSubscriber), typeof(BeetModel))]
+[RequireComponent(typeof(EventSubscriber), typeof(OldBeetModel))]
 public class Beet : MonoBehaviour
 {
     public bool IsHealed { get { return Mathf.Approximately(model.health, 1f); } }
 
     private bool selected = false;    
     private new Renderer renderer;
-    private BeetModel model;
+    private OldBeetModel model;
 
     private void Awake()
     {
-        model = GetComponent<BeetModel>();
+        model = GetComponent<OldBeetModel>();
         renderer = GetComponentInChildren<Renderer>();
         model.startColor = renderer.material.color;
     }
