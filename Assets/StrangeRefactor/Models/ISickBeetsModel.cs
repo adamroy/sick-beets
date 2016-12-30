@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public interface ISickBeetsModel
+public interface ISickBeetsModel : IJsonModelNode
 {
     /// <summary>
     /// The beet that we have selected to move, manupulate, etc.

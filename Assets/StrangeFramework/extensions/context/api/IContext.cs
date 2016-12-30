@@ -53,6 +53,11 @@ namespace strange.extensions.context.api
 		/// Get the ContextView
 		object GetContextView();
 
+        /// Hook for MonoBeahaviour OnApplicationPause(bool)
+        void OnApplicationPause(bool pause);
+
+        /// Hook for MonoBeahaviour OnApplicationQuit()
+        void OnApplicationQuit();
 	}
 }
 

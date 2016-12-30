@@ -10,14 +10,22 @@ public class LoadModelCommand : Command
 
     public override void Execute()
     {
-        // For now just fabricate the model from scratch until actual saving/loading
-        var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
-        foreach(var view in containerViews)
+        if (JsonSavingUtility.Load("GameSave", model))
         {
-            var containerModel = new BeetContainerModel();
-            containerModel.InstanceID = view.GetInstanceID();
-            containerModel.function = view.function;
-            model.AddContainer(containerModel);
+            Debug.Log("Loadin success!");
+        }
+        else
+        {
+            Debug.Log("Creating model");
+            // For now just fabricate the model from scratch until actual saving/loading
+            var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
+            foreach (var view in containerViews)
+            {
+                var containerModel = new BeetContainerModel();
+                containerModel.InstanceID = view.GetInstanceID();
+                containerModel.function = view.function;
+                model.AddContainer(containerModel);
+            }
         }
     }
 }

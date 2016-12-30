@@ -85,11 +85,12 @@ public static class JsonSavingUtility
         MemoryStream stream = new MemoryStream();
         JsonWriter writer = new JsonWriter(stream);
         writer.WriteObject(root);
+        Debug.Log(System.Text.Encoding.Default.GetString(stream.ToArray()));
         string data = Convert.ToBase64String(stream.ToArray());
         PlayerPrefs.SetString(key, data);
     }
 
-    public static void Load(string key, IJsonModelNode root)
+    public static bool Load(string key, IJsonModelNode root)
     {
         if (PlayerPrefs.HasKey(key))
         {
@@ -98,6 +99,9 @@ public static class JsonSavingUtility
             var dataStream = new MemoryStream(dataBuffer);
             JsonReader reader = new JsonReader(dataStream);
             reader.ReadObject(root);
+            return true;
         }
+
+        return false;
     }
 }

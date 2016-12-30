@@ -21,6 +21,12 @@ public class ContainerSelectedCommand : Command
     [Inject]
     public RequestBeetCreationSignal beetCreationRequestSignal { get; set; }
 
+    [Inject]
+    public DestroyBeetSignal beetDestroySignal { get; set; }
+
+    [Inject]
+    public TransferToLabSignal labTransferSignal { get; set; }
+
     public override void Execute()
     {
         var containerModel = model.GetContainerByID(view.GetInstanceID());
@@ -48,12 +54,24 @@ public class ContainerSelectedCommand : Command
                 if(model.GetContainerAssignment(model.SelectedBeet).function == BeetContainerFunction.Input)
                     beetCreationRequestSignal.Dispatch();
 
-                model.AssignBeetToContainer(model.SelectedBeet, containerModel);
-                var beetView = GameObject.FindObjectsOfType<BeetView>().First(v => v.GetInstanceID() == model.SelectedBeet.InstanceID);
-                var containerView = GameObject.FindObjectsOfType<BeetContainerView>().First(v => v.GetInstanceID() == containerModel.InstanceID);
-                beetPlacementSignal.Dispatch(beetView, containerView);
-                beetSelectionSignal.Dispatch(-1); // Deselect
-                model.SelectedBeet = null;
+                bool containerIsTransfer = containerModel.function == BeetContainerFunction.LabTransfer;
+                bool labHasBeet = model.GetBeetAssignment(model.GetContainerByFunction(BeetContainerFunction.Lab)) != null;
+                if (!containerIsTransfer || (containerIsTransfer && !labHasBeet))
+                {
+                    model.AssignBeetToContainer(model.SelectedBeet, containerModel);
+                    var beetView = GameObject.FindObjectsOfType<BeetView>().First(v => v.GetInstanceID() == model.SelectedBeet.InstanceID);
+                    var containerView = GameObject.FindObjectsOfType<BeetContainerView>().First(v => v.GetInstanceID() == containerModel.InstanceID);
+                    beetPlacementSignal.Dispatch(beetView, containerView);
+                    beetSelectionSignal.Dispatch(-1); // Deselect
+                    model.SelectedBeet = null;
+
+                    // Destroy beet if we are placing into output
+                    if (containerModel.function == BeetContainerFunction.Output)
+                        beetDestroySignal.Dispatch(beetView, containerView, 2f);
+                    // Transfer beet if we are placing into transfer container
+                    if (containerModel.function == BeetContainerFunction.LabTransfer)
+                        labTransferSignal.Dispatch(beetView, 2f);
+                }
             }
 
         }

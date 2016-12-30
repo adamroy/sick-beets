@@ -2,6 +2,7 @@
 using strange.extensions.command.api;
 using strange.extensions.context.api;
 using strange.extensions.command.impl;
+using strange.extensions.signal.impl;
 
 namespace strange.extensions.context.impl
 {

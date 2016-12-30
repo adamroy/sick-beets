@@ -3,6 +3,7 @@ using strange.extensions.context.api;
 using strange.extensions.context.impl;
 using strange.extensions.command.api;
 using strange.extensions.command.impl;
+using strange.extensions.signal.impl;
 
 /// Overview!
 /// Make your Mediator as thin as possible. Its function is to mediate
@@ -45,5 +46,21 @@ public class SickBeetsContext : MVCSSignalsContext
             .To<DestroyBeetCommand>();
         commandBinder.Bind<RequestBeetCreationSignal>()
             .To<CreateBeetCommand>();
+        commandBinder.Bind<TransferToLabSignal>()
+            .To<TransferToLabCommand>();
+        commandBinder.Bind<PauseSignal>()
+            .To<SaveModelCommand>();
+    }
+
+    public override void OnApplicationPause(bool pause)
+    {
+        var pauseSignal = injectionBinder.GetInstance<PauseSignal>();
+        pauseSignal.Dispatch(pause);
+    }
+
+    public override void OnApplicationQuit()
+    {
+        var pauseSignal = injectionBinder.GetInstance<PauseSignal>();
+        pauseSignal.Dispatch(true);
     }
 }

@@ -15,10 +15,7 @@ public class BeetContainerMediator : Mediator
 
     [Inject]
     public PlaceBeetSignal beetPlacementSignal { get; set; }
-
-    [Inject]
-    public DestroyBeetSignal beetDestroySignal { get; set; }
-
+    
     public override void OnRegister()
     {
         view.Init();
@@ -40,10 +37,6 @@ public class BeetContainerMediator : Mediator
         if (container == this.view)
         {
             view.PlaceBeet(beet);
-            if(view.function == BeetContainerFunction.Output)
-            {
-                beetDestroySignal.Dispatch(beet, view, 2f);
-            }
         }
     }
 }

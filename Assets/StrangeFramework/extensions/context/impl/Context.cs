@@ -14,18 +14,20 @@
  *		limitations under the License.
  */
 
-/**
- * @class strange.extensions.context.impl.Context
- * 
- * A Context is the entry point to the binding framework.
- * 
- * Extend this class to create the binding context suitable 
- * for your application.
- * 
- * In a typical Unity3D setup, extend MVCSContext and instantiate 
- * your extension from the ContextView.
- */
 
+
+using System;
+/**
+* @class strange.extensions.context.impl.Context
+* 
+* A Context is the entry point to the binding framework.
+* 
+* Extend this class to create the binding context suitable 
+* for your application.
+* 
+* In a typical Unity3D setup, extend MVCSContext and instantiate 
+* your extension from the ContextView.
+*/
 using strange.extensions.context.api;
 using strange.framework.impl;
 
@@ -168,6 +170,16 @@ namespace strange.extensions.context.impl
 		{
 			//Override in subclasses
 		}
-	}
+
+        virtual public void OnApplicationPause(bool pause)
+        {
+
+        }
+
+        virtual public void OnApplicationQuit()
+        {
+
+        }
+    }
 }
 
