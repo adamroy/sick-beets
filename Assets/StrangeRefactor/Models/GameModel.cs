@@ -31,6 +31,8 @@ public class GameModel : IJsonModelNode
 
     public BeetModel SelectedBeet { get; set; }
 
+    #region public methods
+
     public void AddBeet(BeetModel beet)
     {
         beets.Add(beet);
@@ -39,8 +41,7 @@ public class GameModel : IJsonModelNode
     public void RemoveBeet(BeetModel beet)
     {
         // Remove assignments
-        if (assignments.ContainsValue(beet))
-            assignments.Remove(assignments.First(kvp => kvp.Value == beet).Key);
+        assignments.RemoveValue(beet);
 
         beets.Remove(beet);
     }
@@ -53,16 +54,15 @@ public class GameModel : IJsonModelNode
     public void RemoveContainer(BeetContainerModel container)
     {
         // Remove assignments
-        if (assignments.ContainsKey(container))
-            assignments.Remove(container);
+        assignments.Remove(container);
 
         containers.Remove(container);
     }
 
     public void AssignBeetToContainer(BeetModel beet, BeetContainerModel container)
     {
-        if (assignments.ContainsValue(beet))
-            assignments.Remove(assignments.First(kvp => kvp.Value == beet).Key);
+        assignments.RemoveValue(beet);
+        assignments.Remove(container);
         assignments[container] = beet;
     }
     
@@ -103,7 +103,7 @@ public class GameModel : IJsonModelNode
         return containers.FirstOrDefault(container => container.Function == function);
     }
 
-    public IEnumerable<BeetContainerModel> GetContainersByFunction(BeetContainerFunction function)
+    public IEnumerable<BeetContainerModel> GetAllContainersByFunction(BeetContainerFunction function)
     {
         return containers.FindAll(container => container.Function == function);
     }
@@ -121,7 +121,9 @@ public class GameModel : IJsonModelNode
             return 0f;
     }
 
-#region IJsonModelNode
+    #endregion
+
+    #region IJsonModelNode
 
     public void BeforeSerializing()
     {
@@ -131,7 +133,7 @@ public class GameModel : IJsonModelNode
     public void AfterDeserializing()
     {
         // Deserializing creates new lists out of serialized ones, so we need 
-        // to reinitialize dictionaries so that it has references to the actual lists
+        // to reinitialize managed dictionaries so that it has references to the actual lists
         assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
     }
     

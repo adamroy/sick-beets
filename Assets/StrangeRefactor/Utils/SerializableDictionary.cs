@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System;
 using System.Collections;
+using System.Linq;
 
 // Let's us use a dictionary like normal in the model but be able to serialize it
+// Doesn't support equivalent values
 [Serializable]
 public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<TKey, TValue>
 {
@@ -36,6 +38,9 @@ public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<
     // The key/value sources we are using. May either refer to internal sources or external sources.
     private List<TKey> keySource;
     private List<TValue> valueSource;
+
+    public bool IsKeyManaged { get { return internalKeySource != null; } }
+    public bool IsValueManaged { get { return internalValueSource != null; } }
 
     #region constructors
 
@@ -80,6 +85,17 @@ public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<
     public bool ContainsValue(TValue value)
     {
         return dictionary.ContainsValue(value);
+    }
+
+    public bool RemoveValue(TValue value)
+    {
+        if (ContainsValue(value))
+        {
+            var key = this.First(kvp => kvp.Value.Equals(value)).Key;
+            return Remove(key);
+        }
+        else
+            return false;
     }
 
     #region source management

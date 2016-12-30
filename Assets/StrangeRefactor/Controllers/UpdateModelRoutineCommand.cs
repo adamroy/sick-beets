@@ -39,7 +39,7 @@ public class UpdateModelRoutineCommand : Command
 
     private void UpdateModel(float deltaTime)
     {
-        var nurseryContainers = model.GetContainersByFunction(BeetContainerFunction.Nursery);
+        var nurseryContainers = model.GetAllContainersByFunction(BeetContainerFunction.Nursery);
         foreach (var c in nurseryContainers)
         {
             var beet = model.GetBeetAssignment(c);

@@ -8,6 +8,9 @@ public class SaveModelCommand : Command
 {
     public const string SaveGameKey = "GameSave";
 
+    // My debugging switch for now
+    public const bool Debug = false;
+
     // Since this is called from the pause signal
     [Inject]
     public bool pause { get; set; }
@@ -19,7 +22,7 @@ public class SaveModelCommand : Command
     {
         if (pause)
         {
-            JsonSavingUtility.Save(SaveGameKey, model, true);
+            JsonSavingUtility.Save(SaveGameKey, model, Debug);
         }
     }
 }
