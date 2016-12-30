@@ -15,7 +15,7 @@ public class TransferToLabCommand : Command
     public PlaceBeetSignal beetPlacementSignal { get; set; }
 
     [Inject]
-    public SickBeetsModel model { get; set; }
+    public GameModel model { get; set; }
 
     public override void Execute()
     {

@@ -10,13 +10,17 @@ public class InstantiateModelCommand : Command
     public IBeetPrefabLibrary beetLibrary { get; set; }
 
     [Inject]
-    public SickBeetsModel model { get; set; }
+    public GameModel model { get; set; }
 
     [Inject]
     public PlaceBeetSignal beetPlacementSignal { get; set; }
 
     public override void Execute()
     {
+        // If the model wasn't loaded from a save file, then this step can be skipped (i.e. first run)
+        if (!model.SuccessfulyLoaded)
+            return;
+
         var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
 
         foreach (var kvp in model.GetAllAssignements())

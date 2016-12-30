@@ -10,7 +10,7 @@ public class ContainerSelectedCommand : Command
     public BeetContainerView view { get; set; }
 
     [Inject]
-    public SickBeetsModel model { get; set; }
+    public GameModel model { get; set; }
 
     [Inject]
     public SelectBeetSignal beetSelectionSignal { get; set; }

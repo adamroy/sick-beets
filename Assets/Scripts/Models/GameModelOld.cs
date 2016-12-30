@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
-public class GameModel : MonoBehaviour, IJsonModelNode
+public class GameModelOld : MonoBehaviour, IJsonModelNode
 {
     private const string gameModelKey = "GameData";
 

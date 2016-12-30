@@ -4,8 +4,10 @@ using System;
 using System.Linq;
 
 [Serializable]
-public class SickBeetsModel : IJsonModelNode
+public class GameModel : IJsonModelNode
 {
+    public bool SuccessfulyLoaded { get; set; }
+
     [SerializeField]
     private List<BeetModel> beets;
 
@@ -24,8 +26,9 @@ public class SickBeetsModel : IJsonModelNode
 
     private Dictionary<BeetContainerModel, BeetModel> assignments;
     
-    public SickBeetsModel()
+    public GameModel()
     {
+        SuccessfulyLoaded = false;
         beets = new List<BeetModel>();
         containers = new List<BeetContainerModel>();
         assignments = new Dictionary<BeetContainerModel, BeetModel>();

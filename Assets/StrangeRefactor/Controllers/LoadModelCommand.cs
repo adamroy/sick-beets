@@ -6,18 +6,22 @@ using strange.extensions.command.impl;
 public class LoadModelCommand : Command
 {
     [Inject]
-    public SickBeetsModel model { get; set; }
+    public GameModel model { get; set; }
+
+    [Inject]
+    public RequestBeetCreationSignal beetCreationRequestSignal { get; set; }
 
     public override void Execute()
     {
-        if (JsonSavingUtility.Load("GameSave", model))
+        if (JsonSavingUtility.Load(SaveModelCommand.SaveGameKey, model))
         {
-            Debug.Log("Loadin success!");
+            model.SuccessfulyLoaded = true;
         }
         else
         {
-            Debug.Log("Creating model");
-            // For now just fabricate the model from scratch until actual saving/loading
+            model.SuccessfulyLoaded = false;
+
+            // Fabricate model 
             var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
             foreach (var view in containerViews)
             {
@@ -26,6 +30,9 @@ public class LoadModelCommand : Command
                 containerModel.Function = view.function;
                 model.AddContainer(containerModel);
             }
+            
+            // Add initial beet
+            beetCreationRequestSignal.Dispatch();
         }
     }
 }

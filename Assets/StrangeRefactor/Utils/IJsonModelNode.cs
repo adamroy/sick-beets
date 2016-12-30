@@ -80,12 +80,13 @@ public class JsonReader : StreamReader
 
 public static class JsonSavingUtility
 {
-    public static void Save(string key, IJsonModelNode root)
+    public static void Save(string key, IJsonModelNode root, bool debug = false)
     {
         MemoryStream stream = new MemoryStream();
         JsonWriter writer = new JsonWriter(stream);
         writer.WriteObject(root);
-        Debug.Log(System.Text.Encoding.Default.GetString(stream.ToArray()));
+        if (debug)
+            Debug.Log(System.Text.Encoding.Default.GetString(stream.ToArray()));
         string data = Convert.ToBase64String(stream.ToArray());
         PlayerPrefs.SetString(key, data);
     }

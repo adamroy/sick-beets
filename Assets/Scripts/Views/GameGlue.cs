@@ -6,19 +6,19 @@ using System.Linq;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-[RequireComponent(typeof(GameModel))]
+[RequireComponent(typeof(GameModelOld))]
 public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
 {
     
     
     private Beet selectedBeet;
     private Dictionary<Need, float> needsMet;
-    private GameModel model;
+    private GameModelOld model;
 
     
     private void Awake()
     {
-        model = GetComponent<GameModel>();
+        model = GetComponent<GameModelOld>();
         needsMet = new Dictionary<Need, float>();
         model.settingsPanel.OnSettingsChanged += SettingsChanged;
     }
