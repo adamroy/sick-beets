@@ -11,11 +11,11 @@ using strange.extensions.signal.impl;
 /// the View (listening to/controlling interface), Commands (business logic),
 /// Models (maintaining state) or Services (reaching out for data).
 
-public class SickBeetsContext : MVCSSignalsContext
+public class GameContext : MVCSSignalsContext
 {
-    public SickBeetsContext(MonoBehaviour view) : base(view) { }
+    public GameContext(MonoBehaviour view) : base(view) { }
 
-    public SickBeetsContext(MonoBehaviour view, ContextStartupFlags flags) : base(view, flags) { }
+    public GameContext(MonoBehaviour view, ContextStartupFlags flags) : base(view, flags) { }
     
     protected override void mapBindings()
     {
