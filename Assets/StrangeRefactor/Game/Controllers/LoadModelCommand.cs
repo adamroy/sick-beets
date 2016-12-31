@@ -26,7 +26,7 @@ public class LoadModelCommand : Command
             foreach (var view in containerViews)
             {
                 var containerModel = new BeetContainerModel();
-                containerModel.InstanceID = view.GetInstanceID();
+                containerModel.Name = view.name;
                 containerModel.Function = view.function;
                 model.AddContainer(containerModel);
             }

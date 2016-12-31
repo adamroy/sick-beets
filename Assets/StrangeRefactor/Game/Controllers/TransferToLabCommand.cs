@@ -29,7 +29,7 @@ public class TransferToLabCommand : Command
         var labContainer = GameObject.FindObjectsOfType<BeetContainerView>().First(container => container.function == BeetContainerFunction.Lab);
 
         var beetModel = model.GetBeetByID(view.GetInstanceID());
-        var containerModel = model.GetContainerByID(labContainer.GetInstanceID());
+        var containerModel = model.GetContainerByName(labContainer.name);
         model.AssignBeetToContainer(beetModel, containerModel);
 
         beetPlacementSignal.Dispatch(view, labContainer);

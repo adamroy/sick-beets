@@ -93,9 +93,9 @@ public class GameModel : IJsonModelNode
         return beets.FirstOrDefault(beet => beet.InstanceID == instanceID);
     }
 
-    public BeetContainerModel GetContainerByID(int instanceID)
+    public BeetContainerModel GetContainerByName(string name)
     {
-        return containers.FirstOrDefault(container => container.InstanceID == instanceID);
+        return containers.FirstOrDefault(container => container.Name == name);
     }
 
     public BeetContainerModel GetContainerByFunction(BeetContainerFunction function)

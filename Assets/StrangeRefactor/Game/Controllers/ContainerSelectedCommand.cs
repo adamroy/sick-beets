@@ -29,7 +29,7 @@ public class ContainerSelectedCommand : Command
 
     public override void Execute()
     {
-        var containerModel = model.GetContainerByID(view.GetInstanceID());
+        var containerModel = model.GetContainerByName(view.name);
         var beetModel = model.GetBeetAssignment(containerModel);
 
         if(beetModel != null)
@@ -60,7 +60,7 @@ public class ContainerSelectedCommand : Command
                 {
                     model.AssignBeetToContainer(model.SelectedBeet, containerModel);
                     var beetView = GameObject.FindObjectsOfType<BeetView>().First(v => v.GetInstanceID() == model.SelectedBeet.InstanceID);
-                    var containerView = GameObject.FindObjectsOfType<BeetContainerView>().First(v => v.GetInstanceID() == containerModel.InstanceID);
+                    var containerView = GameObject.FindObjectsOfType<BeetContainerView>().First(v => v.name == containerModel.Name);
                     beetPlacementSignal.Dispatch(beetView, containerView);
                     beetSelectionSignal.Dispatch(-1); // Deselect
                     model.SelectedBeet = null;

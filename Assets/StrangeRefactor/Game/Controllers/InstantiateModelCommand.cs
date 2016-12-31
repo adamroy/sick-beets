@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using strange.extensions.command.impl;
 using strange.extensions.context.api;
@@ -7,6 +7,9 @@ using strange.extensions.context.api;
 // Takes a filled out model and instantiates the world from it.
 public class InstantiateModelCommand : Command
 {
+    [Inject(ContextKeys.CONTEXT_VIEW)]
+    public GameObject contextView { get; set; }
+
     [Inject]
     public IBeetPrefabLibrary beetLibrary { get; set; }
 
@@ -22,7 +25,6 @@ public class InstantiateModelCommand : Command
         if (!model.SuccessfulyLoaded) return;
 
         var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
-        Debug.Log(JsonUtility.ToJson(containerViews, true));
 
         foreach (var kvp in model.GetAllAssignements())
         {
@@ -34,7 +36,7 @@ public class InstantiateModelCommand : Command
             {
                 var beetView = GameObject.Instantiate(beetLibrary.CommonBeetPrefab.gameObject).GetComponent<BeetView>();
                 beetModel.InstanceID = beetView.GetInstanceID();
-                var containerView = containerViews.FirstOrDefault(cv => cv.GetInstanceID() == containerModel.InstanceID);
+                var containerView = containerViews.FirstOrDefault(cv => cv.name == containerModel.Name);
 
                 beetPlacementSignal.Dispatch(beetView, containerView);
             }

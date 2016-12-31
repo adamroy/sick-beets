@@ -27,7 +27,8 @@ public class LoadSceneCommand : Command
 
     private IEnumerator LoadSceneCoroutine()
     {
-        yield return SceneManager.LoadSceneAsync(sceneName, loadSceneMode);
+        var asyncOp = SceneManager.LoadSceneAsync(sceneName, loadSceneMode);
+        yield return asyncOp;
         sceneLoadedCallback(sceneName);
         Release();
     }

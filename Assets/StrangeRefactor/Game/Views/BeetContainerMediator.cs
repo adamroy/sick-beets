@@ -34,7 +34,6 @@ public class BeetContainerMediator : Mediator
 
     void PlaceBeet(BeetView beet, BeetContainerView container)
     {
-        print(container);
         if (container == this.view)
         {
             view.PlaceBeet(beet);

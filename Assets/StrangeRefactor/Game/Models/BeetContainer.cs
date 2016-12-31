@@ -5,9 +5,10 @@ using System;
 [Serializable]
 public class BeetContainerModel
 {
+    // The name of the gameobject in the scene distinguishes the view. Make it unique!
     [SerializeField]
-    private int instanceID;
-    public int InstanceID { get { return instanceID; } set { instanceID = value; } }
+    private string name;
+    public string Name { get { return name; } set { name = value; } }
 
     [SerializeField]
     private BeetContainerFunction function;
