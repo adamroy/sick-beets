@@ -21,6 +21,4 @@ public class TouchSensor : MonoBehaviour
     {
         if (OnUp != null) OnUp(this.gameObject);
     }
-
-
 }

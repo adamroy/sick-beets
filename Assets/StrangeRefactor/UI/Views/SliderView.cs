@@ -1,43 +1,39 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using strange.extensions.mediation.impl;
+using strange.extensions.signal.impl;
 
-[RequireComponent(typeof(SliderModel))]
-public class Slider : MonoBehaviour
+public class SliderView : View
 {
-    public Action<Slider> OnValueChanged;
+    public Signal<SliderView> OnValueChanged = new Signal<SliderView>();
     public float Value
     {
         get
         {
-            return model.value;
+            return value;
         }
         private set
         {
-            model.value = value;
+            this.value = value;
             sliderGameObject.transform.position = Vector3.Lerp(lowEndTransform.position, highEndTransform.position, value);
-            if (OnValueChanged != null) OnValueChanged(this);
+            OnValueChanged.Dispatch(this);
         }
     }
 
     public Transform lowEndTransform, highEndTransform;
-    public TouchSensor sliderSensor;
     public GameObject sliderGameObject;
     public new Camera camera;
-    
+
+    private float value = 0.5f;
     private bool sliderHeld;
-    private SliderModel model;
-
-    private void Awake()
-    {
-        model = GetComponent<SliderModel>();
-    }
-
-    private void Start()
+    
+    public void Init()
     {
         sliderHeld = false;
-        sliderSensor.OnDown += (go) => sliderHeld = true;
-        sliderSensor.OnUp += (go) => sliderHeld = false;
+        var touchDetector = sliderGameObject.AddComponent<TouchDetector>();
+        touchDetector.OnDownSignal.AddListener(() => sliderHeld = true);
+        touchDetector.OnUpSignal.AddListener(() => sliderHeld = false);
         Value = Value;
     }
 
@@ -45,18 +41,18 @@ public class Slider : MonoBehaviour
     {
         if(sliderHeld)
         {
-            var p = new Plane(lowEndTransform.position, new Vector3(0, 0, -1));
+            var p = new Plane(-camera.transform.forward, lowEndTransform.position);
             var mouseRay = camera.ScreenPointToRay(Input.mousePosition);
             float d;
             if(p.Raycast(mouseRay, out d))
             {
                 var mousePoint = mouseRay.GetPoint(d);
-                Value = ProjectPointToLineAndClamp(lowEndTransform.position, highEndTransform.position, mousePoint);
+                Value = ProjectPointToLineAndFindProgress(lowEndTransform.position, highEndTransform.position, mousePoint);
             }
         }
     }
 
-    private float ProjectPointToLineAndClamp(Vector3 a, Vector3 b, Vector3 p)
+    private float ProjectPointToLineAndFindProgress(Vector3 a, Vector3 b, Vector3 p)
     {
         var ab = a - b;
         var ap = a - p;

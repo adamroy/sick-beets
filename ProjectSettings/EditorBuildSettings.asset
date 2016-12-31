@@ -6,6 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/strange.unity
-  - enabled: 1
     path: Assets/Scenes/strange_app.unity
+  - enabled: 1
+    path: Assets/Scenes/strange_game.unity
+  - enabled: 1
+    path: Assets/Scenes/strange_ui.unity

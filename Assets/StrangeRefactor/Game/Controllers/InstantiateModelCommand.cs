@@ -19,27 +19,46 @@ public class InstantiateModelCommand : Command
     [Inject]
     public PlaceBeetSignal beetPlacementSignal { get; set; }
 
+    [Inject]
+    public RequestBeetCreationSignal beetCreationRequestSignal { get; set; }
+
     public override void Execute()
     {
-        // If the model wasn't loaded from a save file, then this step can be skipped (i.e. first run)
-        if (!model.SuccessfulyLoaded) return;
-
-        var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
-
-        foreach (var kvp in model.GetAllAssignements())
+        if (model.SuccessfulyLoaded)
         {
-            var containerModel = kvp.Key;
-            var beetModel = kvp.Value;
+            var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
 
-            // Instantiate the gameobject, not just the view!
-            if (beetModel.Type == BeetType.Common)
+            foreach (var kvp in model.GetAllAssignements())
             {
-                var beetView = GameObject.Instantiate(beetLibrary.CommonBeetPrefab.gameObject).GetComponent<BeetView>();
-                beetModel.InstanceID = beetView.GetInstanceID();
-                var containerView = containerViews.FirstOrDefault(cv => cv.name == containerModel.Name);
+                var containerModel = kvp.Key;
+                var beetModel = kvp.Value;
 
-                beetPlacementSignal.Dispatch(beetView, containerView);
+                // Instantiate the gameobject, not just the view!
+                if (beetModel.Type == BeetType.Common)
+                {
+                    var beetView = GameObject.Instantiate(beetLibrary.CommonBeetPrefab.gameObject).GetComponent<BeetView>();
+                    beetModel.InstanceID = beetView.GetInstanceID();
+                    var containerView = containerViews.FirstOrDefault(cv => cv.name == containerModel.Name);
+
+                    beetPlacementSignal.Dispatch(beetView, containerView);
+                }
             }
+        }
+        // If the model wasn't loaded from a save file, then do some jazz for first run
+        else
+        {
+            // Fabricate model 
+            var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
+            foreach (var view in containerViews)
+            {
+                var containerModel = new BeetContainerModel();
+                containerModel.Name = view.name;
+                containerModel.Function = view.function;
+                model.AddContainer(containerModel);
+            }
+
+            // Add initial beet
+            beetCreationRequestSignal.Dispatch();
         }
     }
 }

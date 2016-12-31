@@ -11,24 +11,23 @@ public class LoadAppCommand : Command
     
     [Inject]
     public StartSignal startSignal { get; set; }
-
-    private List<string> scenesToLoad = new List<string>() { "strange" };
-
+    
     public override void Execute()
     {
         Retain();
 
-        foreach (string sceneName in scenesToLoad)
-            loadSceneSignal.Dispatch(sceneName, LoadSceneMode.Additive, OnSceneLoaded);
-    }
+        List<string> scenesToLoad = new List<string>() { "strange_game", "strange_ui" };
 
-    private void OnSceneLoaded(string sceneName)
-    {
-        scenesToLoad.Remove(sceneName);
-        if (scenesToLoad.Count == 0)
-        {
-            startSignal.Dispatch();
-            Release();
-        }
+        foreach (string sceneName in scenesToLoad)
+            loadSceneSignal.Dispatch(sceneName, LoadSceneMode.Additive, 
+            (sceneLoaded) =>
+            {
+                scenesToLoad.Remove(sceneLoaded);
+                if (scenesToLoad.Count == 0)
+                {
+                    startSignal.Dispatch();
+                    Release();
+                }
+            });
     }
 }

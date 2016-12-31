@@ -20,7 +20,7 @@ public class GameGlue : MonoBehaviour, ScreenNavigator.InputConsumer
     {
         model = GetComponent<GameModelOld>();
         needsMet = new Dictionary<Need, float>();
-        model.settingsPanel.OnSettingsChanged += SettingsChanged;
+        //model.settingsPanel.OnSettingsChanged += SettingsChanged;
     }
 
     private void Start()

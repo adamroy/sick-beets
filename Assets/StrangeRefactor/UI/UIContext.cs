@@ -12,6 +12,8 @@ public class UIContext : MVCSSignalsContext
 
     protected override void mapBindings()
     {
+        mediationBinder.Bind<EnvironmentSettingsView>().To<EnvironmentSettingsMediator>();
+
         commandBinder.Bind<StartSignal>();
     }
 }

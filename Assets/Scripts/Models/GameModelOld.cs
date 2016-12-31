@@ -15,7 +15,7 @@ public class GameModelOld : MonoBehaviour, IJsonModelNode
     public AutoGrid releaseGrid;
     public AutoGrid catchGrid;
     public AutoGrid labGrid;
-    public NurserySettingsPanel settingsPanel;
+    public EnvironmentSettingsView settingsPanel;
     public NurserySettingsPanelModel settingsPanelModel;
     public ScreenNavigator navigator;
 

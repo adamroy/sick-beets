@@ -24,7 +24,6 @@ public class GameContext : MVCSSignalsContext
         injectionBinder.Bind<BeetCreatedSignal>().ToSingleton();
         injectionBinder.Bind<SelectBeetSignal>().ToSingleton();
         injectionBinder.Bind<PlaceBeetSignal>().ToSingleton();
-        // injectionBinder.Bind<GameModel>().ToSingleton();
         
         // Mediation bindings
         mediationBinder.Bind<BeetContainerView>().To<BeetContainerMediator>();
@@ -32,13 +31,9 @@ public class GameContext : MVCSSignalsContext
 
         // Command bindings
         commandBinder.Bind<StartSignal>()
-            .To<LoadModelCommand>()
             .To<InstantiateModelCommand>()
             .To<UpdateModelRoutineCommand>()
             .Once().InSequence();
-        commandBinder.Bind<QuitSignal>()
-            .To<SaveModelCommand>()
-            .Once();
         commandBinder.Bind<ContainerSelectedSignal>()
             .To<ContainerSelectedCommand>();
         commandBinder.Bind<DestroyBeetSignal>()
@@ -47,19 +42,5 @@ public class GameContext : MVCSSignalsContext
             .To<CreateBeetCommand>();
         commandBinder.Bind<TransferToLabSignal>()
             .To<TransferToLabCommand>();
-        commandBinder.Bind<PauseSignal>()
-            .To<SaveModelCommand>();
-    }
-
-    public override void OnApplicationPause(bool pause)
-    {
-        var pauseSignal = injectionBinder.GetInstance<PauseSignal>();
-        pauseSignal.Dispatch(pause);
-    }
-
-    public override void OnApplicationQuit()
-    {
-        var pauseSignal = injectionBinder.GetInstance<PauseSignal>();
-        pauseSignal.Dispatch(true);
     }
 }

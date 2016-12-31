@@ -13,7 +13,7 @@ public class BeetContainerView : View
     public void Init()
     {
         var pd = gameObject.AddComponent<TouchDetector>();
-        pd.touchSignal.AddListener(() => touchSignal.Dispatch());
+        pd.OnUpAsButtonSignal.AddListener(() => touchSignal.Dispatch());
     }
 
     public void PlaceBeet(BeetView beet)

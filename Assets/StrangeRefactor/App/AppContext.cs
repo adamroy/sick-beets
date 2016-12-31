@@ -12,17 +12,36 @@ public class AppContext : MVCSSignalsContext
 
     protected override void mapBindings()
     {
+        // The model used throughout the game
         injectionBinder.Bind<GameModel>().ToSingleton().CrossContext();
+
         // This will be the signal child contexts listen to to begin
         injectionBinder.Bind<StartSignal>().ToSingleton().CrossContext();
 
-        commandBinder.Bind<StartAppSignal>().To<LoadAppCommand>();
-        commandBinder.Bind<LoadSceneSignal>().To<LoadSceneCommand>();
+        commandBinder.Bind<StartAppSignal>()
+            .To<LoadModelCommand>()
+            .To<LoadAppCommand>();
+        commandBinder.Bind<PauseSignal>()
+            .To<SaveModelCommand>();
+        commandBinder.Bind<LoadSceneSignal>()
+            .To<LoadSceneCommand>();
     }
 
     public override void Launch()
     {
-        StartAppSignal startSignal = injectionBinder.GetInstance<StartAppSignal>();
+        var startSignal = injectionBinder.GetInstance<StartAppSignal>();
         startSignal.Dispatch();
+    }
+
+    public override void OnApplicationPause(bool pause)
+    {
+        var pauseSignal = injectionBinder.GetInstance<PauseSignal>();
+        pauseSignal.Dispatch(pause);
+    }
+
+    public override void OnApplicationQuit()
+    {
+        var pauseSignal = injectionBinder.GetInstance<PauseSignal>();
+        pauseSignal.Dispatch(true);
     }
 }
