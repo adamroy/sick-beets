@@ -23,13 +23,6 @@ namespace strange.extensions.context.impl
             injectionBinder.Bind<ICommandBinder>().To<SignalCommandBinder>().ToSingleton();
         }
 
-        // Override Start so that we can fire the StartSignal 
-        override public IContext Start()
-        {
-            base.Start();
-            StartSignal startSignal = injectionBinder.GetInstance<StartSignal>();
-            startSignal.Dispatch();
-            return this;
-        }
+       
     }
 }

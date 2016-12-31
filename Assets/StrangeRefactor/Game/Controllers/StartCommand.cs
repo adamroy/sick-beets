@@ -6,6 +6,6 @@ public class StartCommand : Command
 {
     public override void Execute()
     {
-        
+
     }
 }

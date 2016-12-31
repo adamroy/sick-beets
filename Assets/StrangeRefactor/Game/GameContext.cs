@@ -21,10 +21,10 @@ public class GameContext : MVCSSignalsContext
     {
         // Injection bindings
         injectionBinder.Bind<IBeetPrefabLibrary>().ToValue(GameObject.FindObjectOfType<PrefabLibrary>());
-        injectionBinder.Bind<GameModel>().ToSingleton();
         injectionBinder.Bind<BeetCreatedSignal>().ToSingleton();
         injectionBinder.Bind<SelectBeetSignal>().ToSingleton();
         injectionBinder.Bind<PlaceBeetSignal>().ToSingleton();
+        // injectionBinder.Bind<GameModel>().ToSingleton();
         
         // Mediation bindings
         mediationBinder.Bind<BeetContainerView>().To<BeetContainerMediator>();
@@ -34,7 +34,6 @@ public class GameContext : MVCSSignalsContext
         commandBinder.Bind<StartSignal>()
             .To<LoadModelCommand>()
             .To<InstantiateModelCommand>()
-            .To<StartCommand>()
             .To<UpdateModelRoutineCommand>()
             .Once().InSequence();
         commandBinder.Bind<QuitSignal>()

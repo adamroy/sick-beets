@@ -2,6 +2,7 @@
 using System.Collections;
 using strange.extensions.context.impl;
 using strange.extensions.context.api;
+using strange.extensions.signal.impl;
 
 public class UIContext : MVCSSignalsContext
 {
@@ -11,6 +12,6 @@ public class UIContext : MVCSSignalsContext
 
     protected override void mapBindings()
     {
-        
+        commandBinder.Bind<StartSignal>();
     }
 }

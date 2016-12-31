@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using strange.extensions.command.impl;
+using strange.extensions.context.api;
 
 // Takes a filled out model and instantiates the world from it.
 public class InstantiateModelCommand : Command
@@ -18,10 +19,10 @@ public class InstantiateModelCommand : Command
     public override void Execute()
     {
         // If the model wasn't loaded from a save file, then this step can be skipped (i.e. first run)
-        if (!model.SuccessfulyLoaded)
-            return;
+        if (!model.SuccessfulyLoaded) return;
 
         var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
+        Debug.Log(JsonUtility.ToJson(containerViews, true));
 
         foreach (var kvp in model.GetAllAssignements())
         {

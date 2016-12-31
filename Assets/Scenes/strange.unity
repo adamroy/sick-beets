@@ -136,7 +136,7 @@ GameObject:
   - 4: {fileID: 65549110}
   - 114: {fileID: 65549109}
   m_Layer: 0
-  m_Name: SickBeetsRoot
+  m_Name: GameRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
