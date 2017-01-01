@@ -106,7 +106,7 @@ public class ScreenNavigator : MonoBehaviour, IJsonModelNode
                         if (Mathf.Abs(cameraWorldDeltaX) > distanceToCancelClick && hit.collider.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast"))
                         {
                             // Moving layer to IgnoreRaycast cancels OnMouseUpAsButton()
-                            hit.collider.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+                            // hit.collider.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
                         }
 
                         yield return null;

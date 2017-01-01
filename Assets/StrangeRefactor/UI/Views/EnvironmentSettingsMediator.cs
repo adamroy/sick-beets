@@ -15,6 +15,6 @@ public class EnvironmentSettingsMediator : Mediator
 
     private void OnSliderChanged(Need need, float value)
     {
-        Debug.Log(value);
+        
     }
 }
