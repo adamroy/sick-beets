@@ -12,6 +12,12 @@ public class UpdateModelRoutineCommand : Command
     [Inject]
     public GameModel model { get; set; }
 
+    [Inject]
+    public IEnvironmentVariableLibrary environmentVariableLibrary { get; set; }
+
+    [Inject]
+    public BeetModelUpdatedSignal beetModelUpdateSignal { get; set; }
+
     private Coroutine updateCoroutine;
 
     public override void Execute()
@@ -53,18 +59,23 @@ public class UpdateModelRoutineCommand : Command
         // Calculate heal rate new each time to keep responsive
         float total = 0;
         int count = 0;
-        foreach (var envNeed in beet.EnvironmentNeeds)
+        foreach (var envNeed in environmentVariableLibrary.EnvironmentVariables)
         {
-            float needValue = beet.GetEnvironmentNeedValue(envNeed);
-            float envValue = model.GetEnvironmentValue(envNeed);
-            float diff = Mathf.Abs(needValue - envValue);
-            float score = 1 - diff * 2;
-            total += score;
-            count++;
+            if (beet.HasEnvironmentNeed(envNeed))
+            {
+                float needValue = beet.GetEnvironmentNeedValue(envNeed);
+                float envValue = model.GetEnvironmentValue(envNeed);
+                float diff = Mathf.Abs(needValue - envValue);
+                float score = 1 - diff * 2;
+                total += score;
+                count++;
+            }
         }
 
         float healRate = total / count;
         beet.Health += (deltaTime / beet.LifeSpan) * healRate;
+        beet.Health = Mathf.Clamp01(beet.Health); // Health must be in range 0-1
+        beetModelUpdateSignal.Dispatch(beet);
     }
 
     // Seconds since UTC epoch

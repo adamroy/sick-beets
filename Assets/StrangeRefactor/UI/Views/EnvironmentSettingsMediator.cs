@@ -7,14 +7,17 @@ public class EnvironmentSettingsMediator : Mediator
     [Inject]
     public EnvironmentSettingsView view { get; set; }
 
+    [Inject]
+    public EnvironmentChangedSignal environmentChangedSignal { get; set; }
+
     public override void OnRegister()
     {
         view.Init();
         view.OnSettingsChanged.AddListener(OnSliderChanged);
     }
 
-    private void OnSliderChanged(Need need, float value)
+    private void OnSliderChanged(EnvironmentVariable need, float value)
     {
-        
+        environmentChangedSignal.Dispatch(need, value);
     }
 }

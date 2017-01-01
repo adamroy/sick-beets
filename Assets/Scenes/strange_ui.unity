@@ -156,6 +156,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 377123427}
   - 114: {fileID: 377123429}
+  - 114: {fileID: 377123428}
   m_Layer: 8
   m_Name: TemperatureSlider
   m_TagString: Untagged
@@ -179,6 +180,18 @@ Transform:
   - {fileID: 1855258031}
   m_Father: {fileID: 1843652248}
   m_RootOrder: 3
+--- !u!114 &377123428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 377123426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cb11484a20a1504aaa578c520b4dd63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  variable: {fileID: 11400000, guid: d7708c1b46800c248b4eb756c5aa852b, type: 2}
 --- !u!114 &377123429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -311,6 +324,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 843715141}
   - 114: {fileID: 843715143}
+  - 114: {fileID: 843715142}
   m_Layer: 8
   m_Name: LightSlider
   m_TagString: Untagged
@@ -334,6 +348,18 @@ Transform:
   - {fileID: 1598719119}
   m_Father: {fileID: 1843652248}
   m_RootOrder: 2
+--- !u!114 &843715142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 843715140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cb11484a20a1504aaa578c520b4dd63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  variable: {fileID: 11400000, guid: 2d774b2ead47099449dd6c9862e80c86, type: 2}
 --- !u!114 &843715143
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,10 +13,14 @@ public class BeetMediator : Mediator
     [Inject]
     public PlaceBeetSignal beetPlacementSignal { get; set; }
 
+    [Inject]
+    public BeetModelUpdatedSignal beetModelUpdateSignal { get; set; }
+
     public override void OnRegister()
     {
         view.Init();
         selectionSignal.AddListener(SelectionSignalListener);
+        beetModelUpdateSignal.AddListener(BeetModelUpdateListener);
     }
 
     private void SelectionSignalListener(int instanceID)
@@ -25,5 +29,13 @@ public class BeetMediator : Mediator
             view.MarkSelected();
         else
             view.MarkUnselected();
+    }
+
+    private void BeetModelUpdateListener(BeetModel model)
+    {
+        if (model.InstanceID == view.GetInstanceID())
+        {
+            view.SetHealthIndicator(model.Health);
+        }
     }
 }

@@ -20,10 +20,11 @@ public class GameContext : MVCSSignalsContext
     protected override void mapBindings()
     {
         // Injection bindings
-        injectionBinder.Bind<IBeetPrefabLibrary>().ToValue(GameObject.FindObjectOfType<PrefabLibrary>());
+        injectionBinder.Bind<IBeetPrefabLibrary>().Bind<IEnvironmentVariableLibrary>().ToValue(GameObject.FindObjectOfType<AssetLibrary>());
         injectionBinder.Bind<BeetCreatedSignal>().ToSingleton();
         injectionBinder.Bind<SelectBeetSignal>().ToSingleton();
         injectionBinder.Bind<PlaceBeetSignal>().ToSingleton();
+        injectionBinder.Bind<BeetModelUpdatedSignal>().ToSingleton();
         
         // Mediation bindings
         mediationBinder.Bind<BeetContainerView>().To<BeetContainerMediator>();

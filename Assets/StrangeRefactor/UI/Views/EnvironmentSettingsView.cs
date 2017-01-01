@@ -11,24 +11,30 @@ public class EnvironmentSettingsView : View
     public GameObject panel;
     public Transform panelLoweredLocation, panelRaisedLocation;
     public float raiseTime = 0.75f;
-    public Signal<Need, float> OnSettingsChanged = new Signal<Need, float>();
+    public Signal<EnvironmentVariable, float> OnSettingsChanged = new Signal<EnvironmentVariable, float>();
 
     private SliderView[] sliders;
     private bool active;
+    private Dictionary<SliderView, EnvironmentVariable> sliderToEnvVariableMap;
 
     public void Init()
     {
+        sliderToEnvVariableMap = new Dictionary<SliderView, EnvironmentVariable>();
         foreach (var slider in GetComponentsInChildren<SliderView>())
         {
             slider.Init();
             slider.OnValueChanged.AddListener(OnSliderChanged);
+            var envVarAsgnmt = slider.GetComponent<EnvironmentVariableAssignmentView>();
+            if (envVarAsgnmt == null)
+                throw new Exception("Slider needs an EnvironmentVariableAssignmentView!");
+            sliderToEnvVariableMap[slider] = envVarAsgnmt.variable;
         }
         active = false;
     }
 
     private void OnSliderChanged(SliderView slider)
     {
-        OnSettingsChanged.Dispatch(null, slider.Value);
+        OnSettingsChanged.Dispatch(sliderToEnvVariableMap[slider], slider.Value);
     }
 
     private IEnumerator MovePanel(Transform target, bool enable)

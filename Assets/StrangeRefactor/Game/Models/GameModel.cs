@@ -18,7 +18,7 @@ public class GameModel : IJsonModelNode
     private List<BeetContainerModel> containers;
 
     private SerializableDictionary<BeetContainerModel, BeetModel> assignments;
-    private SerializableDictionary<EnvironmentVariable, float> environmentVariables;
+    private SerializableDictionary<string, float> environmentVariables; // Maps names to values
 
     public GameModel()
     {
@@ -26,7 +26,7 @@ public class GameModel : IJsonModelNode
         beets = new List<BeetModel>();
         containers = new List<BeetContainerModel>();
         assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
-        environmentVariables = new SerializableDictionary<EnvironmentVariable, float>();
+        environmentVariables = new SerializableDictionary<string, float>();
     }
 
     public BeetModel SelectedBeet { get; set; }
@@ -113,10 +113,17 @@ public class GameModel : IJsonModelNode
         return assignments.ToList();
     }
 
+    public void SetEnvironmentValue(EnvironmentVariable variable, float value)
+    {
+        if (environmentVariables.ContainsKey(variable.name))
+            environmentVariables.Remove(variable.name);
+        environmentVariables[variable.name] = value;
+    }
+
     public float GetEnvironmentValue(EnvironmentVariable variable)
     {
-        if (environmentVariables.ContainsKey(variable))
-            return environmentVariables[variable];
+        if (environmentVariables.ContainsKey(variable.name))
+            return environmentVariables[variable.name];
         else
             return 0f;
     }

@@ -15,5 +15,6 @@ public class UIContext : MVCSSignalsContext
         mediationBinder.Bind<EnvironmentSettingsView>().To<EnvironmentSettingsMediator>();
 
         commandBinder.Bind<StartSignal>();
+        commandBinder.Bind<EnvironmentChangedSignal>().To<EnvironmentChangedCommand>();
     }
 }
