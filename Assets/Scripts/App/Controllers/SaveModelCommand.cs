@@ -9,7 +9,7 @@ public class SaveModelCommand : Command
     public const string SaveGameKey = "GameSave";
 
     // My debugging switch for now
-    public const bool Debug = true;
+    public const bool Debug = false;
 
     // Since this is called from the pause signal
     [Inject]

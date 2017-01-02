@@ -16,7 +16,6 @@ public class InitiateUICommand : Command
 
     public override void Execute()
     {
-        Debug.Log("Initiating UI");
         foreach(var variable in environmentVariableLibrary.EnvironmentVariables)
         {
             setEnvironmentVariable.Dispatch(variable, model.GetEnvironmentValue(variable));

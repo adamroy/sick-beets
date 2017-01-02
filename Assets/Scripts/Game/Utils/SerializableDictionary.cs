@@ -98,54 +98,6 @@ public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<
             return false;
     }
 
-    #region source management
-
-    private void TryAddManagedKey(TKey key)
-    {
-        if (internalKeySource == null) return;
-
-        if (!internalKeySource.Contains(key))
-            internalKeySource.Add(key);
-    }
-
-    private void TryRemoveManagedKey(TKey key)
-    {
-        if (internalKeySource == null) return;
-
-        internalKeySource.Remove(key);
-    }
-
-    private void ClearManagedKeys()
-    {
-        if (internalKeySource == null) return;
-
-        internalKeySource.Clear();
-    }
-
-    private void TryAddManagedValue(TValue value)
-    {
-        if (internalValueSource == null) return;
-
-        if (!internalValueSource.Contains(value))
-            internalValueSource.Add(value);
-    }
-
-    private void TryRemoveManagedValue(TValue value)
-    {
-        if (internalValueSource == null) return;
-
-        internalValueSource.Remove(value);
-    }
-
-    private void ClearManagedValues()
-    {
-        if (internalValueSource == null) return;
-
-        internalValueSource.Clear();
-    }
-
-    #endregion
-
     #region IDictionary<TKey, TValue>
 
     public ICollection<TKey> Keys
@@ -196,8 +148,6 @@ public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<
     public void Add(TKey key, TValue value)
     {
         dictionary.Add(key, value);
-        TryAddManagedKey(key);
-        TryAddManagedValue(value);
     }
 
     public bool ContainsKey(TKey key)
@@ -207,9 +157,6 @@ public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<
 
     public bool Remove(TKey key)
     {
-        TryRemoveManagedKey(key);
-        if (dictionary.ContainsKey(key))
-            TryRemoveManagedValue(dictionary[key]);
         return dictionary.Remove(key);
     }
 
@@ -220,15 +167,11 @@ public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<
 
     public void Add(System.Collections.Generic.KeyValuePair<TKey, TValue> item)
     {
-        TryAddManagedKey(item.Key);
-        TryAddManagedValue(item.Value);
         dictionary.Add(item.Key, item.Value);
     }
 
     public void Clear()
     {
-        ClearManagedKeys();
-        ClearManagedValues();
         dictionary.Clear();
     }
 
@@ -272,14 +215,50 @@ public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<
     {
         keyIndices.Clear();
         valueIndices.Clear();
+        
+        if(IsKeyManaged)
+        {
+            internalKeySource.Clear();
+        }
+        if(IsValueManaged)
+        { 
+            internalValueSource.Clear();
+            // Reserve space
+            for (int i = 0; i < dictionary.Count; i++)
+                internalValueSource.Add(default(TValue));
+        }
+
+        int index = 0;
+        
         foreach (var kvp in dictionary)
         {
-            int keyIndex = keySource.IndexOf(kvp.Key);
-            keyIndices.Add(keyIndex);
-            int valueIndex = valueSource.IndexOf(kvp.Value);
-            valueIndices.Add(valueIndex);
-            Debug.Log("(key, value): (" + kvp.Key + ", " + kvp.Value + ")");
-            Debug.Log("Key Index: " + keyIndex + ", " + valueIndex);
+            int keyIndex = -1;
+            if (IsKeyManaged == false) 
+            {
+                // When external managing keys, use the index of the actual source (no changing order)
+                keyIndex = keySource.IndexOf(kvp.Key);
+                keyIndices.Add(keyIndex);
+            }
+            else
+            {
+                // When internally managing, add keys in order of enumeration
+                internalKeySource.Add(kvp.Key);
+                keyIndex = index++;
+                keyIndices.Add(keyIndex);
+            }
+
+            if (IsValueManaged == false)
+            {
+                // When externally managing, use the index of the actual source (no changing order)
+                int valueIndex = valueSource.IndexOf(kvp.Value);
+                valueIndices.Add(valueIndex);
+            }
+            else
+            {
+                // When internally managing values, add them in order of the keys
+                internalValueSource[keyIndex] = kvp.Value;
+                valueIndices.Add(keyIndex);
+            }
         }
     }
 
@@ -302,9 +281,8 @@ public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<
             int keyIndex = keyIndices[i];
             int valueIndex = valueIndices[i];
 
-            if (keyIndex < keySource.Count && valueIndex < valueSource.Count)
+            if (keyIndex < keySource.Count && valueIndex < valueSource.Count && keyIndex >= 0 && valueIndex >= 0)
             {
-                Debug.Log("Loading: (" + keySource[keyIndex] + ", " + valueSource[valueIndex] + ")");
                 dictionary.Add(keySource[keyIndex], valueSource[valueIndex]);
             }
             else
