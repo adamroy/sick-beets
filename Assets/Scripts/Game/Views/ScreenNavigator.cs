@@ -2,12 +2,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using strange.extensions.mediation.impl;
 
 // Controls navigation between game screens
 // Swipe horizontally to switch screens or use buttons
 // Assumes x axis aligned
 [RequireComponent(typeof(Camera))]
-public class ScreenNavigator : MonoBehaviour, IJsonModelNode
+public class ScreenNavigator : View
 {
     public static ScreenNavigator Instance { get; private set; }
 
@@ -16,44 +17,25 @@ public class ScreenNavigator : MonoBehaviour, IJsonModelNode
     public float distanceToCancelClick;
     public float allowedDistanceOverBoundry;
     public float boundryGravity;
-
-    [HideInInspector]
-    [SerializeField]
+    
     private Transform currentPosition;
     private new Camera camera;
     private Coroutine movementCoroutine;
-    private List<InputConsumer> inputConsumers;
-
-    public interface InputConsumer
+    
+    protected override void Awake()
     {
-        bool IsActive();
-    }
-
-    private void Awake()
-    {
-        inputConsumers = new List<InputConsumer>();
+        base.Awake();
         Instance = this;
-    }
-
-    public void AddInputConsumer(InputConsumer ip)
-    {
-        inputConsumers.Add(ip);
-    }
-
-    public void RemoveInputConsumer(InputConsumer ip)
-    {
-        inputConsumers.Remove(ip);
     }
 
     private bool CanMove()
     {
-        foreach (var ip in inputConsumers)
-            if (ip.IsActive()) return false;
         return true;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         camera = GetComponent<Camera>();
         if (currentPosition != null)
             camera.transform.position = currentPosition.position;
@@ -192,10 +174,4 @@ public class ScreenNavigator : MonoBehaviour, IJsonModelNode
         else
             return currentPosition;
     }
-
-    public void BeforeSerializing() { }
-
-    public void AfterDeserializing() { }
-
-    public IEnumerable<IJsonModelNode> GetChildren() { return null; }
 }

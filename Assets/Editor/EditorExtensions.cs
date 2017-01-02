@@ -16,8 +16,8 @@ public class EditorExtensions
         PlayerPrefs.DeleteAll();
     }
 
-    private static string mainScene = "strange_app";
-    private static string[] tertiaryScenes = new string[] { "strange_game", "strange_ui" };
+    private static string mainScene = "app";
+    private static string[] tertiaryScenes = new string[] { "game", "ui" };
 
     private static void UnloadTertiaryScenes()
     {

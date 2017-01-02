@@ -16,7 +16,7 @@ public class LoadAppCommand : Command
     {
         Retain();
 
-        List<string> scenesToLoad = new List<string>() { "strange_game", "strange_ui" };
+        List<string> scenesToLoad = new List<string>() { "game", "ui" };
 
         foreach (string sceneName in scenesToLoad)
             loadSceneSignal.Dispatch(sceneName, LoadSceneMode.Additive, 

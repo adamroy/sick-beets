@@ -26,6 +26,12 @@ public class UpdateModelRoutineCommand : Command
         updateCoroutine = contextView.GetComponent<MonoBehaviour>().StartCoroutine(UpdateCoroutine());
     }
 
+    public override void Release()
+    {
+        contextView.GetComponent<MonoBehaviour>().StopCoroutine(updateCoroutine);
+        base.Release();
+    }
+
     private IEnumerator UpdateCoroutine()
     {
         float deltaTime = Convert.ToSingle(CurrentSeconds() - model.Time);
