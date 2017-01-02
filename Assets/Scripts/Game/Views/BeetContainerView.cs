@@ -12,7 +12,8 @@ public class BeetContainerView : View
 
     public void Init()
     {
-        var pd = gameObject.AddComponent<TouchDetector>();
+        var pd = gameObject.AddComponent<TouchDetectorView>();
+        pd.InputLayer = InputLayer.Game;
         pd.OnUpAsButtonSignal.AddListener(() => touchSignal.Dispatch());
     }
 

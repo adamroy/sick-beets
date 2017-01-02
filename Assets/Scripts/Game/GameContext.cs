@@ -29,6 +29,7 @@ public class GameContext : MVCSSignalsContext
         // Mediation bindings
         mediationBinder.Bind<BeetContainerView>().To<BeetContainerMediator>();
         mediationBinder.Bind<BeetView>().To<BeetMediator>();
+        mediationBinder.Bind<TouchDetectorView>().To<TouchDetectorMediator>();
 
         // Command bindings
         commandBinder.Bind<StartSignal>()

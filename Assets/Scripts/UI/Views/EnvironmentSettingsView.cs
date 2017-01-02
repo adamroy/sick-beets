@@ -12,6 +12,7 @@ public class EnvironmentSettingsView : View
     public Transform panelLoweredLocation, panelRaisedLocation;
     public float raiseTime = 0.75f;
     public Signal<EnvironmentVariable, float> OnSettingsChanged = new Signal<EnvironmentVariable, float>();
+    public Signal<bool> OnPanelVisibleChanged = new Signal<bool>();
 
     private SliderView[] sliders;
     private bool active;
@@ -58,10 +59,12 @@ public class EnvironmentSettingsView : View
             active = !active;
             if (active)
             {
+                OnPanelVisibleChanged.Dispatch(true);
                 StartCoroutine(MovePanel(panelRaisedLocation, true));
             }
             else
             {
+                OnPanelVisibleChanged.Dispatch(false);
                 StartCoroutine(MovePanel(panelLoweredLocation, false));
             }
         }

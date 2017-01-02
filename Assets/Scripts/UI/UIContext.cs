@@ -13,6 +13,7 @@ public class UIContext : MVCSSignalsContext
     protected override void mapBindings()
     {
         mediationBinder.Bind<EnvironmentSettingsView>().To<EnvironmentSettingsMediator>();
+        mediationBinder.Bind<TouchDetectorView>().To<TouchDetectorMediator>();
 
         commandBinder.Bind<StartSignal>();
         commandBinder.Bind<EnvironmentChangedSignal>().To<EnvironmentChangedCommand>();

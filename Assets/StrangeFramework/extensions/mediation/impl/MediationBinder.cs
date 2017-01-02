@@ -51,9 +51,9 @@ namespace strange.extensions.mediation.impl
 
 		public void Trigger(MediationEvent evt, IView view)
 		{
-			Type viewType = view.GetType();
+            Type viewType = view.GetType();
 			IMediationBinding binding = GetBinding (viewType) as IMediationBinding;
-			if (binding != null)
+            if (binding != null)
 			{
 				switch(evt)
 				{
@@ -115,7 +115,7 @@ namespace strange.extensions.mediation.impl
 		{
 			Type viewType = view.GetType();
 
-			if (bindings.ContainsKey(viewType))
+            if (bindings.ContainsKey(viewType))
 			{
 				object[] values = binding.value as object[];
 				int aa = values.Length;
@@ -127,6 +127,7 @@ namespace strange.extensions.mediation.impl
 					{
 						throw new MediationException(viewType + "mapped to itself. The result would be a stack overflow.", MediationExceptionType.MEDIATOR_VIEW_STACK_OVERFLOW);
 					}
+                    
 					MonoBehaviour mediator = mono.gameObject.AddComponent(mediatorType) as MonoBehaviour;
 					if (mediator == null)
 						throw new MediationException ("The view: " + viewType.ToString() + " is mapped to mediator: " + mediatorType.ToString() + ". AddComponent resulted in null, which probably means " + mediatorType.ToString().Substring(mediatorType.ToString().LastIndexOf(".")+1) + " is not a MonoBehaviour.", MediationExceptionType.NULL_MEDIATOR);

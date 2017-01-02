@@ -66,7 +66,7 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightingDataAsset: {fileID: 112000024, guid: ae2bd95546b01dd4a9d9c1263b07e25e,
+  m_LightingDataAsset: {fileID: 112000025, guid: a1b625e2787715245ad45f2e85d3a4e6,
     type: 2}
   m_RuntimeCPUUsage: 25
 --- !u!196 &4
@@ -1295,7 +1295,6 @@ MonoBehaviour:
   distanceToCancelClick: 0.5
   allowedDistanceOverBoundry: 1
   boundryGravity: 10
-  currentPosition: {fileID: 0}
 --- !u!1 &1000536104
 GameObject:
   m_ObjectHideFlags: 0

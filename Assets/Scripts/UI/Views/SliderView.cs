@@ -31,7 +31,8 @@ public class SliderView : View
     public void Init()
     {
         sliderHeld = false;
-        var touchDetector = sliderGameObject.AddComponent<TouchDetector>();
+        var touchDetector = sliderGameObject.AddComponent<TouchDetectorView>();
+        touchDetector.InputLayer = InputLayer.UI;
         touchDetector.RaycastCamera = camera;
         touchDetector.OnDownSignal.AddListener(() => sliderHeld = true);
         touchDetector.OnUpSignal.AddListener(() => sliderHeld = false);
