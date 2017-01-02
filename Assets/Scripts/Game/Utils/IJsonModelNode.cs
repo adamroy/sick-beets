@@ -99,7 +99,15 @@ public static class JsonSavingUtility
             var dataBuffer = Convert.FromBase64String(dataString);
             var dataStream = new MemoryStream(dataBuffer);
             JsonReader reader = new JsonReader(dataStream);
-            reader.ReadObject(root);
+            try
+            {
+                reader.ReadObject(root);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+                return false;
+            }
             return true;
         }
 

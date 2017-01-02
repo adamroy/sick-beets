@@ -31,6 +31,16 @@ public class GameModel : IJsonModelNode
 
     public BeetModel SelectedBeet { get; set; }
 
+    public void Clear()
+    {
+        SuccessfulyLoaded = false;
+        this.Time = 0;
+        beets = new List<BeetModel>();
+        containers = new List<BeetContainerModel>();
+        assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
+        environmentVariables = new SerializableDictionary<string, float>();
+    }
+
     #region public methods
 
     public void AddBeet(BeetModel beet)
