@@ -20,6 +20,7 @@ public class AppContext : MVCSSignalsContext
         injectionBinder.Bind<ChangeActiveInputLayerSignal>().ToSingleton().CrossContext();
         injectionBinder.Bind<SetInputLayerEnabledSignal>().ToSingleton().CrossContext();
 
+        // Have to repeat this in child contexts, no cross-context mediation
         mediationBinder.Bind<TouchDetectorView>().To<TouchDetectorMediator>();
 
         commandBinder.Bind<StartAppSignal>()

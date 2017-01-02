@@ -3,9 +3,9 @@ using UnityEngine;
 using strange.extensions.mediation.impl;
 using strange.extensions.signal.impl;
 
-public class TouchDetectorView : View
+public class TouchDetectorView : View, ITouchEnabler
 {
-    public InputLayer InputLayer;
+    public InputLayer inputLayer;
     public Signal OnUpAsButtonSignal = new Signal();
     public Signal OnDownSignal = new Signal();
     public Signal OnUpSignal = new Signal();
@@ -88,8 +88,14 @@ public class TouchDetectorView : View
         return Physics.Raycast(ray, out hit, 100f) && hit.collider == GetComponent<Collider>();
     }
 
+    #region ITouchEnabler
+
+    public InputLayer InputLayer { get { return inputLayer; } set { inputLayer = value; } }
+
     public void SetTouchEnabled(bool enabled)
     {
         touchEnabled = enabled;
     }
+
+    #endregion
 }

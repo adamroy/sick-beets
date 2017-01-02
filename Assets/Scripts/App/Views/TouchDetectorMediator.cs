@@ -1,25 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
-using strange.extensions.mediation.impl;
+using System;
 
-public class TouchDetectorMediator : Mediator
+public class TouchDetectorMediator : TouchEnablerMediator
 {
     [Inject]
     public TouchDetectorView view { get; set; }
 
-    [Inject]
-    public SetInputLayerEnabledSignal setInputLayerEnabledSignal { get; set; }
-
-    public override void OnRegister()
-    {
-        setInputLayerEnabledSignal.AddListener(EnableInputLayer);
-    }
-
-    private void EnableInputLayer(InputLayer layer, bool enabled)
-    {
-        if (view.InputLayer == layer)
-        {
-            view.SetTouchEnabled(enabled);
-        }
-    }
+    protected override ITouchEnabler View { get { return view; } }
 }
