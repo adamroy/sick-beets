@@ -14,15 +14,13 @@ public class AppContext : MVCSSignalsContext
     {
         // The model used throughout the game
         injectionBinder.Bind<GameModel>().ToSingleton().CrossContext();
+        injectionBinder.Bind<IBeetPrefabLibrary>().Bind<IEnvironmentVariableLibrary>().ToValue(GameObject.FindObjectOfType<AssetLibrary>()).CrossContext();
         // This will be the signal child contexts listen to to begin
         injectionBinder.Bind<StartSignal>().ToSingleton().CrossContext();
         // This lets any part of the app change the active input layer
         injectionBinder.Bind<ChangeActiveInputLayerSignal>().ToSingleton().CrossContext();
         injectionBinder.Bind<SetInputLayerEnabledSignal>().ToSingleton().CrossContext();
-
-        // Have to repeat this in child contexts, no cross-context mediation
-        mediationBinder.Bind<TouchDetectorView>().To<TouchDetectorMediator>();
-
+        
         commandBinder.Bind<StartAppSignal>()
             .To<LoadModelCommand>()
             .To<LoadAppCommand>();

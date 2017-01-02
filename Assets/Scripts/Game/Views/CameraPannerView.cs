@@ -8,10 +8,8 @@ using strange.extensions.mediation.impl;
 // Swipe horizontally to switch screens or use buttons
 // Assumes x axis aligned
 [RequireComponent(typeof(Camera))]
-public class ScreenNavigator : View
+public class CameraPannerView : View, IInputEnabler
 {
-    public static ScreenNavigator Instance { get; private set; }
-
     // Where the camera should stop to be on different screens
     public Transform[] cameraPositions;
     public float distanceToCancelClick;
@@ -21,18 +19,8 @@ public class ScreenNavigator : View
     private Transform currentPosition;
     private new Camera camera;
     private Coroutine movementCoroutine;
+    private bool inputEnabled = true;
     
-    protected override void Awake()
-    {
-        base.Awake();
-        Instance = this;
-    }
-
-    private bool CanMove()
-    {
-        return true;
-    }
-
     protected override void Start()
     {
         base.Start();
@@ -58,6 +46,11 @@ public class ScreenNavigator : View
         }
     }
 
+    private bool CanMove()
+    {
+        return inputEnabled;
+    }
+    
     private IEnumerator NavigationCoroutine()
     {
         while(true)
@@ -174,4 +167,15 @@ public class ScreenNavigator : View
         else
             return currentPosition;
     }
+
+    #region ITouchEnabler
+
+    public InputLayer InputLayer { get { return InputLayer.Camera; } }
+
+    public void SetInputEnabled(bool enabled)
+    {
+        inputEnabled = enabled;
+    }
+
+    #endregion
 }

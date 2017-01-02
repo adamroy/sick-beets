@@ -274,15 +274,19 @@ public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<
         valueIndices.Clear();
         foreach (var kvp in dictionary)
         {
-            keyIndices.Add(keySource.IndexOf(kvp.Key));
-            valueIndices.Add(valueSource.IndexOf(kvp.Value));
+            int keyIndex = keySource.IndexOf(kvp.Key);
+            keyIndices.Add(keyIndex);
+            int valueIndex = valueSource.IndexOf(kvp.Value);
+            valueIndices.Add(valueIndex);
+            Debug.Log("(key, value): (" + kvp.Key + ", " + kvp.Value + ")");
+            Debug.Log("Key Index: " + keyIndex + ", " + valueIndex);
         }
     }
 
     public void AfterDeserializing()
     {
         dictionary.Clear();
-
+        
         // Fetch our saved values if they exist
         if (internalKeySource != null && internalKeySource.Count > 0)
             keySource = internalKeySource;
@@ -300,11 +304,12 @@ public class SerializableDictionary<TKey, TValue> : IJsonModelNode, IDictionary<
 
             if (keyIndex < keySource.Count && valueIndex < valueSource.Count)
             {
+                Debug.Log("Loading: (" + keySource[keyIndex] + ", " + valueSource[valueIndex] + ")");
                 dictionary.Add(keySource[keyIndex], valueSource[valueIndex]);
             }
             else
             {
-                throw new Exception("SerializableDictionary error, saved indices exceed source length.");
+                throw new Exception("SerializableDictionary error: attempting to access indices outside source size.");
             }
         }
     }

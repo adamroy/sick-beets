@@ -3,10 +3,10 @@ using System.Collections;
 using strange.extensions.mediation.impl;
 
 // The base for mediators that deal with ITouchEnabler classes to allow them to talk to the app
-public abstract class TouchEnablerMediator : Mediator
+public abstract class InputEnablerMediator : Mediator
 {
     // Can't [Inject] interfaces (ITouchEnabler) so this inheritance based approach is a work around
-    protected abstract ITouchEnabler View { get; }
+    protected abstract IInputEnabler View { get; }
 
     // Apparently [Inject] tags are usable when inherited!
     [Inject]
@@ -21,7 +21,7 @@ public abstract class TouchEnablerMediator : Mediator
     {
         if (View.InputLayer == layer)
         {
-            View.SetTouchEnabled(enabled);
+            View.SetInputEnabled(enabled);
         }
     }
 }

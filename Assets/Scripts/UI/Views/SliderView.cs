@@ -7,19 +7,7 @@ using strange.extensions.signal.impl;
 public class SliderView : View
 {
     public Signal<SliderView> OnValueChanged = new Signal<SliderView>();
-    public float Value
-    {
-        get
-        {
-            return value;
-        }
-        private set
-        {
-            this.value = value;
-            sliderGameObject.transform.position = Vector3.Lerp(lowEndTransform.position, highEndTransform.position, value);
-            OnValueChanged.Dispatch(this);
-        }
-    }
+    public float Value { get { return value; } }
 
     public Transform lowEndTransform, highEndTransform;
     public GameObject sliderGameObject;
@@ -36,7 +24,7 @@ public class SliderView : View
         touchDetector.RaycastCamera = camera;
         touchDetector.OnDownSignal.AddListener(() => sliderHeld = true);
         touchDetector.OnUpSignal.AddListener(() => sliderHeld = false);
-        Value = Value;
+        SetValue(this.value, true);
     }
 
     private void Update()
@@ -49,7 +37,8 @@ public class SliderView : View
             if(p.Raycast(mouseRay, out d))
             {
                 var mousePoint = mouseRay.GetPoint(d);
-                Value = ProjectPointToLineAndFindProgress(lowEndTransform.position, highEndTransform.position, mousePoint);
+                float v = ProjectPointToLineAndFindProgress(lowEndTransform.position, highEndTransform.position, mousePoint);
+                SetValue(v, true);
             }
         }
     }
@@ -62,5 +51,18 @@ public class SliderView : View
         float t = Vector3.Dot(ab, result) / (ab.magnitude * ab.magnitude);
         t = Mathf.Clamp01(t);
         return t;
+    }
+
+    private void SetValue(float value, bool dispatchUpdateSignal)
+    {
+        this.value = value;
+        sliderGameObject.transform.position = Vector3.Lerp(lowEndTransform.position, highEndTransform.position, value);
+        if (dispatchUpdateSignal)
+            OnValueChanged.Dispatch(this);
+    }
+
+    public void SetValue(float value)
+    {
+        SetValue(value, false);
     }
 }

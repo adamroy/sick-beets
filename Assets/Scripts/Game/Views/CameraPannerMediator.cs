@@ -2,10 +2,10 @@
 using System.Collections;
 using System;
 
-public class TouchDetectorMediator : InputEnablerMediator
+public class CameraPannerMediator : InputEnablerMediator
 {
     [Inject]
-    public TouchDetectorView view { get; set; }
+    public CameraPannerView view { get; set; }
 
     protected override IInputEnabler View { get { return view; } }
 }

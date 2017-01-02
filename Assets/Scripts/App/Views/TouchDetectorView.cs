@@ -3,7 +3,7 @@ using UnityEngine;
 using strange.extensions.mediation.impl;
 using strange.extensions.signal.impl;
 
-public class TouchDetectorView : View, ITouchEnabler
+public class TouchDetectorView : View, IInputEnabler
 {
     public InputLayer inputLayer;
     public Signal OnUpAsButtonSignal = new Signal();
@@ -92,7 +92,7 @@ public class TouchDetectorView : View, ITouchEnabler
 
     public InputLayer InputLayer { get { return inputLayer; } set { inputLayer = value; } }
 
-    public void SetTouchEnabled(bool enabled)
+    public void SetInputEnabled(bool enabled)
     {
         touchEnabled = enabled;
     }

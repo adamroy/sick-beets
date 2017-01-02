@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using strange.extensions.mediation.impl;
 using strange.extensions.signal.impl;
 
@@ -31,6 +32,15 @@ public class EnvironmentSettingsView : View
             sliderToEnvVariableMap[slider] = envVarAsgnmt.variable;
         }
         active = false;
+    }
+
+    public void SetEnvironmentVariable(EnvironmentVariable variable, float value)
+    {
+        var sliders = GetComponentsInChildren<SliderView>();
+        var targetSlider = sliders.FirstOrDefault(s => s.GetComponent<EnvironmentVariableAssignmentView>().variable == variable);
+        if (targetSlider != null)
+            targetSlider.SetValue(value);
+
     }
 
     private void OnSliderChanged(SliderView slider)

@@ -2,8 +2,8 @@
 using System.Collections;
 using strange.extensions.mediation.impl;
 
-public interface ITouchEnabler
+public interface IInputEnabler
 {
     InputLayer InputLayer { get; }
-    void SetTouchEnabled(bool enabled);
+    void SetInputEnabled(bool enabled);
 }

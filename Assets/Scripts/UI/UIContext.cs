@@ -15,7 +15,9 @@ public class UIContext : MVCSSignalsContext
         mediationBinder.Bind<EnvironmentSettingsView>().To<EnvironmentSettingsMediator>();
         mediationBinder.Bind<TouchDetectorView>().To<TouchDetectorMediator>();
 
-        commandBinder.Bind<StartSignal>();
+        commandBinder.Bind<StartSignal>()
+            .To<InitiateUICommand>();
+            
         commandBinder.Bind<EnvironmentChangedSignal>().To<EnvironmentChangedCommand>();
     }
 }

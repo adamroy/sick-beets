@@ -122,10 +122,11 @@ public class GameModel : IJsonModelNode
 
     public float GetEnvironmentValue(EnvironmentVariable variable)
     {
-        if (environmentVariables.ContainsKey(variable.name))
-            return environmentVariables[variable.name];
-        else
-            return 0f;
+        // Set a default value 
+        if (!environmentVariables.ContainsKey(variable.name))
+            SetEnvironmentValue(variable, 0.5f);
+
+        return environmentVariables[variable.name];
     }
 
     #endregion

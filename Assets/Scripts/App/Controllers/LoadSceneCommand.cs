@@ -30,6 +30,7 @@ public class LoadSceneCommand : Command
         var asyncOp = SceneManager.LoadSceneAsync(sceneName, loadSceneMode);
         yield return asyncOp;
         sceneLoadedCallback(sceneName);
+        yield return null; // Wait an extra frame to hopefully hit the Start() phase
         Release();
     }
 }

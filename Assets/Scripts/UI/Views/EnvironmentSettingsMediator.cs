@@ -18,6 +18,9 @@ public class EnvironmentSettingsMediator : Mediator
         view.Init();
         view.OnSettingsChanged.AddListener(OnSliderChanged);
         view.OnPanelVisibleChanged.AddListener(OnSliderVisibleChanged);
+
+        // This signal is used as a two way channel, so we can get commands to set vars from here
+        environmentChangedSignal.AddListener(OnEnvironmentChanged);
     }
 
     private void OnSliderChanged(EnvironmentVariable need, float value)
@@ -28,5 +31,10 @@ public class EnvironmentSettingsMediator : Mediator
     private void OnSliderVisibleChanged(bool visible)
     {
         changeActiveInputLayerSignal.Dispatch(InputLayer.UI, visible);
+    }
+
+    private void OnEnvironmentChanged(EnvironmentVariable var, float value)
+    {
+        view.SetEnvironmentVariable(var, value);
     }
 }

@@ -7,9 +7,7 @@ public class LoadModelCommand : Command
 {
     [Inject]
     public GameModel model { get; set; }
-
     
-
     public override void Execute()
     {
         if (JsonSavingUtility.Load(SaveModelCommand.SaveGameKey, model))
