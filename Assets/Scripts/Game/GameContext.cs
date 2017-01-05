@@ -24,6 +24,7 @@ public class GameContext : MVCSSignalsContext
         injectionBinder.Bind<SelectBeetSignal>().ToSingleton();
         injectionBinder.Bind<PlaceBeetSignal>().ToSingleton();
         injectionBinder.Bind<BeetModelUpdatedSignal>().ToSingleton();
+        injectionBinder.Bind<PlaceCameraSignal>().ToSingleton();
         
         // Mediation bindings
         mediationBinder.Bind<BeetContainerView>().To<BeetContainerMediator>();
@@ -42,7 +43,9 @@ public class GameContext : MVCSSignalsContext
             .To<DestroyBeetCommand>();
         commandBinder.Bind<RequestBeetCreationSignal>()
             .To<CreateBeetCommand>();
-        commandBinder.Bind<TransferToLabSignal>()
-            .To<TransferToLabCommand>();
+        commandBinder.Bind<ResearchBeetSignal>()
+            .To<TransferToLabCommand>()
+            .To<PanToLabCommand>()
+            .InSequence();
     }
 }

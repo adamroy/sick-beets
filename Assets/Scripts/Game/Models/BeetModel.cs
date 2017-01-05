@@ -5,8 +5,7 @@ using System;
 [Serializable]
 public class BeetModel
 {
-    private int instanceID;
-    public int InstanceID { get { return instanceID; } set { instanceID = value; } }
+    public int InstanceID { get; set; }
 
     [SerializeField]
     private BeetType type;

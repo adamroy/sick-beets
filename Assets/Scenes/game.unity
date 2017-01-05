@@ -1288,9 +1288,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraPositions:
-  - {fileID: 1000536105}
-  - {fileID: 756864600}
-  - {fileID: 1545976028}
+  - destination: 0
+    transform: {fileID: 1545976028}
+  - destination: 1
+    transform: {fileID: 756864600}
+  - destination: 2
+    transform: {fileID: 1000536105}
   distanceToCancelClick: 0.5
   allowedDistanceOverBoundry: 1
   boundryGravity: 10

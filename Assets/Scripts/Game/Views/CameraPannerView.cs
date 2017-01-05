@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using strange.extensions.mediation.impl;
 
 // Controls navigation between game screens
@@ -10,8 +10,15 @@ using strange.extensions.mediation.impl;
 [RequireComponent(typeof(Camera))]
 public class CameraPannerView : View, IInputEnabler
 {
+    [Serializable]
+    public class CameraPosition
+    {
+        public CameraDestination destination;
+        public Transform transform;
+    }
+
     // Where the camera should stop to be on different screens
-    public Transform[] cameraPositions;
+    public CameraPosition[] cameraPositions;
     public float distanceToCancelClick;
     public float allowedDistanceOverBoundry;
     public float boundryGravity;
@@ -37,11 +44,11 @@ public class CameraPannerView : View, IInputEnabler
         float minDistance = float.PositiveInfinity;
         foreach (var transf in cameraPositions)
         {
-            var distance = Vector3.Distance(transform.position, transf.position);
+            var distance = Vector3.Distance(transform.position, transf.transform.position);
             if (distance < minDistance)
             {
                 minDistance = distance;
-                currentPosition = transf;
+                currentPosition = transf.transform;
             }
         }
     }
@@ -87,7 +94,7 @@ public class CameraPannerView : View, IInputEnabler
                         yield return null;
                     }
                     
-                    hit.collider.gameObject.layer = orignalLayer;
+                    // hit.collider.gameObject.layer = orignalLayer;
                     var targetPosition = GetNextPosition();
                     movementCoroutine = StartCoroutine(SnapToPosition(targetPosition));
                 }
@@ -105,10 +112,10 @@ public class CameraPannerView : View, IInputEnabler
         float minX = float.MaxValue, maxX = float.MinValue;
         foreach(var t in cameraPositions)
         {
-            if (t.position.x < minX)
-                minX = t.position.x;
-            if (t.position.x > maxX)
-                maxX = t.position.x;
+            if (t.transform.position.x < minX)
+                minX = t.transform.position.x;
+            if (t.transform.position.x > maxX)
+                maxX = t.transform.position.x;
         }
 
         if (destinationCameraX < minX)
@@ -146,13 +153,13 @@ public class CameraPannerView : View, IInputEnabler
         float minDistance = float.PositiveInfinity;
         foreach (var transf in cameraPositions)
         {
-            if (transf == currentPosition) continue;
+            if (transf.transform == currentPosition) continue;
 
-            var distance = Vector3.Distance(this.transform.position, transf.position);
+            var distance = Vector3.Distance(this.transform.position, transf.transform.position);
             if (distance < minDistance)
             {
                 minDistance = distance;
-                targetPosition = transf;
+                targetPosition = transf.transform;
             }
         }
 
@@ -168,6 +175,19 @@ public class CameraPannerView : View, IInputEnabler
             return currentPosition;
     }
 
+    // Move to the tagged location
+    public void MoveToDestinarion(CameraDestination dest)
+    {
+        if (movementCoroutine != null)
+        {
+            StopCoroutine(movementCoroutine);
+            InitializeCurrentPosition();
+        }
+        var target = cameraPositions.First(cp => cp.destination == dest).transform;
+        print(target.position);
+        movementCoroutine = StartCoroutine(SnapToPosition(target));
+    }
+
     #region ITouchEnabler
 
     public InputLayer InputLayer { get { return InputLayer.Camera; } }
@@ -178,4 +198,11 @@ public class CameraPannerView : View, IInputEnabler
     }
 
     #endregion
+}
+
+public enum CameraDestination
+{
+    Shop,
+    Nursery, 
+    Lab
 }

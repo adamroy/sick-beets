@@ -6,11 +6,8 @@ using System.Linq;
 public class TransferToLabCommand : Command
 {
     [Inject]
-    public BeetView view { get; set; }
-
-    [Inject]
-    public float delay { get; set; }
-
+    public BeetModel beetModel { get; set; }
+    
     [Inject]
     public PlaceBeetSignal beetPlacementSignal { get; set; }
 
@@ -19,20 +16,11 @@ public class TransferToLabCommand : Command
 
     public override void Execute()
     {
-        Retain();
-        view.StartCoroutine(TransferAfterDelay());
-    }
-
-    private IEnumerator TransferAfterDelay()
-    {
-        yield return new WaitForSeconds(delay);
-        var labContainer = GameObject.FindObjectsOfType<BeetContainerView>().First(container => container.function == BeetContainerFunction.Lab);
-
-        var beetModel = model.GetBeetByID(view.GetInstanceID());
-        var containerModel = model.GetContainerByName(labContainer.name);
+        var containerModel = model.GetContainerByFunction(BeetContainerFunction.Lab);
         model.AssignBeetToContainer(beetModel, containerModel);
 
+        var view = Utils.GetBeetViewByModel(beetModel); // GameObject.FindObjectsOfType<BeetView>().First(v => v.GetInstanceID() == beetModel.InstanceID);
+        var labContainer = Utils.GetBeetContainerViewByFunction(BeetContainerFunction.Lab); // GameObject.FindObjectsOfType<BeetContainerView>().First(c => c.function == BeetContainerFunction.Lab);
         beetPlacementSignal.Dispatch(view, labContainer);
-        Release();
     }
 }

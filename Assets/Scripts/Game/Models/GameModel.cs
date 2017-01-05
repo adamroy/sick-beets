@@ -7,6 +7,7 @@ using System.Linq;
 public class GameModel : IJsonModelNode
 {
     public bool SuccessfulyLoaded { get; set; }
+    public BeetModel SelectedBeet { get; set; }
 
     [SerializeField]
     public long Time;
@@ -28,8 +29,6 @@ public class GameModel : IJsonModelNode
         assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
         environmentVariables = new SerializableDictionary<string, float>();
     }
-
-    public BeetModel SelectedBeet { get; set; }
 
     public void Clear()
     {

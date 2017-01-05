@@ -25,7 +25,7 @@ public class ContainerSelectedCommand : Command
     public DestroyBeetSignal beetDestroySignal { get; set; }
 
     [Inject]
-    public TransferToLabSignal labTransferSignal { get; set; }
+    public ResearchBeetSignal researchBeetSignal { get; set; }
 
     public override void Execute()
     {
@@ -59,18 +59,20 @@ public class ContainerSelectedCommand : Command
                 if (!containerIsTransfer || (containerIsTransfer && !labHasBeet))
                 {
                     model.AssignBeetToContainer(model.SelectedBeet, containerModel);
-                    var beetView = GameObject.FindObjectsOfType<BeetView>().First(v => v.GetInstanceID() == model.SelectedBeet.InstanceID);
-                    var containerView = GameObject.FindObjectsOfType<BeetContainerView>().First(v => v.name == containerModel.Name);
+                    var beetView = Utils.GetBeetViewByModel(model.SelectedBeet); // GameObject.FindObjectsOfType<BeetView>().First(v => v.GetInstanceID() == model.SelectedBeet.InstanceID);
+                    var containerView = Utils.GetBeetContainerViewByModel(containerModel); // GameObject.FindObjectsOfType<BeetContainerView>().First(v => v.name == containerModel.Name);
                     beetPlacementSignal.Dispatch(beetView, containerView);
                     beetSelectionSignal.Dispatch(-1); // Deselect
-                    model.SelectedBeet = null;
 
                     // Destroy beet if we are placing into output
                     if (containerModel.Function == BeetContainerFunction.Output)
                         beetDestroySignal.Dispatch(beetView, containerView, 2f);
                     // Transfer beet if we are placing into transfer container
                     if (containerModel.Function == BeetContainerFunction.LabTransfer)
-                        labTransferSignal.Dispatch(beetView, 2f);
+                        researchBeetSignal.Dispatch(model.SelectedBeet);
+                    
+                    // Deselect now since this is needed 3 lines up
+                    model.SelectedBeet = null;
                 }
             }
 
