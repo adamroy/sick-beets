@@ -10,6 +10,7 @@ using strange.extensions.mediation.impl;
 [RequireComponent(typeof(Camera))]
 public class CameraPannerView : View, IInputEnabler
 {
+    // Attach labels to position
     [Serializable]
     public class CameraPosition
     {
@@ -25,7 +26,8 @@ public class CameraPannerView : View, IInputEnabler
     
     private Transform currentPosition;
     private new Camera camera;
-    private Coroutine movementCoroutine;
+    private Coroutine snapCoroutine;
+    private Coroutine inputCoroutine;
     private bool inputEnabled = true;
     
     protected override void Start()
@@ -36,7 +38,7 @@ public class CameraPannerView : View, IInputEnabler
             camera.transform.position = currentPosition.position;
         else
             InitializeCurrentPosition();
-        StartCoroutine(NavigationCoroutine());
+        inputCoroutine = StartCoroutine(InputCoroutine());
     }
 
     private void InitializeCurrentPosition()
@@ -58,7 +60,7 @@ public class CameraPannerView : View, IInputEnabler
         return inputEnabled;
     }
     
-    private IEnumerator NavigationCoroutine()
+    private IEnumerator InputCoroutine()
     {
         while(true)
         {
@@ -68,9 +70,9 @@ public class CameraPannerView : View, IInputEnabler
                 var ray = camera.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out hit, float.PositiveInfinity))
                 {
-                    if (movementCoroutine != null)
+                    if (snapCoroutine != null)
                     {
-                        StopCoroutine(movementCoroutine);
+                        StopCoroutine(snapCoroutine);
                         InitializeCurrentPosition();
                     }
 
@@ -96,7 +98,7 @@ public class CameraPannerView : View, IInputEnabler
                     
                     // hit.collider.gameObject.layer = orignalLayer;
                     var targetPosition = GetNextPosition();
-                    movementCoroutine = StartCoroutine(SnapToPosition(targetPosition));
+                    snapCoroutine = StartCoroutine(SnapToPosition(targetPosition));
                 }
             }
 
@@ -143,8 +145,8 @@ public class CameraPannerView : View, IInputEnabler
             transform.position = Vector3.Lerp(transform.position, target.position, 0.1f);
             yield return null;
         }
-
-        movementCoroutine = null;
+        
+        snapCoroutine = null;
     }
 
     private Transform GetNextPosition()
@@ -176,16 +178,14 @@ public class CameraPannerView : View, IInputEnabler
     }
 
     // Move to the tagged location
-    public void MoveToDestinarion(CameraDestination dest)
+    public void MoveToDestination(CameraDestination dest)
     {
-        if (movementCoroutine != null)
+        if (snapCoroutine != null)
         {
-            StopCoroutine(movementCoroutine);
-            InitializeCurrentPosition();
+            StopCoroutine(snapCoroutine);
         }
         var target = cameraPositions.First(cp => cp.destination == dest).transform;
-        print(target.position);
-        movementCoroutine = StartCoroutine(SnapToPosition(target));
+        snapCoroutine = StartCoroutine(SnapToPosition(target));
     }
 
     #region ITouchEnabler
@@ -195,11 +195,18 @@ public class CameraPannerView : View, IInputEnabler
     public void SetInputEnabled(bool enabled)
     {
         inputEnabled = enabled;
+
+        // Stop tracking input from the input coroutine
+        if(enabled)
+            inputCoroutine = StartCoroutine(InputCoroutine());
+        else
+            StopCoroutine(inputCoroutine);
     }
 
     #endregion
 }
 
+// Labels for where the camera can go
 public enum CameraDestination
 {
     Shop,

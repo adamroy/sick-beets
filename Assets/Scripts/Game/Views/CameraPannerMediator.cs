@@ -20,6 +20,6 @@ public class CameraPannerMediator : InputEnablerMediator
 
     private void OnPlaceCamera(CameraDestination dest)
     {
-        view.MoveToDestinarion(dest);
+        view.MoveToDestination(dest);
     }
 }
