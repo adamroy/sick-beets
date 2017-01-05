@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using strange.extensions.mediation.impl;
+using strange.extensions.signal.impl;
 
 // Controls navigation between game screens
 // Swipe horizontally to switch screens or use buttons
@@ -10,6 +11,8 @@ using strange.extensions.mediation.impl;
 [RequireComponent(typeof(Camera))]
 public class CameraPannerView : View, IInputEnabler
 {
+    public Signal<CameraDestination> OnCameraPositonChanged = new Signal<CameraDestination>();
+
     // Attach labels to position
     [Serializable]
     public class CameraPosition
@@ -139,6 +142,8 @@ public class CameraPannerView : View, IInputEnabler
     private IEnumerator SnapToPosition(Transform target)
     {
         currentPosition = target;
+        var destination = cameraPositions.First(cp => cp.transform == target).destination;
+        OnCameraPositonChanged.Dispatch(destination);
 
         while (Vector3.Distance(transform.position, target.position) > 0.01f)
         {
@@ -178,14 +183,24 @@ public class CameraPannerView : View, IInputEnabler
     }
 
     // Move to the tagged location
-    public void MoveToDestination(CameraDestination dest)
+    public void MoveToDestination(CameraDestination dest , bool withLerp)
     {
         if (snapCoroutine != null)
         {
             StopCoroutine(snapCoroutine);
         }
+
         var target = cameraPositions.First(cp => cp.destination == dest).transform;
-        snapCoroutine = StartCoroutine(SnapToPosition(target));
+
+        if (withLerp)
+        {
+            snapCoroutine = StartCoroutine(SnapToPosition(target));
+        }
+        else
+        {   
+            transform.position = target.position;
+            OnCameraPositonChanged.Dispatch(dest);
+        }
     }
 
     #region ITouchEnabler

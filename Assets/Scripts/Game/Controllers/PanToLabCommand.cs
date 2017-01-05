@@ -13,6 +13,6 @@ public class PanToLabCommand : Command
     public override void Execute()
     {
         setInputLayerEnabledSignal.Dispatch(InputLayer.Camera, false);
-        placeCameraSignal.Dispatch(CameraDestination.Lab);
+        placeCameraSignal.Dispatch(CameraDestination.Lab, true);
     }
 }

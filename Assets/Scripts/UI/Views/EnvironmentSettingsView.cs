@@ -15,7 +15,6 @@ public class EnvironmentSettingsView : View
     public Signal<EnvironmentVariable, float> OnSettingsChanged = new Signal<EnvironmentVariable, float>();
     public Signal<bool> OnPanelVisibleChanged = new Signal<bool>();
 
-    private SliderView[] sliders;
     private bool active;
     private Dictionary<SliderView, EnvironmentVariable> sliderToEnvVariableMap;
 
@@ -62,22 +61,26 @@ public class EnvironmentSettingsView : View
         if (!enable) panel.SetActive(false);
     }
 
+    public void Toggle()
+    {
+        active = !active;
+        if (active)
+        {
+            OnPanelVisibleChanged.Dispatch(true);
+            StartCoroutine(MovePanel(panelRaisedLocation, true));
+        }
+        else
+        {
+            OnPanelVisibleChanged.Dispatch(false);
+            StartCoroutine(MovePanel(panelLoweredLocation, false));
+        }
+    }
+
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Menu))
         {
-            active = !active;
-            if (active)
-            {
-                OnPanelVisibleChanged.Dispatch(true);
-                StartCoroutine(MovePanel(panelRaisedLocation, true));
-            }
-            else
-            {
-                OnPanelVisibleChanged.Dispatch(false);
-                StartCoroutine(MovePanel(panelLoweredLocation, false));
-            }
+            Toggle();
         }
     }
-
 }

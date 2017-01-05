@@ -18,6 +18,9 @@ public class GameModel : IJsonModelNode
     [SerializeField]
     private List<BeetContainerModel> containers;
 
+    [SerializeField]
+    private CameraDestination cameraPosition;
+
     private SerializableDictionary<BeetContainerModel, BeetModel> assignments;
     private SerializableDictionary<string, float> environmentVariables; // Maps names to values
 
@@ -136,6 +139,16 @@ public class GameModel : IJsonModelNode
             SetEnvironmentValue(variable, 0.5f);
 
         return environmentVariables[variable.name];
+    }
+
+    public void SetCameraDestination(CameraDestination dest)
+    {
+        cameraPosition = dest;
+    }
+
+    public CameraDestination GetCameraDestination()
+    {
+        return cameraPosition;
     }
 
     #endregion

@@ -47,5 +47,7 @@ public class GameContext : MVCSSignalsContext
             .To<TransferToLabCommand>()
             .To<PanToLabCommand>()
             .InSequence();
+        commandBinder.Bind<CameraPositionChangedSignal>()
+            .To<CameraPositonChangedCommand>();
     }
 }

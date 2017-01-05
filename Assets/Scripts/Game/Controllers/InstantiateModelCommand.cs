@@ -22,6 +22,9 @@ public class InstantiateModelCommand : Command
     [Inject]
     public RequestBeetCreationSignal beetCreationRequestSignal { get; set; }
 
+    [Inject]
+    public PlaceCameraSignal placeCameraSignal { get; set; }
+
     public override void Execute()
     {
         if (model.SuccessfulyLoaded)
@@ -43,6 +46,8 @@ public class InstantiateModelCommand : Command
                     beetPlacementSignal.Dispatch(beetView, containerView);
                 }
             }
+
+            placeCameraSignal.Dispatch(model.GetCameraDestination(), false);
         }
         // If the model wasn't loaded from a save file, then do some jazz for first run
         else
@@ -59,6 +64,9 @@ public class InstantiateModelCommand : Command
 
             // Add initial beet
             beetCreationRequestSignal.Dispatch();
+
+            // Place camera
+            placeCameraSignal.Dispatch(CameraDestination.Nursery, false);
         }
     }
 }
