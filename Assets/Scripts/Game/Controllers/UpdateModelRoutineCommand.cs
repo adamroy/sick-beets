@@ -37,6 +37,8 @@ public class UpdateModelRoutineCommand : Command
         float deltaTime = Convert.ToSingle(CurrentSeconds() - model.Time);
         model.Time = CurrentSeconds();
         UpdateModel(deltaTime);
+        // Use realtime since startup so that pauses don't interupt updates
+        float previousFrame = Time.realtimeSinceStartup;
 
         yield return null;
 
@@ -44,7 +46,9 @@ public class UpdateModelRoutineCommand : Command
         {
             // Save time constantly so we're good whenever we quit
             model.Time = CurrentSeconds();
-            UpdateModel(Time.deltaTime);
+            float delta = Time.realtimeSinceStartup - previousFrame;
+            UpdateModel(delta);
+            previousFrame = Time.realtimeSinceStartup;
             yield return null;
         }
     }
