@@ -16,7 +16,7 @@ public class SliderView : View
     private float value = 0.5f;
     private bool sliderHeld;
     
-    public void Init()
+    public virtual void Init()
     {
         sliderHeld = false;
         var touchDetector = sliderGameObject.AddComponent<TouchDetectorView>();

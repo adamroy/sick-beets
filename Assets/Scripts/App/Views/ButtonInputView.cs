@@ -22,7 +22,7 @@ public class ButtonInputView : View
 #elif UNITY_ANDROID
         if(Input.GetKeyDown(KeyCode.Menu))
         {
-            OnOptionsPressed.Dispatch();
+            OnMenuPressed.Dispatch();
         }
         if(Input.GetKeyDown(KeyCode.Escape)) // Esacape is the Android back button
         {

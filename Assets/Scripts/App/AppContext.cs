@@ -12,10 +12,16 @@ public class AppContext : MVCSSignalsContext
 
     protected override void mapBindings()
     {
+        // Various data that can be set in the Editor by editing the gameobject
+        injectionBinder
+            .Bind<IBeetPrefabLibrary>()
+            .Bind<IEnvironmentVariableLibrary>()
+            .Bind<IBaseLibrary>()
+            .Bind<ISequenceLibrary>()
+            .ToValue(GameObject.FindObjectOfType<AssetLibrary>()).CrossContext();
+
         // The model used throughout the game
         injectionBinder.Bind<GameModel>().ToSingleton().CrossContext();
-        // Various data that can be set in the Editor by editing the gameobject
-        injectionBinder.Bind<IBeetPrefabLibrary>().Bind<IEnvironmentVariableLibrary>().ToValue(GameObject.FindObjectOfType<AssetLibrary>()).CrossContext();
         // This will be the signal child contexts listen to to begin
         injectionBinder.Bind<StartSignal>().ToSingleton().CrossContext();
         // This lets any part of the app change the active input layer

@@ -13,12 +13,15 @@ public class UIContext : MVCSSignalsContext
     protected override void mapBindings()
     {
         injectionBinder.Bind<ToggleEnvironmentSettingsPanelSignal>().ToSingleton();
+        injectionBinder.Bind<ToggleGeneticSequencerSignal>().ToSingleton();
 
         mediationBinder.Bind<EnvironmentSettingsView>().To<EnvironmentSettingsMediator>();
         mediationBinder.Bind<TouchDetectorView>().To<TouchDetectorMediator>();
+        mediationBinder.Bind<GeneticSequencerView>().To<GeneticSequencerMediator>();
 
         commandBinder.Bind<StartSignal>().To<InitiateUICommand>();
         commandBinder.Bind<EnvironmentChangedSignal>().To<EnvironmentChangedCommand>();
         commandBinder.Bind<ButtonPressedSignal>().To<UIButtonPressedCommand>();
+        commandBinder.Bind<ResearchBeetSignal>().To<CreateSequenceCommand>();
     }
 }
