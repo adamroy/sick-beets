@@ -75,12 +75,4 @@ public class EnvironmentSettingsView : View
             StartCoroutine(MovePanel(panelLoweredLocation, false));
         }
     }
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Menu))
-        {
-            Toggle();
-        }
-    }
 }

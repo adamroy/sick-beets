@@ -23,7 +23,11 @@ public class AppContext : MVCSSignalsContext
         injectionBinder.Bind<SetInputLayerEnabledSignal>().ToSingleton().CrossContext();
         // Researching a beet effects the Game and UI
         injectionBinder.Bind<ResearchBeetSignal>().ToSingleton().CrossContext();
-        
+        // Lets whole app listen to button presses
+        injectionBinder.Bind<ButtonPressedSignal>().ToSingleton().CrossContext();
+
+        mediationBinder.Bind<ButtonInputView>().To<ButtonInputMediator>();
+
         commandBinder.Bind<StartAppSignal>()
             .To<LoadModelCommand>()
             .To<LoadAppCommand>();

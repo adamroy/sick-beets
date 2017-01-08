@@ -11,4 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39173e9a39fa6284595ccf05dc56bcee, type: 3}
   m_Name: JukeBox
   m_EditorClassIdentifier: 
-  unlockingSequence: {fileID: 0}
+  unlockingSequence: {fileID: 11400000, guid: e40c0fda5e4361f4bbb7160a64a9f53b, type: 2}

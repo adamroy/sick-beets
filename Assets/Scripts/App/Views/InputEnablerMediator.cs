@@ -5,7 +5,7 @@ using strange.extensions.mediation.impl;
 // The base for mediators that deal with ITouchEnabler classes to allow them to talk to the app
 public abstract class InputEnablerMediator : Mediator
 {
-    // Can't [Inject] interfaces (ITouchEnabler) so this inheritance based approach is a work around
+    // Can't [Inject] interfaces (IInputEnabler) so this inheritance based approach is a work around
     protected abstract IInputEnabler View { get; }
 
     // Apparently [Inject] tags are usable when inherited!

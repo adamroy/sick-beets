@@ -13,6 +13,9 @@ public class EnvironmentSettingsMediator : Mediator
     [Inject]
     public ChangeActiveInputLayerSignal changeActiveInputLayerSignal { get; set; }
 
+    [Inject]
+    public ToggleEnvironmentSettingsPanelSignal toggleEnvironmentSettingsPanelSignal { get; set; }
+
     public override void OnRegister()
     {
         view.Init();
@@ -21,6 +24,8 @@ public class EnvironmentSettingsMediator : Mediator
 
         // This signal is used as a two way channel, so we can get commands to set vars from here
         environmentChangedSignal.AddListener(OnEnvironmentChanged);
+
+        toggleEnvironmentSettingsPanelSignal.AddListener(OnTogglePanel);
     }
 
     private void OnSliderChanged(EnvironmentVariable need, float value)
@@ -36,5 +41,10 @@ public class EnvironmentSettingsMediator : Mediator
     private void OnEnvironmentChanged(EnvironmentVariable var, float value)
     {
         view.SetEnvironmentVariable(var, value);
+    }
+
+    private void OnTogglePanel()
+    {
+        view.Toggle();
     }
 }
