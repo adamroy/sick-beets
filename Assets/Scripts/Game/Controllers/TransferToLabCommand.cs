@@ -19,8 +19,8 @@ public class TransferToLabCommand : Command
         var containerModel = model.GetContainerByFunction(BeetContainerFunction.Lab);
         model.AssignBeetToContainer(beetModel, containerModel);
 
-        var view = Utils.GetBeetViewByModel(beetModel); // GameObject.FindObjectsOfType<BeetView>().First(v => v.GetInstanceID() == beetModel.InstanceID);
-        var labContainer = Utils.GetBeetContainerViewByFunction(BeetContainerFunction.Lab); // GameObject.FindObjectsOfType<BeetContainerView>().First(c => c.function == BeetContainerFunction.Lab);
+        var view = Utils.GetBeetViewByModel(beetModel);
+        var labContainer = Utils.GetBeetContainerViewByFunction(BeetContainerFunction.Lab);
         beetPlacementSignal.Dispatch(view, labContainer);
     }
 }

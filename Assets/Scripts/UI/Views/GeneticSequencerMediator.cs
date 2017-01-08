@@ -10,6 +10,12 @@ public class GeneticSequencerMediator : Mediator
     [Inject]
     public ToggleGeneticSequencerSignal toggleGeneticSequencerSignal { get; set; }
 
+    [Inject]
+    public CancelResearchBeetSignal cancelResearchBeetSignal { get; set; }
+   
+    [Inject]
+    public ChangeActiveInputLayerSignal changeActiveInputLayerSignal { get; set; }
+
     public override void OnRegister()
     {
         view.Init();
@@ -37,6 +43,8 @@ public class GeneticSequencerMediator : Mediator
 
     private void Cancel()
     {
-
+        view.Hide();
+        changeActiveInputLayerSignal.Dispatch(InputLayer.Game, true);
+        cancelResearchBeetSignal.Dispatch();
     }
 }

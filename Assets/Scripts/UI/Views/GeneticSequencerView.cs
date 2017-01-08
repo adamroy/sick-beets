@@ -81,18 +81,15 @@ public class GeneticSequencerView : View
         OnCancel.Dispatch();
     }
 
-    private IEnumerator MovePanel(Transform target, bool enable)
+    private IEnumerator MovePanel(Transform target)
     {
         var startPosition = panel.transform.position;
-        if (enable) panel.SetActive(true);
 
         for (float t = 0, p = 0; t < raiseTime; t += Time.deltaTime, p = t / raiseTime)
         {
             panel.transform.position = Vector3.Lerp(startPosition, target.transform.position, p);
             yield return null;
         }
-
-        if (!enable) panel.SetActive(false);
     }
 
     public void Display(SequencerData data)
@@ -100,7 +97,7 @@ public class GeneticSequencerView : View
         active = true;
         healthySlider.DisplaySequence(data.HealthySequence, 3, 1);
         unhealthySlider.DisplaySequence(data.UnhealthySequence, 3, 1);
-        StartCoroutine(MovePanel(panelRaisedLocation, true));
+        StartCoroutine(MovePanel(panelRaisedLocation));
     }
 
     public void Hide()
@@ -108,6 +105,6 @@ public class GeneticSequencerView : View
         active = false;
         healthySlider.ClearSequence();
         unhealthySlider.ClearSequence();
-        StartCoroutine(MovePanel(panelLoweredLocation, false));
+        StartCoroutine(MovePanel(panelLoweredLocation));
     }
 }

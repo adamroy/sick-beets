@@ -50,5 +50,7 @@ public class GameContext : MVCSSignalsContext
             .InSequence();
         commandBinder.Bind<CameraPositionChangedSignal>()
             .To<CameraPositonChangedCommand>();
+        commandBinder.Bind<CancelResearchBeetSignal>()
+            .To<TransferFromLabCommand>();
     }
 }

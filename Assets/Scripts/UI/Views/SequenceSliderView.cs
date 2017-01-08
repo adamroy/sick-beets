@@ -142,8 +142,9 @@ public class SequenceSliderView : SliderView
     public void ClearSequence()
     {
         var children = sliderGameObject.GetComponentsInChildren<Transform>();
-        foreach(var child in children)
-            Destroy(child.gameObject);
+        foreach (var child in children)
+            if (child != sliderGameObject.transform)
+                Destroy(child.gameObject);
 
         var pos = sliderGameObject.transform.position;
         pos.x = sliderWorldStartX;
@@ -151,6 +152,8 @@ public class SequenceSliderView : SliderView
         sliderGameObject.GetComponent<BoxCollider>().size = Vector3.zero;
         lowEndTransform.localPosition = Vector3.zero;
         highEndTransform.localPosition = Vector3.zero;
+
+        StopAllCoroutines();
     }
 
     public List<Base> GetLeftMargin()
