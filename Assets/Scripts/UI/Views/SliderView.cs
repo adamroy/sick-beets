@@ -15,6 +15,7 @@ public class SliderView : View
 
     private float value = 0.5f;
     private bool sliderHeld;
+    private Coroutine slideCoroutine;
     
     public virtual void Init()
     {
@@ -22,24 +23,50 @@ public class SliderView : View
         var touchDetector = sliderGameObject.AddComponent<TouchDetectorView>();
         touchDetector.InputLayer = InputLayer.UI;
         touchDetector.RaycastCamera = camera;
-        touchDetector.OnDownSignal.AddListener(() => sliderHeld = true);
-        touchDetector.OnUpSignal.AddListener(() => sliderHeld = false);
+        touchDetector.OnDownSignal.AddListener(MouseDown);
+        touchDetector.OnUpSignal.AddListener(MouseUp);
         SetValue(this.value, true);
     }
 
-    private void Update()
+    private void MouseDown()
     {
-        if(sliderHeld)
+        slideCoroutine = StartCoroutine(SlideCoroutine());
+    }
+
+    private void MouseUp()
+    {
+        StopCoroutine(slideCoroutine);
+    }
+
+    protected IEnumerator SlideCoroutine()
+    {
+        var sliderMouseOffset = Vector3.zero;
+
+        // Temp scope for var names
+        {
+            var p = new Plane(-camera.transform.forward, lowEndTransform.position);
+            var mouseRay = camera.ScreenPointToRay(Input.mousePosition);
+            float d;
+            if (p.Raycast(mouseRay, out d))
+            {
+                var mousePoint = mouseRay.GetPoint(d);
+                sliderMouseOffset = sliderGameObject.transform.position - mousePoint;
+            }
+        }
+
+        while (true)
         {
             var p = new Plane(-camera.transform.forward, lowEndTransform.position);
             var mouseRay = camera.ScreenPointToRay(Input.mousePosition);
             float d;
             if(p.Raycast(mouseRay, out d))
             {
-                var mousePoint = mouseRay.GetPoint(d);
+                var mousePoint = mouseRay.GetPoint(d) + sliderMouseOffset;
                 float v = ProjectPointToLineAndFindProgress(lowEndTransform.position, highEndTransform.position, mousePoint);
                 SetValue(v, true);
             }
+
+            yield return null;
         }
     }
 
@@ -63,6 +90,7 @@ public class SliderView : View
 
     public void SetValue(float value)
     {
+        // We got this from the outside, so they should already have the slider value, no need to dispatch signal
         SetValue(value, false);
     }
 }

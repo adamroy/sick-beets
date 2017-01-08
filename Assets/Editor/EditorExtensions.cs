@@ -10,18 +10,13 @@ public class EditorExtensions
         EditorApplication.playmodeStateChanged += UnloadTertiaryScenes;
     }
 
-    [MenuItem("Tools/Clear PlayerPrefs %#c")]
-    private static void ClearPlayerPrefs()
-    {
-        PlayerPrefs.DeleteAll();
-    }
-
     private static string mainScene = "app";
     private static string[] tertiaryScenes = new string[] { "game", "ui" };
 
+    // Load and unload tertiary scenes on play so they aren't duplicated when loaded in game code
     private static void UnloadTertiaryScenes()
     {
-        if(!EditorApplication.isPlaying && EditorSceneManager.GetActiveScene().name == mainScene)
+        if (!EditorApplication.isPlaying && EditorSceneManager.GetActiveScene().name == mainScene)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
             {
@@ -47,5 +42,20 @@ public class EditorExtensions
                 }
             }
         }
+    }
+
+    [MenuItem("Tools/Clear PlayerPrefs %#c")]
+    private static void ClearPlayerPrefs()
+    {
+        PlayerPrefs.DeleteAll();
+    }
+
+    [MenuItem("Tools/Clear Console %#x")]
+    private static void ClearConsole()
+    {
+        // This simply does "LogEntries.Clear()" the long way:
+        var logEntries = System.Type.GetType("UnityEditorInternal.LogEntries,UnityEditor.dll");
+        var clearMethod = logEntries.GetMethod("Clear", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+        clearMethod.Invoke(null, null);
     }
 }

@@ -11,6 +11,8 @@ public class TouchDetectorView : View, IInputEnabler
     public Signal OnUpSignal = new Signal();
     public Camera RaycastCamera { get; set; }
 
+    [SerializeField]
+    private Camera raycastCamera;
     private bool mouseDownOverCollider;
     private bool touchEnabled = true;
 
@@ -19,7 +21,12 @@ public class TouchDetectorView : View, IInputEnabler
         base.Awake();
 
         if (RaycastCamera == null)
-            RaycastCamera = Camera.main;
+        {
+            if (raycastCamera != null)
+                RaycastCamera = raycastCamera;
+            else
+                RaycastCamera = Camera.main;
+        }
 
         if (GetComponent<Collider>() == null)
             gameObject.AddComponent<BoxCollider>();
@@ -85,7 +92,7 @@ public class TouchDetectorView : View, IInputEnabler
     {
         RaycastHit hit;
         Ray ray = RaycastCamera.ScreenPointToRay(Input.mousePosition);
-        return Physics.Raycast(ray, out hit, 100f) && hit.collider == GetComponent<Collider>();
+        return Physics.Raycast(ray, out hit, 100f, 1 << gameObject.layer) && hit.collider == GetComponent<Collider>();
     }
 
     #region ITouchEnabler

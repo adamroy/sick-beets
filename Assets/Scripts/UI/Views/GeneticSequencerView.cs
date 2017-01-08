@@ -31,21 +31,46 @@ public class GeneticSequencerView : View
         cancelButton.OnUpAsButtonSignal.AddListener(Cancel);
     }
 
+    private void PrintSequence(List<Base> seq)
+    {
+        string seqStr = "";
+        foreach (var b in seq)
+            seqStr += b.name;
+        print(seqStr);
+    }
+
     private void Confirm()
     {
         var hlm = healthySlider.GetLeftMargin();
         var ulm = unhealthySlider.GetLeftMargin();
 
+        //print("Helthy Left Margin");
+        //PrintSequence(hlm);
+        //print("Unhealth Left Margin");
+        //PrintSequence(ulm);
+
         var hrm = healthySlider.GetRightMargin();
         var urm = unhealthySlider.GetRightMargin();
 
-        if (!hlm.SequenceEqual(ulm) || hlm.SequenceEqual(urm))
+        //print("Helthy Right Margin");
+        //PrintSequence(hrm);
+        //print("Unhealth Right Margin");
+        //PrintSequence(urm);
+
+        if (hlm.SequenceEqual(ulm) && hrm.SequenceEqual(urm))
         {
             var researchSelection = unhealthySlider.GetSelectedSequence();
             OnValidSequenceConfirmed.Dispatch(researchSelection);
+
+            //print("Helthy Selection");
+            //PrintSequence(healthySlider.GetSelectedSequence());
+            //print("Unhealthy Selection");
+            //PrintSequence(researchSelection);
+            //print("Valid alignment");
         }
         else
         {
+            //print("Invalid alignment");
             // Handle selection of invalid sequence
             // (Display visual signal that it is invalid)
         }
@@ -70,20 +95,19 @@ public class GeneticSequencerView : View
         if (!enable) panel.SetActive(false);
     }
 
-    public void Toggle(SequencerData data)
+    public void Display(SequencerData data)
     {
-        active = data != null;
-        if (active)
-        {
-            healthySlider.DisplaySequence(data.HealthySequence, 3, 1);
-            unhealthySlider.DisplaySequence(data.UnhealthySequence, 3, 1);
-            StartCoroutine(MovePanel(panelRaisedLocation, true));
-        }
-        else
-        {
-            healthySlider.ClearSequence();
-            unhealthySlider.ClearSequence();
-            StartCoroutine(MovePanel(panelLoweredLocation, false));
-        }
+        active = true;
+        healthySlider.DisplaySequence(data.HealthySequence, 3, 1);
+        unhealthySlider.DisplaySequence(data.UnhealthySequence, 3, 1);
+        StartCoroutine(MovePanel(panelRaisedLocation, true));
+    }
+
+    public void Hide()
+    {
+        active = false;
+        healthySlider.ClearSequence();
+        unhealthySlider.ClearSequence();
+        StartCoroutine(MovePanel(panelLoweredLocation, false));
     }
 }

@@ -20,7 +20,14 @@ public class GeneticSequencerMediator : Mediator
 
     private void TogglePanel(SequencerData data)
     {
-        view.Toggle(data);
+        if (data != null)
+        {
+            view.Display(data);
+        }
+        else
+        {
+            view.Hide();
+        }
     }
 
     private void ValidSequenceConfirmed(List<Base> sequence)

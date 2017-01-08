@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Name: G
   m_EditorClassIdentifier: 
   color: {r: 0.031186577, g: 0.9044118, b: 0, a: 1}
+  displayPrefab: {fileID: 119824, guid: bb9eac288fc764d4f83228a773d19bbb, type: 2}

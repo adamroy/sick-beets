@@ -20,6 +20,7 @@ public class CreateSequenceCommand : Command
 
     public override void Execute()
     {
+        // Fake data for now
         var sequencerData = new SequencerData();
         sequencerData.HealthySequence.AddRange(baseLibrary.Bases);
         sequencerData.HealthySequence.AddRange(baseLibrary.Bases);
