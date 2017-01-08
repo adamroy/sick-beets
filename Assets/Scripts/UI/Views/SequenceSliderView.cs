@@ -8,8 +8,22 @@ public class SequenceSliderView : SliderView
 
     public void DisplaySequence(List<Base> sequence, int selectionSize, int marginSize)
     {
-
         this.selectionSize = selectionSize;
+    }
+
+    public void ClearSequence()
+    {
+
+    }
+
+    public List<Base> GetLeftMargin()
+    {
+        return null;
+    }
+
+    public List<Base> GetRightMargin()
+    {
+        return null;
     }
 
     public List<Base> GetSelectedSequence()

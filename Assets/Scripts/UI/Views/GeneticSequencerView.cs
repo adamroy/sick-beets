@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using strange.extensions.mediation.impl;
-using System;
+using System.Linq;
+using strange.extensions.signal.impl;
 
 public class GeneticSequencerView : View
 {
+    public Signal<List<Base>> OnValidSequenceConfirmed = new Signal<List<Base>>();
+    public Signal OnCancel = new Signal();
+
     public GameObject panel;
     public Transform panelLoweredLocation, panelRaisedLocation;
     public float raiseTime = 0.75f;
@@ -12,6 +17,7 @@ public class GeneticSequencerView : View
     public SequenceSliderView unhealthySlider;
     public TouchDetectorView confirmButton;
     public TouchDetectorView cancelButton;
+    public new Camera camera;
 
     private bool active = false;
 
@@ -19,18 +25,35 @@ public class GeneticSequencerView : View
     {
         healthySlider.Init();
         unhealthySlider.Init();
+        confirmButton.RaycastCamera = camera;
+        cancelButton.RaycastCamera = camera;
         confirmButton.OnUpAsButtonSignal.AddListener(Confirm);
         cancelButton.OnUpAsButtonSignal.AddListener(Cancel);
     }
 
     private void Confirm()
     {
+        var hlm = healthySlider.GetLeftMargin();
+        var ulm = unhealthySlider.GetLeftMargin();
 
+        var hrm = healthySlider.GetRightMargin();
+        var urm = unhealthySlider.GetRightMargin();
+
+        if (!hlm.SequenceEqual(ulm) || hlm.SequenceEqual(urm))
+        {
+            var researchSelection = unhealthySlider.GetSelectedSequence();
+            OnValidSequenceConfirmed.Dispatch(researchSelection);
+        }
+        else
+        {
+            // Handle selection of invalid sequence
+            // (Display visual signal that it is invalid)
+        }
     }
 
     private void Cancel()
     {
-
+        OnCancel.Dispatch();
     }
 
     private IEnumerator MovePanel(Transform target, bool enable)
@@ -58,6 +81,8 @@ public class GeneticSequencerView : View
         }
         else
         {
+            healthySlider.ClearSequence();
+            unhealthySlider.ClearSequence();
             StartCoroutine(MovePanel(panelLoweredLocation, false));
         }
     }

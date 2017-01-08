@@ -5,4 +5,5 @@ using System.Collections;
 public class Base : ScriptableObject
 {
     public Color color;
+    public GameObject displayPrefab;
 }
