@@ -6,6 +6,7 @@ using System.Linq;
 [Serializable]
 public class GameModel : IJsonModelNode
 {
+    // Fields that don't need to be saved but are passed around with the model
     public bool SuccessfulyLoaded { get; set; }
     public BeetModel SelectedBeet { get; set; }
 
@@ -21,8 +22,12 @@ public class GameModel : IJsonModelNode
     [SerializeField]
     private CameraDestination cameraPosition;
 
-    private SerializableDictionary<BeetContainerModel, BeetModel> assignments;
+    private SerializableDictionary<BeetContainerModel, BeetModel> assignments; // Maps containers to beets
     private SerializableDictionary<string, float> environmentVariables; // Maps names to values
+
+    [SerializeField]
+    private ResearchModel research;
+    public ResearchModel Research { get { return research; } }
 
     public GameModel()
     {
@@ -43,7 +48,7 @@ public class GameModel : IJsonModelNode
         environmentVariables = new SerializableDictionary<string, float>();
     }
 
-    #region public methods
+    #region public data methods
 
     public void AddBeet(BeetModel beet)
     {
@@ -178,4 +183,3 @@ public class GameModel : IJsonModelNode
 
 #endregion
 }
-
