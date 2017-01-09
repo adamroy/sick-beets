@@ -7,6 +7,7 @@ public class ResearchModel
 {
     public enum Phase
     {
+        Idle,
         GeneSelection,
         Research,
         Results
@@ -27,6 +28,11 @@ public class ResearchModel
     public float Progress { get { return progress; } set { progress = value; } }
 
     #region public data methods
+
+    public ResearchModel()
+    {
+        Clear();
+    }
 
     public void SetPhase(Phase p)
     {
@@ -54,10 +60,12 @@ public class ResearchModel
         return timeToResearch;
     }
 
-    public void ClearResearch()
+    public void Clear()
     {
+        phase = Phase.Idle;
         researchSequence = null;
         timeToResearch = 0f;
+        progress = 0f;
     }
 
     #endregion

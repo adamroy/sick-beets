@@ -36,6 +36,7 @@ public class GameModel : IJsonModelNode
         containers = new List<BeetContainerModel>();
         assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
         environmentVariables = new SerializableDictionary<string, float>();
+        research = new ResearchModel();
     }
 
     public void Clear()
@@ -46,6 +47,7 @@ public class GameModel : IJsonModelNode
         containers = new List<BeetContainerModel>();
         assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
         environmentVariables = new SerializableDictionary<string, float>();
+        Research.Clear();
     }
 
     #region public data methods

@@ -29,44 +29,81 @@ public class InstantiateModelCommand : Command
     {
         if (model.SuccessfulyLoaded)
         {
-            var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
-
-            foreach (var kvp in model.GetAllAssignements())
-            {
-                var containerModel = kvp.Key;
-                var beetModel = kvp.Value;
-
-                // Instantiate the gameobject, not just the view!
-                if (beetModel.Type == BeetType.Common)
-                {
-                    var beetView = GameObject.Instantiate(beetLibrary.CommonBeetPrefab.gameObject).GetComponent<BeetView>();
-                    beetModel.InstanceID = beetView.GetInstanceID();
-                    var containerView = containerViews.FirstOrDefault(cv => cv.name == containerModel.Name);
-
-                    beetPlacementSignal.Dispatch(beetView, containerView);
-                }
-            }
-
-            placeCameraSignal.Dispatch(model.GetCameraDestination(), false);
+            OnLoadSuccess();
         }
         // If the model wasn't loaded from a save file, then do some jazz for first run
         else
         {
-            // Fabricate model 
-            var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
-            foreach (var view in containerViews)
-            {
-                var containerModel = new BeetContainerModel();
-                containerModel.Name = view.name;
-                containerModel.Function = view.function;
-                model.AddContainer(containerModel);
-            }
-
-            // Add initial beet
-            beetCreationRequestSignal.Dispatch();
-
-            // Place camera
-            placeCameraSignal.Dispatch(CameraDestination.Nursery, false);
+            OnLoadFail();
         }
+    }
+
+    private void OnLoadSuccess()
+    {
+        if (model.Research.GetPhase() == ResearchModel.Phase.GeneSelection)
+        {
+            ResetResearch();
+        }
+
+        var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
+
+        foreach (var kvp in model.GetAllAssignements())
+        {
+            var containerModel = kvp.Key;
+            var beetModel = kvp.Value;
+
+            // Instantiate the gameobject, not just the view!
+            if (beetModel.Type == BeetType.Common)
+            {
+                var beetView = GameObject.Instantiate(beetLibrary.CommonBeetPrefab.gameObject).GetComponent<BeetView>();
+                beetModel.InstanceID = beetView.GetInstanceID();
+                var containerView = containerViews.FirstOrDefault(cv => cv.name == containerModel.Name);
+
+                beetPlacementSignal.Dispatch(beetView, containerView);
+            }
+        }
+
+        placeCameraSignal.Dispatch(model.GetCameraDestination(), false);
+
+        
+    }
+
+    private void ResetResearch()
+    {
+        var container = model.GetContainerByFunction(BeetContainerFunction.Lab);
+        var beet = model.GetBeetAssignment(container);
+        var openNurseryContainer = model.GetAllContainersByFunction(BeetContainerFunction.Nursery).First(c => model.GetBeetAssignment(c) == null);
+
+        if (beet != null)
+        {
+            if(openNurseryContainer != null)
+            {
+                model.AssignBeetToContainer(beet, openNurseryContainer);
+            }
+            else
+            {
+                model.UnassignBeetToContainer(beet, openNurseryContainer);
+                model.RemoveBeet(beet);
+            }
+        }
+    }
+
+    private void OnLoadFail()
+    {
+        // Fabricate model 
+        var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
+        foreach (var view in containerViews)
+        {
+            var containerModel = new BeetContainerModel();
+            containerModel.Name = view.name;
+            containerModel.Function = view.function;
+            model.AddContainer(containerModel);
+        }
+
+        // Add initial beet
+        beetCreationRequestSignal.Dispatch();
+
+        // Place camera
+        placeCameraSignal.Dispatch(CameraDestination.Nursery, false);
     }
 }

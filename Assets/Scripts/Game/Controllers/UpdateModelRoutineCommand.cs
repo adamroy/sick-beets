@@ -18,6 +18,9 @@ public class UpdateModelRoutineCommand : Command
     [Inject]
     public BeetModelUpdatedSignal beetModelUpdateSignal { get; set; }
 
+    [Inject]
+    public ResearchCompleteSignal researchCompleteSignal { get; set; }
+
     private Coroutine updateCoroutine;
 
     public override void Execute()
@@ -62,6 +65,8 @@ public class UpdateModelRoutineCommand : Command
             if (beet != null)
                 UpdateBeetHealth(beet, deltaTime);
         }
+
+        UpdateResearch(deltaTime);
     }
 
     private void UpdateBeetHealth(BeetModel beet, float deltaTime)
@@ -86,6 +91,20 @@ public class UpdateModelRoutineCommand : Command
         beet.Health += (deltaTime / beet.LifeSpan) * healRate;
         beet.Health = Mathf.Clamp01(beet.Health); // Health must be in range 0-1
         beetModelUpdateSignal.Dispatch(beet);
+    }
+
+    private void UpdateResearch(float deltaTime)
+    {
+        if (model.Research.GetPhase() == ResearchModel.Phase.Research)
+        {
+            model.Research.Progress = Mathf.Clamp01(model.Research.Progress + deltaTime / model.Research.TimeToResearch);
+
+            if (Mathf.Approximately(model.Research.Progress, 1f))
+            {
+                model.Research.SetPhase(ResearchModel.Phase.Results);
+                researchCompleteSignal.Dispatch();
+            }
+        }
     }
 
     // Seconds since UTC epoch

@@ -18,6 +18,9 @@ public class CreateSequenceCommand : Command
     [Inject]
     public ISequenceLibrary sequenceLibrary { get; set; }
 
+    [Inject]
+    public GameModel model { get; set; }
+
     public override void Execute()
     {
         // Fake data for now
@@ -27,5 +30,7 @@ public class CreateSequenceCommand : Command
         sequencerData.UnhealthySequence.AddRange(baseLibrary.Bases);
         sequencerData.UnhealthySequence.AddRange(baseLibrary.Bases);
         toggleGeneticSequencerSignal.Dispatch(sequencerData);
+
+        model.Research.SetPhase(ResearchModel.Phase.GeneSelection);
     }
 }

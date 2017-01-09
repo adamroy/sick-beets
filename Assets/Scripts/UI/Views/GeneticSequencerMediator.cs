@@ -16,6 +16,9 @@ public class GeneticSequencerMediator : Mediator
     [Inject]
     public ChangeActiveInputLayerSignal changeActiveInputLayerSignal { get; set; }
 
+    [Inject]
+    public SequenceResearchConfirmedSignal sequenceResearchConfirmedSignal { get; set; }
+
     public override void OnRegister()
     {
         view.Init();
@@ -38,7 +41,9 @@ public class GeneticSequencerMediator : Mediator
 
     private void ValidSequenceConfirmed(List<Base> sequence)
     {
-
+        view.Hide();
+        changeActiveInputLayerSignal.Dispatch(InputLayer.Game, true);
+        sequenceResearchConfirmedSignal.Dispatch(sequence);
     }
 
     private void Cancel()

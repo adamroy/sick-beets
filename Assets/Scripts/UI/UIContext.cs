@@ -23,5 +23,6 @@ public class UIContext : MVCSSignalsContext
         commandBinder.Bind<EnvironmentChangedSignal>().To<EnvironmentChangedCommand>();
         commandBinder.Bind<ButtonPressedSignal>().To<UIButtonPressedCommand>();
         commandBinder.Bind<ResearchBeetSignal>().To<CreateSequenceCommand>();
+        commandBinder.Bind<SequenceResearchConfirmedSignal>().To<ResearchSequenceCommand>();
     }
 }

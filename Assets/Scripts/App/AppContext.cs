@@ -32,6 +32,8 @@ public class AppContext : MVCSSignalsContext
         // Lets whole app listen to button presses
         injectionBinder.Bind<ButtonPressedSignal>().ToSingleton().CrossContext();
         injectionBinder.Bind<CancelResearchBeetSignal>().ToSingleton().CrossContext();
+        injectionBinder.Bind<SequenceResearchConfirmedSignal>().ToSingleton().CrossContext();
+        injectionBinder.Bind<ResearchCompleteSignal>().ToSingleton().CrossContext();
 
         mediationBinder.Bind<ButtonInputView>().To<ButtonInputMediator>();
 
