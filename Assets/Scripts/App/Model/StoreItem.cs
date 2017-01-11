@@ -4,5 +4,5 @@ using System.Collections;
 [CreateAssetMenu()]
 public class StoreItem : ScriptableObject
 {
-    public Sequence unlockingSequence;
+    public Sequence UnlockingSequence;
 }

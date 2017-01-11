@@ -18,6 +18,7 @@ public class AppContext : MVCSSignalsContext
             .Bind<IEnvironmentVariableLibrary>()
             .Bind<IBaseLibrary>()
             .Bind<ISequenceLibrary>()
+            .Bind<IStoreItemLibrary>()
             .ToValue(GameObject.FindObjectOfType<AssetLibrary>()).CrossContext();
 
         // The model used throughout the game
@@ -34,6 +35,7 @@ public class AppContext : MVCSSignalsContext
         injectionBinder.Bind<CancelResearchBeetSignal>().ToSingleton().CrossContext();
         injectionBinder.Bind<SequenceResearchConfirmedSignal>().ToSingleton().CrossContext();
         injectionBinder.Bind<ResearchCompleteSignal>().ToSingleton().CrossContext();
+        injectionBinder.Bind<StoreItemUnlockedSignal>().ToSingleton().CrossContext();
 
         mediationBinder.Bind<ButtonInputView>().To<ButtonInputMediator>();
 
@@ -46,6 +48,8 @@ public class AppContext : MVCSSignalsContext
             .To<LoadSceneCommand>();
         commandBinder.Bind<ChangeActiveInputLayerSignal>()
             .To<ChangeActiveInputLayerCommand>();
+        commandBinder.Bind<ResearchCompleteSignal>()
+            .To<UnlockStoreItemCommand>();
     }
 
     public override void Launch()

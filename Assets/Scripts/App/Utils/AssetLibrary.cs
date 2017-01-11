@@ -4,7 +4,7 @@ using strange.extensions.mediation.impl;
 using strange.extensions.injector.api;
 using System;
 
-public class AssetLibrary : View, IBeetPrefabLibrary, IEnvironmentVariableLibrary, IBaseLibrary, ISequenceLibrary
+public class AssetLibrary : View, IBeetPrefabLibrary, IEnvironmentVariableLibrary, IBaseLibrary, ISequenceLibrary, IStoreItemLibrary
 {
     public BeetView commonBeetPrefab;
     public BeetView CommonBeetPrefab { get { return commonBeetPrefab; } }
@@ -17,4 +17,7 @@ public class AssetLibrary : View, IBeetPrefabLibrary, IEnvironmentVariableLibrar
 
     public List<Sequence> sequences;
     public IEnumerable<Sequence> Sequences { get { return sequences; } }
+
+    public List<StoreItem> storeItems;
+    public IEnumerable<StoreItem> StoreItems { get { return storeItems; } }
 }

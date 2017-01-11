@@ -29,6 +29,10 @@ public class GameModel : IJsonModelNode
     private ResearchModel research;
     public ResearchModel Research { get { return research; } }
 
+    [SerializeField]
+    private StoreModel store;
+    public StoreModel Store { get { return store; } }
+
     public GameModel()
     {
         SuccessfulyLoaded = false;
@@ -37,6 +41,7 @@ public class GameModel : IJsonModelNode
         assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
         environmentVariables = new SerializableDictionary<string, float>();
         research = new ResearchModel();
+        store = new StoreModel();
     }
 
     public void Clear()
@@ -48,6 +53,7 @@ public class GameModel : IJsonModelNode
         assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
         environmentVariables = new SerializableDictionary<string, float>();
         Research.Clear();
+        Store.Clear();
     }
 
     #region public data methods
