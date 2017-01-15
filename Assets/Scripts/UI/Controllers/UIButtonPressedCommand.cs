@@ -8,7 +8,7 @@ public class UIButtonPressedCommand : Command
     public Button buttonPressed { get; set; }
 
     [Inject]
-    public GameModel model { get; set; }
+    public AppModel model { get; set; }
 
     [Inject]
     public ToggleEnvironmentSettingsPanelSignal toggleEnvironmentSettingsPanelSignal { get; set; }

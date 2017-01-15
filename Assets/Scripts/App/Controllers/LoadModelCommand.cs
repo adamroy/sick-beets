@@ -8,7 +8,7 @@ using strange.extensions.context.api;
 public class LoadModelCommand : Command
 {
     [Inject]
-    public GameModel model { get; set; }
+    public AppModel model { get; set; }
     
     public override void Execute()
     {

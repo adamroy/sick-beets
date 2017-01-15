@@ -7,7 +7,7 @@ using System.Linq;
 public class TransferFromLabCommand : Command
 {
     [Inject]
-    public GameModel model { get; set; }
+    public AppModel model { get; set; }
 
     [Inject]
     public PlaceBeetSignal placeBeetSignal { get; set; }

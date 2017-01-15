@@ -10,7 +10,7 @@ public class UpdateModelRoutineCommand : Command
     public GameObject contextView { get; set; }
 
     [Inject]
-    public GameModel model { get; set; }
+    public AppModel model { get; set; }
 
     [Inject]
     public IEnvironmentVariableLibrary environmentVariableLibrary { get; set; }
@@ -37,8 +37,8 @@ public class UpdateModelRoutineCommand : Command
 
     private IEnumerator UpdateCoroutine()
     {
-        float deltaTime = Convert.ToSingle(CurrentSeconds() - model.Time);
-        model.Time = CurrentSeconds();
+        float deltaTime = Convert.ToSingle(CurrentSeconds() - model.GetTime());
+        model.SetTime(CurrentSeconds());
         UpdateModel(deltaTime);
         // Use realtime since startup so that pauses don't interupt updates
         float previousFrame = Time.realtimeSinceStartup;
@@ -48,7 +48,7 @@ public class UpdateModelRoutineCommand : Command
         while (true)
         {
             // Save time constantly so we're good whenever we quit
-            model.Time = CurrentSeconds();
+            model.SetTime(CurrentSeconds());
             float delta = Time.realtimeSinceStartup - previousFrame;
             UpdateModel(delta);
             previousFrame = Time.realtimeSinceStartup;

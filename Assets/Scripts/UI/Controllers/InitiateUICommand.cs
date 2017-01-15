@@ -6,7 +6,7 @@ using strange.extensions.command.impl;
 public class InitiateUICommand : Command
 {
     [Inject]
-    public GameModel model { get; set; }
+    public AppModel model { get; set; }
 
     [Inject]
     public EnvironmentChangedSignal setEnvironmentVariable { get; set; }

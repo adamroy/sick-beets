@@ -19,7 +19,7 @@ public class CreateSequenceCommand : Command
     public ISequenceLibrary sequenceLibrary { get; set; }
 
     [Inject]
-    public GameModel model { get; set; }
+    public AppModel model { get; set; }
 
     public override void Execute()
     {

@@ -9,7 +9,7 @@ public class UnlockStoreItemCommand : Command
     public IStoreItemLibrary storeItemLibrary { get; set; }
 
     [Inject]
-    public GameModel model { get; set; }
+    public AppModel model { get; set; }
 
     [Inject]
     public StoreItemUnlockedSignal storeItemUnlockedSignal { get; set; }

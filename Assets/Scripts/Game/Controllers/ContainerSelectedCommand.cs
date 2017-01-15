@@ -10,7 +10,7 @@ public class ContainerSelectedCommand : Command
     public BeetContainerView view { get; set; }
 
     [Inject]
-    public GameModel model { get; set; }
+    public AppModel model { get; set; }
 
     [Inject]
     public SelectBeetSignal beetSelectionSignal { get; set; }
@@ -67,6 +67,7 @@ public class ContainerSelectedCommand : Command
                     // Destroy beet if we are placing into output
                     if (containerModel.Function == BeetContainerFunction.Output)
                         beetDestroySignal.Dispatch(beetView, containerView, 2f);
+
                     // Transfer beet if we are placing into transfer container
                     if (containerModel.Function == BeetContainerFunction.LabTransfer)
                         researchBeetSignal.Dispatch(model.SelectedBeet);

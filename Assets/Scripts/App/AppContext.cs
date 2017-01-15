@@ -22,7 +22,7 @@ public class AppContext : MVCSSignalsContext
             .ToValue(GameObject.FindObjectOfType<AssetLibrary>()).CrossContext();
 
         // The model used throughout the game
-        injectionBinder.Bind<GameModel>().ToSingleton().CrossContext();
+        injectionBinder.Bind<AppModel>().ToSingleton().CrossContext();
         // This will be the signal child contexts listen to to begin
         injectionBinder.Bind<StartSignal>().ToSingleton().CrossContext();
         // This lets any part of the app change the active input layer

@@ -16,7 +16,7 @@ public class SaveModelCommand : Command
     public bool pause { get; set; }
 
     [Inject]
-    public GameModel model { get; set; }
+    public AppModel model { get; set; }
     
     public override void Execute()
     {

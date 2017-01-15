@@ -14,7 +14,7 @@ public class InstantiateModelCommand : Command
     public IBeetPrefabLibrary beetLibrary { get; set; }
 
     [Inject]
-    public GameModel model { get; set; }
+    public AppModel model { get; set; }
 
     [Inject]
     public PlaceBeetSignal beetPlacementSignal { get; set; }

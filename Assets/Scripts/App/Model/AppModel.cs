@@ -4,18 +4,18 @@ using System;
 using System.Linq;
 
 [Serializable]
-public class GameModel : IJsonModelNode
+public class AppModel : IJsonModelNode
 {
     // Fields that don't need to be saved but are passed around with the model
     public bool SuccessfulyLoaded { get; set; }
     public BeetModel SelectedBeet { get; set; }
 
     [SerializeField]
-    public long Time;
+    private long time;
 
     [SerializeField]
     private List<BeetModel> beets;
-
+    
     [SerializeField]
     private List<BeetContainerModel> containers;
 
@@ -33,7 +33,7 @@ public class GameModel : IJsonModelNode
     private StoreModel store;
     public StoreModel Store { get { return store; } }
 
-    public GameModel()
+    public AppModel()
     {
         SuccessfulyLoaded = false;
         beets = new List<BeetModel>();
@@ -47,7 +47,7 @@ public class GameModel : IJsonModelNode
     public void Clear()
     {
         SuccessfulyLoaded = false;
-        this.Time = 0;
+        this.time = 0;
         beets = new List<BeetModel>();
         containers = new List<BeetContainerModel>();
         assignments = new SerializableDictionary<BeetContainerModel, BeetModel>(containers, beets);
@@ -162,6 +162,16 @@ public class GameModel : IJsonModelNode
     public CameraDestination GetCameraDestination()
     {
         return cameraPosition;
+    }
+
+    public void SetTime(long time)
+    {
+        this.time = time;
+    }
+
+    public long GetTime()
+    {
+        return this.time;
     }
 
     #endregion
