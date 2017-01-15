@@ -22,6 +22,8 @@ public class DestroyBeetCommand : Command
     public override void Execute()
     {
         model.World.RemoveBeet(model.World.GetBeetByID(beetView.GetInstanceID()));
+        // Get 100 funds from curing beet (TODO depends on beet health and rarity)
+        model.MakeTransaction(100);
         GameObject.Destroy(beetView.gameObject, delay);
     }
 }

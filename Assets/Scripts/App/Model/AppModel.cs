@@ -12,9 +12,12 @@ public class AppModel : IJsonModelNode
     [SerializeField]
     private long time;
 
+    [SerializeField]
+    private int funds;
+
     private WorldModel world;
     public WorldModel World { get { return world; } }
-
+    
     [SerializeField]
     private ResearchModel research;
     public ResearchModel Research { get { return research; } }
@@ -27,6 +30,7 @@ public class AppModel : IJsonModelNode
     {
         SuccessfulyLoaded = false;
         time = 0;
+        funds = 0;
         world = new WorldModel();
         research = new ResearchModel();
         store = new StoreModel();
@@ -35,7 +39,8 @@ public class AppModel : IJsonModelNode
     public void Clear()
     {
         SuccessfulyLoaded = false;
-        this.time = 0;
+        time = 0;
+        funds = 0;
         World.Clear();
         Research.Clear();
         Store.Clear();
@@ -51,6 +56,20 @@ public class AppModel : IJsonModelNode
     public long GetTime()
     {
         return this.time;
+    }
+
+    public int GetFunds()
+    {
+        return funds;
+    }
+
+    public bool MakeTransaction(int amount)
+    {
+        if (funds + amount < 0)
+            return false;
+
+        funds += amount;
+        return true;
     }
 
     #endregion
