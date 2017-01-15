@@ -21,6 +21,9 @@ public class UpdateModelRoutineCommand : Command
     [Inject]
     public ResearchCompleteSignal researchCompleteSignal { get; set; }
 
+    [Inject]
+    public ResearchProgressChangedSignal researchProgressChangedSignal { get; set; }
+
     private Coroutine updateCoroutine;
 
     public override void Execute()
@@ -98,12 +101,17 @@ public class UpdateModelRoutineCommand : Command
         if (model.Research.GetPhase() == ResearchModel.Phase.Research)
         {
             model.Research.Progress = Mathf.Clamp01(model.Research.Progress + deltaTime / model.Research.TimeToResearch);
+            researchProgressChangedSignal.Dispatch(model.Research.Progress);
 
-            if (Mathf.Approximately(model.Research.Progress, 1f))
+            if (model.Research.Progress == 1f)
             {
                 model.Research.SetPhase(ResearchModel.Phase.Results);
                 researchCompleteSignal.Dispatch();
             }
+        }
+        else if (model.Research.GetPhase() == ResearchModel.Phase.Idle)
+        {
+            researchProgressChangedSignal.Dispatch(0f);
         }
     }
 

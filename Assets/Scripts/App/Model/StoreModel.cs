@@ -9,6 +9,8 @@ public class StoreModel
     [SerializeField]
     private List<string> unlockedItems;
 
+    [SerializeField]
+    private List<string> purchasedItems;
 
     public StoreModel()
     {
@@ -18,21 +20,32 @@ public class StoreModel
     public void Clear()
     {
         unlockedItems = new List<string>();
+        purchasedItems = new List<string>();
     }
+
+    #region public data methods
 
     public void UnlockItem(StoreItem item)
     {
-        if (unlockedItems.Contains(item.name) == false)
+        if (!unlockedItems.Contains(item.name))
             unlockedItems.Add(item.name);
-    }
-
-    public void LockItem(StoreItem item)
-    {
-        unlockedItems.Remove(item.name);
     }
 
     public bool IsUnlocked(StoreItem item)
     {
         return unlockedItems.Contains(item.name);
     }
+
+    public void PurchaseItem(StoreItem item)
+    {
+        if (!purchasedItems.Contains(item.name))
+            purchasedItems.Add(item.name);
+    }
+
+    public bool IsPurchased(StoreItem item)
+    {
+        return purchasedItems.Contains(item.name);
+    }
+
+    #endregion
 }

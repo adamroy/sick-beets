@@ -14,11 +14,20 @@ public class InitiateUICommand : Command
     [Inject]
     public IEnvironmentVariableLibrary environmentVariableLibrary { get; set; }
 
+    [Inject]
+    public FundsChangedSignal fundsChangedSignal { get; set; }
+
+    [Inject]
+    public ResearchProgressChangedSignal researchProgressChangedSignal { get; set; }
+
     public override void Execute()
     {
         foreach(var variable in environmentVariableLibrary.EnvironmentVariables)
         {
             setEnvironmentVariable.Dispatch(variable, model.World.GetEnvironmentValue(variable));
         }
+
+        fundsChangedSignal.Dispatch(model.GetFunds());
+        researchProgressChangedSignal.Dispatch(model.Research.Progress);
     }
 }

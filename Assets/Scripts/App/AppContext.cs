@@ -36,7 +36,9 @@ public class AppContext : MVCSSignalsContext
         injectionBinder.Bind<SequenceResearchConfirmedSignal>().ToSingleton().CrossContext();
         injectionBinder.Bind<ResearchCompleteSignal>().ToSingleton().CrossContext();
         injectionBinder.Bind<StoreItemUnlockedSignal>().ToSingleton().CrossContext();
-
+        injectionBinder.Bind<FundsChangedSignal>().ToSingleton().CrossContext();
+        injectionBinder.Bind<ResearchProgressChangedSignal>().ToSingleton().CrossContext();
+        
         mediationBinder.Bind<ButtonInputView>().To<ButtonInputMediator>();
 
         commandBinder.Bind<StartAppSignal>()

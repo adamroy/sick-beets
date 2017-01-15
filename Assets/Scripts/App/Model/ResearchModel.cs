@@ -25,7 +25,7 @@ public class ResearchModel
 
     [SerializeField]
     private float progress;
-    public float Progress { get { return progress; } set { progress = value; } }
+    public float Progress { get { return progress; } set { progress = Mathf.Clamp01(value); } }
 
     #region public data methods
 
