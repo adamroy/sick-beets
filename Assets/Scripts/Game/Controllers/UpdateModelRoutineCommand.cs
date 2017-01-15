@@ -58,10 +58,10 @@ public class UpdateModelRoutineCommand : Command
 
     private void UpdateModel(float deltaTime)
     {
-        var nurseryContainers = model.GetAllContainersByFunction(BeetContainerFunction.Nursery);
+        var nurseryContainers = model.World.GetAllContainersByFunction(BeetContainerFunction.Nursery);
         foreach (var c in nurseryContainers)
         {
-            var beet = model.GetBeetAssignment(c);
+            var beet = model.World.GetBeetAssignment(c);
             if (beet != null)
                 UpdateBeetHealth(beet, deltaTime);
         }
@@ -79,7 +79,7 @@ public class UpdateModelRoutineCommand : Command
             if (beet.HasEnvironmentNeed(envNeed))
             {
                 float needValue = beet.GetEnvironmentNeedValue(envNeed);
-                float envValue = model.GetEnvironmentValue(envNeed);
+                float envValue = model.World.GetEnvironmentValue(envNeed);
                 float diff = Mathf.Abs(needValue - envValue);
                 float score = 1 - diff * 2;
                 total += score;

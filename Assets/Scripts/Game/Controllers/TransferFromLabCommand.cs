@@ -14,16 +14,16 @@ public class TransferFromLabCommand : Command
 
     public override void Execute()
     {
-        var labContainerModel = model.GetContainerByFunction(BeetContainerFunction.Lab);
-        var beet = model.GetBeetAssignment(labContainerModel);
+        var labContainerModel = model.World.GetContainerByFunction(BeetContainerFunction.Lab);
+        var beet = model.World.GetBeetAssignment(labContainerModel);
 
         if (beet == null)
             throw new Exception("Lab should have a beet by this point!");
 
-        var nurseryContainers = model.GetAllContainersByFunction(BeetContainerFunction.Nursery);
-        var openNurseryContainer = nurseryContainers.First(c => model.GetBeetAssignment(c) == null);
+        var nurseryContainers = model.World.GetAllContainersByFunction(BeetContainerFunction.Nursery);
+        var openNurseryContainer = nurseryContainers.First(c => model.World.GetBeetAssignment(c) == null);
 
-        model.AssignBeetToContainer(beet, openNurseryContainer);
+        model.World.AssignBeetToContainer(beet, openNurseryContainer);
 
         var beetView = Utils.GetBeetViewByModel(beet);
         var containerView = Utils.GetBeetContainerViewByModel(openNurseryContainer);

@@ -16,8 +16,8 @@ public class TransferToLabCommand : Command
 
     public override void Execute()
     {
-        var containerModel = model.GetContainerByFunction(BeetContainerFunction.Lab);
-        model.AssignBeetToContainer(beetModel, containerModel);
+        var containerModel = model.World.GetContainerByFunction(BeetContainerFunction.Lab);
+        model.World.AssignBeetToContainer(beetModel, containerModel);
 
         var view = Utils.GetBeetViewByModel(beetModel);
         var labContainer = Utils.GetBeetContainerViewByFunction(BeetContainerFunction.Lab);

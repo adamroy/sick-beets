@@ -15,6 +15,6 @@ public class EnvironmentChangedCommand : Command
 
     public override void Execute()
     {
-        model.SetEnvironmentValue(variable, value);
+        model.World.SetEnvironmentValue(variable, value);
     }
 }

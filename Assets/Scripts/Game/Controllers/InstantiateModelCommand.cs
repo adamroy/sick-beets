@@ -47,7 +47,7 @@ public class InstantiateModelCommand : Command
 
         var containerViews = GameObject.FindObjectsOfType<BeetContainerView>();
 
-        foreach (var kvp in model.GetAllAssignements())
+        foreach (var kvp in model.World.GetAllAssignements())
         {
             var containerModel = kvp.Key;
             var beetModel = kvp.Value;
@@ -63,27 +63,27 @@ public class InstantiateModelCommand : Command
             }
         }
 
-        placeCameraSignal.Dispatch(model.GetCameraDestination(), false);
+        placeCameraSignal.Dispatch(model.World.GetCameraDestination(), false);
 
         
     }
 
     private void ResetResearch()
     {
-        var container = model.GetContainerByFunction(BeetContainerFunction.Lab);
-        var beet = model.GetBeetAssignment(container);
-        var openNurseryContainer = model.GetAllContainersByFunction(BeetContainerFunction.Nursery).First(c => model.GetBeetAssignment(c) == null);
+        var container = model.World.GetContainerByFunction(BeetContainerFunction.Lab);
+        var beet = model.World.GetBeetAssignment(container);
+        var openNurseryContainer = model.World.GetAllContainersByFunction(BeetContainerFunction.Nursery).First(c => model.World.GetBeetAssignment(c) == null);
 
         if (beet != null)
         {
             if(openNurseryContainer != null)
             {
-                model.AssignBeetToContainer(beet, openNurseryContainer);
+                model.World.AssignBeetToContainer(beet, openNurseryContainer);
             }
             else
             {
-                model.UnassignBeetToContainer(beet, openNurseryContainer);
-                model.RemoveBeet(beet);
+                model.World.AssignBeetToContainer(beet, openNurseryContainer);
+                model.World.RemoveBeet(beet);
             }
         }
     }
@@ -97,7 +97,7 @@ public class InstantiateModelCommand : Command
             var containerModel = new BeetContainerModel();
             containerModel.Name = view.name;
             containerModel.Function = view.function;
-            model.AddContainer(containerModel);
+            model.World.AddContainer(containerModel);
         }
 
         // Add initial beet

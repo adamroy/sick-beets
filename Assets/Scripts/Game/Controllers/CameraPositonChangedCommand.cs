@@ -12,6 +12,6 @@ public class CameraPositonChangedCommand : Command
 
     public override void Execute()
     {
-        model.SetCameraDestination(destination);
+        model.World.SetCameraDestination(destination);
     }
 }

@@ -18,7 +18,7 @@ public class InitiateUICommand : Command
     {
         foreach(var variable in environmentVariableLibrary.EnvironmentVariables)
         {
-            setEnvironmentVariable.Dispatch(variable, model.GetEnvironmentValue(variable));
+            setEnvironmentVariable.Dispatch(variable, model.World.GetEnvironmentValue(variable));
         }
     }
 }

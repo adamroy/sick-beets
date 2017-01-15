@@ -17,7 +17,7 @@ public class UIButtonPressedCommand : Command
     {
         if (buttonPressed == Button.Menu)
         {
-            if (model.GetCameraDestination() == CameraDestination.Nursery)
+            if (model.World.GetCameraDestination() == CameraDestination.Nursery)
             {
                 toggleEnvironmentSettingsPanelSignal.Dispatch();
             }

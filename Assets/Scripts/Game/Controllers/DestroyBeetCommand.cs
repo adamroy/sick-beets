@@ -21,7 +21,7 @@ public class DestroyBeetCommand : Command
 
     public override void Execute()
     {
-        model.RemoveBeet(model.GetBeetByID(beetView.GetInstanceID()));
+        model.World.RemoveBeet(model.World.GetBeetByID(beetView.GetInstanceID()));
         GameObject.Destroy(beetView.gameObject, delay);
     }
 }
