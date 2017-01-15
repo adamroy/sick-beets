@@ -39,7 +39,6 @@ public class EnvironmentSettingsView : View
         var targetSlider = sliders.FirstOrDefault(s => s.GetComponent<EnvironmentVariableAssignmentView>().variable == variable);
         if (targetSlider != null)
             targetSlider.SetValue(value);
-
     }
 
     private void OnSliderChanged(SliderView slider)

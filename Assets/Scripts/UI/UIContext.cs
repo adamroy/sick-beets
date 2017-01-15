@@ -19,6 +19,7 @@ public class UIContext : MVCSSignalsContext
         mediationBinder.Bind<TouchDetectorView>().To<TouchDetectorMediator>();
         mediationBinder.Bind<GeneticSequencerView>().To<GeneticSequencerMediator>();
         mediationBinder.Bind<InformationBarView>().To<InformationBarMediator>();
+        mediationBinder.Bind<StoreDisplayView>().To<StoreDisplayMediator>();
 
         commandBinder.Bind<StartSignal>().To<InitiateUICommand>();
         commandBinder.Bind<EnvironmentChangedSignal>().To<EnvironmentChangedCommand>();

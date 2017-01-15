@@ -15,10 +15,19 @@ public class InitiateUICommand : Command
     public IEnvironmentVariableLibrary environmentVariableLibrary { get; set; }
 
     [Inject]
+    public IStoreItemLibrary storeItemLibrary { get; set; }
+
+    [Inject]
     public FundsChangedSignal fundsChangedSignal { get; set; }
 
     [Inject]
     public ResearchProgressChangedSignal researchProgressChangedSignal { get; set; }
+
+    [Inject]
+    public StoreItemUnlockedSignal storeItemUnlockedSignal { get; set; }
+
+    [Inject]
+    public StoreItemPurchasedSignal storeItemPurchasedSignal { get; set; }
 
     public override void Execute()
     {
@@ -29,5 +38,17 @@ public class InitiateUICommand : Command
 
         fundsChangedSignal.Dispatch(model.GetFunds());
         researchProgressChangedSignal.Dispatch(model.Research.Progress);
+
+        foreach (var item in storeItemLibrary.StoreItems)
+        {
+            if(model.Store.IsPurchased(item))
+            {
+                storeItemPurchasedSignal.Dispatch(item);
+            }
+            else if(model.Store.IsUnlocked(item))
+            {
+                storeItemUnlockedSignal.Dispatch(item);
+            }
+        }
     }
 }

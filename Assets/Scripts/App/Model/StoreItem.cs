@@ -5,4 +5,7 @@ using System.Collections;
 public class StoreItem : ScriptableObject
 {
     public Sequence UnlockingSequence;
+
+    [TextArea(2, 10)]
+    public string description;
 }
