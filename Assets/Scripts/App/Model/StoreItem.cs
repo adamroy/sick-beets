@@ -8,4 +8,6 @@ public class StoreItem : ScriptableObject
 
     [TextArea(2, 10)]
     public string description;
+
+    public ItemEffect effect;
 }

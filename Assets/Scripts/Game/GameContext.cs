@@ -32,6 +32,7 @@ public class GameContext : MVCSSignalsContext
         mediationBinder.Bind<TouchDetectorView>().To<TouchDetectorMediator>();
         mediationBinder.Bind<CameraPannerView>().To<CameraPannerMediator>();
         mediationBinder.Bind<StoreItemView>().To<StoreItemMediator>();
+        mediationBinder.Bind<ItemsWorldView>().To<ItemsWorldMediator>();
 
         // Command bindings
         commandBinder.Bind<StartSignal>()
@@ -52,5 +53,7 @@ public class GameContext : MVCSSignalsContext
             .To<CameraPositonChangedCommand>();
         commandBinder.Bind<CancelResearchBeetSignal>()
             .To<TransferFromLabCommand>();
+        commandBinder.Bind<StoreItemPurchasedSignal>()
+            .To<StoreItemPurchasedCommand>();
     }
 }

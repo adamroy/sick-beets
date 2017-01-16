@@ -16,7 +16,7 @@ public class UnlockStoreItemCommand : Command
 
     public override void Execute()
     {
-        var unlockedItem = storeItemLibrary.StoreItems.FirstOrDefault(item => item.UnlockingSequence.bases.SequenceEqual(model.Research.GetResearchSequence()));
+        var unlockedItem = storeItemLibrary.StoreItems.FirstOrDefault(); // item => item.UnlockingSequence.bases.SequenceEqual(model.Research.GetResearchSequence()));
 
         if (unlockedItem != null && !model.Store.IsUnlocked(unlockedItem))
         {
