@@ -32,7 +32,7 @@ public class GameContext : MVCSSignalsContext
         mediationBinder.Bind<TouchDetectorView>().To<TouchDetectorMediator>();
         mediationBinder.Bind<CameraPannerView>().To<CameraPannerMediator>();
         mediationBinder.Bind<StoreItemView>().To<StoreItemMediator>();
-        mediationBinder.Bind<ItemsWorldView>().To<ItemsWorldMediator>();
+        mediationBinder.Bind<JukeBoxView>().To<JukeBoxMediator>();
 
         // Command bindings
         commandBinder.Bind<StartSignal>()
