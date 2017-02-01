@@ -106,7 +106,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   environmentNeeds:
   - variable: {fileID: 11400000, guid: 2d774b2ead47099449dd6c9862e80c86, type: 2}
-    value: 0.75
+    min: 0
+    max: 1
+  - variable: {fileID: 11400000, guid: d7708c1b46800c248b4eb756c5aa852b, type: 2}
+    min: 0
+    max: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

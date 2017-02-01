@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using strange.extensions.mediation.impl;
 using strange.extensions.signal.impl;
+using Random = UnityEngine.Random;
 
 public class BeetView : View
 {
@@ -13,7 +14,18 @@ public class BeetView : View
     {
         public EnvironmentVariable variable;
         [Range(0f, 1f)]
-        public float value;
+        public float min, max;
+
+        private float value = -1;
+        public float Value
+        {
+            get
+            {
+                if (value < 0f)
+                    value = Random.Range(min, max);
+                return value;
+            }
+        }
     }
 
     public List<EnvironmentNeed> environmentNeeds;

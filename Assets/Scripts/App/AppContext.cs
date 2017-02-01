@@ -42,6 +42,7 @@ public class AppContext : MVCSSignalsContext
         injectionBinder.Bind<StoreItemPurchasedSignal>().ToSingleton().CrossContext();
         injectionBinder.Bind<ActivateItemViewSignal>().ToSingleton().CrossContext();
         injectionBinder.Bind<RuntimeCofiguration>().ToSingleton().CrossContext();
+        injectionBinder.Bind<DisplayHealRateSignal>().ToSingleton().CrossContext();
 
         mediationBinder.Bind<ButtonInputView>().To<ButtonInputMediator>();
 

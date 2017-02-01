@@ -24,7 +24,7 @@ public class CreateBeetCommand : Command
         beetModel.InstanceID = view.GetInstanceID();
         beetModel.LifeSpan = 10f; // 10 seconds
         foreach (var need in view.environmentNeeds)
-            beetModel.AddEnvironmentNeed(need.variable, need.value);
+            beetModel.AddEnvironmentNeed(need.variable, need.Value);
         model.World.AddBeet(beetModel);
         var inputContainer = model.World.GetContainerByFunction(BeetContainerFunction.Input);
         model.World.AssignBeetToContainer(beetModel, inputContainer);
