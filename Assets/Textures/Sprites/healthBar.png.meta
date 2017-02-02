@@ -1,11 +1,12 @@
 fileFormatVersion: 2
 guid: 9474bed5aebd4b44f9fa05e2d99af277
-timeCreated: 1486013205
+timeCreated: 1486020054
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: healthBarBackground
-    21300002: healthBarBorder
+    21300002: healthBarBackground2
+    21300004: healthBarBorder2
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -66,13 +67,25 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
     - serializedVersion: 2
-      name: healthBarBorder
+      name: healthBarBackground2
       rect:
         serializedVersion: 2
-        x: 56
-        y: 91
-        width: 408
-        height: 161
+        x: 13
+        y: 75
+        width: 101
+        height: 42
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+    - serializedVersion: 2
+      name: healthBarBorder2
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 22
+        width: 101
+        height: 42
       alignment: 4
       pivot: {x: 0, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

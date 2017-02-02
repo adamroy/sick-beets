@@ -11,11 +11,11 @@ public class HealthView : View
     public void DisplayHealth(float health)
     {
         // Set the color
-        int firstIndex = Mathf.FloorToInt((health - 0.001f) * (healthColors.Length - 1));
+        int firstIndex = Mathf.FloorToInt(Mathf.Clamp01(health - 0.01f) * (healthColors.Length - 1));
         float progress = health * (healthColors.Length - 1) - firstIndex;
-        int secondIndex = firstIndex + 1;
+        int secondIndex = (firstIndex + 1) % healthColors.Length;
         healthBar.color = Color.Lerp(healthColors[firstIndex], healthColors[secondIndex], progress);
-        
+
         // Set the bar width
         var scale = healthBar.transform.localScale;
         scale.x = health;
