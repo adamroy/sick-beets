@@ -140,7 +140,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -0.09
+      value: -0.31
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalRotation.x
@@ -802,7 +802,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -1.257
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalRotation.x
@@ -931,8 +931,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPosition: {fileID: 2107659728}
   function: 2
-  healingRateDisplay: {fileID: 0}
-  healingRateIcons: []
 --- !u!23 &257104430
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1129,7 +1127,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 320234726}
   m_LocalRotation: {x: 0, y: -0.29665667, z: 0, w: 0.9549842}
-  m_LocalPosition: {x: -1.47, y: 0.23, z: -2.17}
+  m_LocalPosition: {x: -1.47, y: 0.23, z: -2.86}
   m_LocalScale: {x: 0.44833863, y: 0.44833863, z: 0.44833863}
   m_LocalEulerAnglesHint: {x: 0, y: -34.5139, z: 0}
   m_Children: []
@@ -1362,7 +1360,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -0.09
+      value: -0.31
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1498,7 +1496,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -0.09
+      value: -0.31
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1714,8 +1712,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPosition: {fileID: 824261766}
   function: 3
-  healingRateDisplay: {fileID: 0}
-  healingRateIcons: []
 --- !u!23 &1175482291
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2039,7 +2035,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -1.257
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalRotation.x
@@ -2121,6 +2117,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 8648179}
     m_Modifications:
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0.55
@@ -2131,7 +2131,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -1.257
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 498890, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_LocalRotation.x
@@ -2156,6 +2156,54 @@ Prefab:
     - target: {fileID: 170518, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
       propertyPath: m_Name
       value: BeetContainer (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[0].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[0].g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[0].b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[0].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[2].r
+      value: 0.06805283
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[2].g
+      value: 0.89705884
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[2].b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[2].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[1].r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[1].g
+      value: 0.8482759
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[1].b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447774, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
+      propertyPath: healthColors.Array.data[1].a
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4d4db509b931934aaa385d1f9807376, type: 2}
@@ -2273,8 +2321,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPosition: {fileID: 1737971460}
   function: 1
-  healingRateDisplay: {fileID: 0}
-  healingRateIcons: []
 --- !u!23 &1440444715
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2659,8 +2705,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPosition: {fileID: 1048623519}
   function: 4
-  healingRateDisplay: {fileID: 0}
-  healingRateIcons: []
 --- !u!23 &1583254772
 MeshRenderer:
   m_ObjectHideFlags: 0

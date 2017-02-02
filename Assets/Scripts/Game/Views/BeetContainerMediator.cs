@@ -19,6 +19,9 @@ public class BeetContainerMediator : Mediator
     [Inject]
     public DisplayHealRateSignal displayHealRateSignal { get; set; }
 
+    [Inject]
+    public DisplayHealthSignal displayHealthSignal { get; set; }
+
     public override void OnRegister()
     {
         view.Init();
@@ -27,8 +30,9 @@ public class BeetContainerMediator : Mediator
         if (view.function == BeetContainerFunction.Input)
             beetCreationSignal.AddListener(view.PlaceBeet);
 
-        displayHealRateSignal.AddListener(DisplayHealRate);
         beetPlacementSignal.AddListener(PlaceBeet);
+        displayHealRateSignal.AddListener(DisplayHealRate);
+        displayHealthSignal.AddListener(DisplayHealthCallback);
     }
 
     private void TouchListener()
@@ -50,6 +54,15 @@ public class BeetContainerMediator : Mediator
         {
             // Since not all containers have this function, it's a separate component which we call through sendmessage
             this.view.SendMessage("DisplayHealingRate", rate, SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
+    void DisplayHealthCallback(BeetContainerView container, float health)
+    {
+        if (container == this.view)
+        {
+            // Since not all containers have this function, it's a separate component which we call through sendmessage
+            this.view.SendMessage("DisplayHealth", health, SendMessageOptions.DontRequireReceiver);
         }
     }
 }

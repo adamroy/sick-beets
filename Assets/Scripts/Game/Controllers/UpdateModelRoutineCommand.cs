@@ -24,6 +24,12 @@ public class UpdateModelRoutineCommand : Command
     [Inject]
     public ResearchProgressChangedSignal researchProgressChangedSignal { get; set; }
 
+    [Inject]
+    public DisplayHealthSignal displayHealthSignal { get; set; }
+
+    [Inject]
+    public DisplayHealRateSignal displayHealRateSignal { get; set; }
+
     private Coroutine updateCoroutine;
 
     public override void Execute()
@@ -66,18 +72,20 @@ public class UpdateModelRoutineCommand : Command
         {
             var beet = model.World.GetBeetAssignment(c);
             if (beet != null)
-                UpdateBeetHealth(beet, deltaTime);
+                UpdateBeetHealth(beet, deltaTime, c);
         }
 
         UpdateResearch(deltaTime);
     }
 
-    private void UpdateBeetHealth(BeetModel beet, float deltaTime)
+    private void UpdateBeetHealth(BeetModel beet, float deltaTime, BeetContainerModel container)
     {
         float healRate = Utils.CalculateBeatHealRate(beet, model, environmentVariableLibrary);
         beet.Health += (deltaTime / beet.LifeSpan) * healRate;
         beet.Health = Mathf.Clamp01(beet.Health); // Health must be in range 0-1
         beetModelUpdateSignal.Dispatch(beet);
+        displayHealthSignal.Dispatch(Utils.GetBeetContainerViewByModel(container), beet.Health);
+        displayHealRateSignal.Dispatch(Utils.GetBeetContainerViewByModel(container), healRate);
     }
 
     private void UpdateResearch(float deltaTime)

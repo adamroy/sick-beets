@@ -23,6 +23,7 @@ public class CreateBeetCommand : Command
         beetModel.Type = BeetType.Common;
         beetModel.InstanceID = view.GetInstanceID();
         beetModel.LifeSpan = 10f; // 10 seconds
+        beetModel.Health = 0f;
         foreach (var need in view.environmentNeeds)
             beetModel.AddEnvironmentNeed(need.variable, need.Value);
         model.World.AddBeet(beetModel);

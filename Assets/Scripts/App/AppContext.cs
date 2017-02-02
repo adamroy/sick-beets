@@ -43,6 +43,7 @@ public class AppContext : MVCSSignalsContext
         injectionBinder.Bind<ActivateItemViewSignal>().ToSingleton().CrossContext();
         injectionBinder.Bind<RuntimeCofiguration>().ToSingleton().CrossContext();
         injectionBinder.Bind<DisplayHealRateSignal>().ToSingleton().CrossContext();
+        injectionBinder.Bind<DisplayHealthSignal>().ToSingleton().CrossContext();
 
         mediationBinder.Bind<ButtonInputView>().To<ButtonInputMediator>();
 
